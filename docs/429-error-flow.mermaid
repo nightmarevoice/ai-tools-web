@@ -1,0 +1,69 @@
+```mermaid
+sequenceDiagram
+    participant User as 用户
+    participant Component as React组件
+    participant ApiClient as API客户端
+    participant Backend as 后端API
+    participant EventManager as 事件管理器
+    participant UseAuth as useAuth Hook
+    participant Storage as localStorage
+    participant Navbar as 导航栏
+
+    User->>Component: 发起操作（搜索/查询）
+    Component->>ApiClient: 调用 API 方法
+    ApiClient->>Backend: 发送 HTTP 请求
+    Backend-->>ApiClient: 返回 429 状态码
+    
+    rect rgb(255, 240, 240)
+        Note over ApiClient: 检测到 429 错误
+        ApiClient->>Storage: clearAuth()<br/>清除 auth_user<br/>清除 auth_access_token
+        ApiClient->>ApiClient: setAccessToken(null)
+        ApiClient->>EventManager: emit('RATE_LIMIT_EXCEEDED')
+    end
+    
+    rect rgb(240, 255, 240)
+        Note over EventManager,UseAuth: 事件传播
+        EventManager->>UseAuth: 触发事件监听器
+        UseAuth->>UseAuth: setAccessTokenState(null)<br/>setUserState(null)
+        UseAuth->>ApiClient: apiClient.setAccessToken(null)
+        UseAuth->>User: toast.error("请求频率超限...")
+    end
+    
+    rect rgb(240, 240, 255)
+        Note over UseAuth,Navbar: UI 自动更新
+        UseAuth-->>Navbar: isAuthenticated = false
+        Navbar-->>User: 显示"登录"按钮
+    end
+    
+    ApiClient-->>Component: 抛出 ApiError
+    Component-->>User: 显示错误状态
+
+    Note over User: 用户看到：<br/>1. Toast 提示消息<br/>2. 登录按钮<br/>3. 认证状态已清除
+```
+
+## 关键点说明
+
+### 1. 错误检测（API 客户端层）
+- 在 `handleError` 方法中检测 429 状态码
+- 立即清除本地存储的认证信息
+- 触发全局事件通知其他组件
+
+### 2. 状态同步（Hook 层）
+- `useAuth` Hook 订阅认证事件
+- 收到事件后更新内部状态
+- 触发所有使用该 Hook 的组件重新渲染
+
+### 3. UI 响应（组件层）
+- 导航栏等组件自动响应状态变化
+- Toast 提示用户发生了什么
+- 引导用户重新登录
+
+## 优势
+
+1. **解耦**：各层职责清晰，互不依赖
+2. **自动化**：无需手动在每个调用点处理
+3. **实时性**：状态变化立即反映到 UI
+4. **可扩展**：易于添加新的认证事件类型
+
+
+

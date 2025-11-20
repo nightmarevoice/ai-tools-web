@@ -1,0 +1,600 @@
+{
+  "common": {
+    "language": {
+      "en": "영어",
+      "zh": "중국어",
+      "zh-TW": "중국어（대만）",
+      "ja": "일본어",
+      "ko": "한국어"
+    },
+    "chooseLanguage": "언어 선택",
+    "visitWebsite": "웹사이트 방문",
+    "loading": "로딩 중...",
+    "loadedAll": "모두 로드됨",
+    "loadMore": "더 로드하기",
+    "searchResults": "검색 결과",
+    "monthlyVisits": "월간 방문 수",
+    "nav": {
+      "home": "홈",
+      "categories": "카테고리",
+      "intelligentTools": "지능형 도구",
+      "dataanalysis": "웹사이트 통계",
+      "profile": "프로필",
+      "dashboard": "대시보드",
+      "logIn": "로그인",
+      "logOut": "로그아웃"
+    }
+  },
+  "loginPrompt": {
+    "title": "요청 빈도 초과",
+    "description": "요청 빈도가 제한을 초과했습니다. 서비스를 계속 이용하려면 로그인하세요.",
+    "hint": "로그인 후 더 높은 요청 제한과 추가 기능을 이용하실 수 있습니다.",
+    "login": "지금 로그인",
+    "cancel": "취소"
+  },
+  "home": {
+    "metadata": {
+      "title": "AI 연구 어시스턴트 | 연구 논문 발견, 요약 및 분석",
+      "description": "연구 논문을 쉽게 발견, 요약 및 분석할 수 있는 AI 기반 연구 어시스턴트",
+      "ogAlt": "AI 연구 어시스턴트"
+    },
+    "hero": {
+      "title": "필요한 모든 시나리오에 해당하는 AI 도구를 여기서 찾을 수 있습니다",
+      "subtitle": "AI 도구 검색 엔진을 구축하여 필요한 AI 도구를 빠르게 찾을 수 있도록 돕습니다"
+    },
+    "searchBar": {
+      "placeholder": "AI 도구 찾기",
+      "searchPlaceholder": "무엇이든 검색",
+      "mode": "모드:",
+      "chatMode": "Chat 모드",
+      "agentMode": "Agent 모드",
+      "popularSearches": "인기 검색",
+      "popularKeywords": {
+        "travelPlanning": "여행 계획",
+        "interiorDesign": "인테리어 디자인",
+        "podcastProduction": "팟캐스트 제작",
+        "imageGeneration": "이미지 생성",
+        "languageTranslation": "언어 번역"
+      }
+    },
+    "whyChooseUs": {
+      "title": "왜 우리를 선택해야 할까요?",
+      "description": "시장에서 최고의 AI 도구를 엄선하여 정리하여 가장 적합한 솔루션을 빠르게 찾을 수 있도록 도와드립니다"
+    },
+    "semanticSearch": {
+      "title": "의미론적 설명 → 일치하는 AI 도구",
+      "description": "의미론적 설명을 입력하세요（예：「재무 보고서를 분석하고 시각화」）。시스템이 의도를 이해하고 해당 시나리오에 대한 AI 도구 목록을 반환합니다。",
+      "imageCaption": "이미지：Unsplash（일러스트）",
+      "imageAlt": "의미론적 매칭 개념 일러스트",
+      "matchedTools": "일치하는 도구（예시）",
+      "tool1": {
+        "name": "OpenAI 텍스트 분석",
+        "description": "자연어 처리 · 엔티티 추출 · 주제 클러스터링"
+      },
+      "tool2": {
+        "name": "LangChain 에이전트",
+        "description": "데이터 처리 체인 · 도구 오케스트레이션"
+      },
+      "tool3": {
+        "name": "Plotly",
+        "description": "대화형 시각화 · 대시보드"
+      },
+      "tool4": {
+        "name": "Pandas",
+        "description": "데이터 클리닝 · 특징 공학"
+      },
+      "tags": {
+        "nlp": "자연어 처리",
+        "analysis": "분석",
+        "orchestration": "오케스트레이션",
+        "pipeline": "파이프라인",
+        "visualization": "시각화",
+        "charts": "차트",
+        "data": "데이터",
+        "processing": "처리"
+      },
+      "exampleNote": "이것은 정적 예시입니다. 실제 결과는 의미론적 쿼리에 따라 동적으로 일치합니다."
+    },
+    "testimonials": {
+      "title": "사용자 리뷰",
+      "description": "AI 도구 탐색에 대한 피드백—시나리오 기반, 태그 기반 탐색으로 명확한 대안과 나란히 비교 보기를 제공하여 적절한 도구를 더 빠르게 선택할 수 있도록 합니다。",
+      "items": [
+        {
+          "quote": "자연어로 요구사항을 설명하면 프로덕션 준비가 된 AI 도구 체인이 반환되어 많은 스크리닝 시간을 절약합니다。",
+          "author": "천뤄시",
+          "role": "데이터 분석가 · 인터넷"
+        },
+        {
+          "quote": "태그와 시나리오 탐색이 명확합니다。대안과 비교가 실용적이며 빠른 의사결정에 도움이 됩니다。",
+          "author": "왕레이",
+          "role": "제품 관리자 · 스타트업"
+        },
+        {
+          "quote": "논문 워크플로우—검색, 요약부터 시각화까지—를 한 번에 연결하여 효율성이 크게 향상되었습니다。",
+          "author": "리샤샤",
+          "role": "대학원생 · 컴퓨터 과학"
+        },
+        {
+          "quote": "도구 오케스트레이션 접근 방식을 좋아합니다：완전한 파이프라인을 복사하여 시작점으로 한 다음 최적화합니다。",
+          "author": "자오얼리",
+          "role": "백엔드 엔지니어"
+        },
+        {
+          "quote": "즐겨찾기 및 비교 보기는 팀 리뷰에서 매우 유용합니다。중요한 차이점을 한 페이지에서 볼 수 있습니다。",
+          "author": "몰리",
+          "role": "디자인 리더"
+        },
+        {
+          "quote": "검색 결과에는 도구뿐만 아니라 워크플로 템플릿도 포함되어 있어 초보자에게 완벽합니다。",
+          "author": "행크",
+          "role": "데이터 과학 인턴"
+        }
+      ]
+    },
+    "cta": {
+      "title": "AI 도구 탐색에 대한 피드백—시나리오 기반、",
+      "description": "태그 기반 탐색으로 명확한 대안과 나란히 비교 보기를 제공하여 적절한 도구를 더 빠르게 선택할 수 있도록 합니다。"
+    },
+    "categoryExploration": {
+      "title": "카테고리로 탐색",
+      "subtitle": "{count}개 카테고리",
+      "viewAll": "전체 보기",
+      "loading": "카테고리 통계 로딩 중...",
+      "error": "카테고리 통계 로드 실패",
+      "empty": "카테고리 통계 데이터 없음",
+      "toolCount": "{count}개 도구",
+      "visits": "{count}회 방문"
+    },
+    "aiToolsTabs": {
+      "title": "추천 AI 도구",
+      "subtitle": "트렌딩, 신규, 편집자 추천으로 고품질 AI 도구를 빠르게 발견하세요",
+      "tabs": {
+        "trending": "🔥 트렌딩",
+        "recent": "⭐ 신규",
+        "featured": "✨ 편집자 추천"
+      },
+      "tools": {
+        "chatgpt": {
+          "name": "ChatGPT",
+          "description": "다양한 작업을 지원하는 강력한 AI 어시스턴트"
+        },
+        "dalle3": {
+          "name": "DALL-E 3",
+          "description": "텍스트 프롬프트에서 고품질 AI 이미지 생성"
+        },
+        "copilot": {
+          "name": "GitHub Copilot",
+          "description": "더 빠르고 스마트한 코딩을 위한 AI 페어 프로그래머"
+        },
+        "midjourney": {
+          "name": "Midjourney",
+          "description": "전문가급 AI 아트 생성 도구"
+        },
+        "claude": {
+          "name": "Claude 3.5",
+          "description": "더 강력한 성능을 가진 최신 세대 AI 어시스턴트"
+        },
+        "runway": {
+          "name": "Runway",
+          "description": "AI 비디오 생성 및 편집 플랫폼"
+        },
+        "jasper": {
+          "name": "Jasper",
+          "description": "기업용 AI 카피라이팅 도구"
+        },
+        "synthesia": {
+          "name": "Synthesia",
+          "description": "카메라 없이 AI 비디오 제작"
+        },
+        "perplexity": {
+          "name": "Perplexity",
+          "description": "검색과 AI 채팅을 결합한 도구"
+        },
+        "copyai": {
+          "name": "Copy.ai",
+          "description": "AI로 빠르게 마케팅 카피 생성"
+        },
+        "murf": {
+          "name": "Murf.ai",
+          "description": "AI 음성 생성 및 텍스트 음성 변환"
+        },
+        "beautiful": {
+          "name": "Beautiful.ai",
+          "description": "전문 프레젠테이션 자동 생성"
+        }
+      },
+      "categories": {
+        "aiAssistant": "🤖 AI 어시스턴트",
+        "imageGeneration": "🎨 이미지 생성",
+        "codeGeneration": "💻 코드 생성",
+        "aiVideo": "🎬 AI 비디오",
+        "aiWriting": "✍️ AI 글쓰기",
+        "audioVoice": "🎵 오디오 및 음성",
+        "dataAnalytics": "📊 데이터 및 분석"
+      },
+      "pricing": {
+        "free": "무료",
+        "freemium": "프리미엄",
+        "paid": "유료"
+      }
+    }
+  },
+  "categories": {
+    "loadingPage": "카테고리 페이지 로딩 중...",
+    "loadingCategories": "카테고리 데이터 로딩 중...",
+    "categoriesFailed": "카테고리 데이터 로드 실패：{error}",
+    "chooseOnLeft": "왼쪽에서 카테고리를 선택하세요",
+    "hotTools": "인기 도구",
+    "hotToolsOfCategory": "{name} 인기 도구",
+    "search": {
+      "tipWithQuery": "\"{query}\"에 관한 도구（최대 {limit}개 표시）",
+      "tip": "일치하는 도구（최대 {limit}개 표시）"
+    },
+    "defaultLoadedCount": "이 카테고리의 도구를 표시합니다. {loaded}{total, select, 0 {} other { / {total}}}개 로드됨",
+    "searchBox": {
+      "title": "가장 포괄적이고 최신의 AI 도구 컬렉션",
+      "subtitle": "키워드를 입력하여 필요한 도구를 빠르게 필터링"
+    },
+    "loadMore": "더 로드하기",
+    "loadingMore": "로딩 중...",
+    "loadAppsFailed": "도구 목록 로드 실패",
+    "loadMoreFailed": "더 로드하기 실패",
+    "searchFailed": "검색 실패, 나중에 다시 시도해 주세요"
+  },
+  "tool": {
+    "breadcrumb": {
+      "categories": "카테고리",
+      "detail": "도구 상세 정보"
+    },
+    "loadingDetail": "애플리케이션 상세 정보 로딩 중...",
+    "failed": "로드 실패",
+    "backToCategories": "카테고리로 돌아가기",
+    "backToHome": "홈으로 돌아가기",
+    "noPreview": "미리보기 이미지 없음",
+    "whatIs": "{app}이란 무엇인가요?",
+    "alternatives": "대체 도구",
+    "alternativesTo": "{app}의 대체 도구",
+    "by": "제공：",
+    "visitWebsite": "웹사이트 방문",
+    "stats": {
+      "monthlyVisits": "월간 방문수",
+      "avgDuration": "평균 체류 시간",
+      "categoryRank": "카테고리 순위",
+      "bounceRate": "이탈률"
+    },
+    "tabs": {
+      "overview": "개요",
+      "alternatives": "대체 도구"
+    },
+    "mainFeatures": "주요 기능",
+    "similar": {
+      "loading": "유사 도구 로딩 중...",
+      "none": "관련 도구가 없습니다",
+      "noAlternatives": "아직 대체 도구를 찾지 못했습니다. 나중에 다시 확인하세요!"
+    },
+    "similarity": "유사도：{percent}%",
+    "match": "{percent}% 일치",
+    "preview": {
+      "aria": "공식 미리보기 열기"
+    },
+    "metadata": {
+      "notFound": "도구를 찾을 수 없습니다"
+    }
+  },
+  "dashboard": {
+    "searchFailed": "검색 실패, 나중에 다시 시도해 주세요."
+  },
+  "recommendedTools": {
+    "title": "🔥 추천 도구",
+    "tools": {
+      "chatgpt": "다양한 작업을 도와주는 강력한 AI 채팅 어시스턴트",
+      "dalle3": "텍스트 프롬프트에서 고품질 AI 이미지 생성",
+      "githubCopilot": "코딩을 더 빠르고 스마트하게 만드는 AI 코딩 어시스턴트",
+      "midjourney": "전문가급 AI 아트 생성 도구",
+      "claudeCode": "향상된 성능을 가진 차세대 AI 어시스턴트"
+    }
+  },
+  "paperResults": {
+    "emptyPrompt": "키워드를 입력하여 AI 도구 검색을 시작하세요. 예:",
+    "emptyExample": "\"이미지를 생성할 수 있는 AI 도구\"",
+    "noResults": "관련 AI 도구를 찾을 수 없습니다.",
+    "searching": "검색 중...",
+    "foundResults": "{count}개의 관련 도구를 찾았습니다",
+    "findTools": "적합한 AI 도구 찾기",
+    "aiSummary": "AI 요약"
+  },
+  "privacy": {
+    "metadata": {
+      "title": "개인정보 보호정책 | AI 도구 내비게이션",
+      "description": "당사가 개인정보를 어떻게 수집, 사용 및 보호하는지 알아보세요"
+    },
+    "title": "개인정보 보호정책",
+    "effectiveDate": "시행일: {date}",
+    "intro": "당사는 귀하의 개인정보를 소중히 여기며 보호하는 데 최선을 다하고 있습니다. 본 정책은 당사 웹사이트를 사용할 때 정보를 어떻게 수집, 사용 및 보호하는지 설명합니다.",
+    "section1": {
+      "title": "1. 수집하는 정보",
+      "item1": "사이트 내에서 입력한 내용(검색어 등)",
+      "item2": "사이트 사용 데이터(브라우저, 언어 설정, 페이지 방문 등)",
+      "item3": "분석 및 악용 방지를 위해 생성될 수 있는 익명 액세스 식별자"
+    },
+    "section2": {
+      "title": "2. 정보 사용 방식",
+      "item1": "사이트 기능 및 검색 결과 제공 및 개선",
+      "item2": "보안 및 성능 모니터링 수행",
+      "item3": "동의를 얻거나 법률이 허용하는 범위 내에서 통계 분석 수행"
+    },
+    "section3": {
+      "title": "3. 쿠키 및 로컬 저장소",
+      "content": "당사는 언어 설정, 세션 정보 및 익명 식별자를 저장하기 위해 쿠키 및 로컬 저장소를 사용할 수 있습니다. 브라우저에서 쿠키를 관리하거나 비활성화할 수 있지만 일부 기능이 제한될 수 있습니다."
+    },
+    "section4": {
+      "title": "4. 데이터 공유",
+      "content": "당사는 귀하의 개인정보를 판매하지 않습니다. 서비스 제공에 필요한 경우, 법적 의무를 이행하는 경우 또는 귀하의 동의를 얻은 경우에만 신뢰할 수 있는 제3자 서비스 제공업체와 필요한 정보를 공유합니다."
+    },
+    "section5": {
+      "title": "5. 데이터 보안 및 보관",
+      "content": "당사는 데이터 보안을 보호하기 위해 합리적인 조치를 취하며, 법률에서 더 긴 보관 기간을 요구하지 않는 한 수집 목적을 달성하는 데 필요한 기간 동안 데이터를 보관합니다."
+    },
+    "section6": {
+      "title": "6. 귀하의 권리",
+      "content": "적용 법률에 따라 귀하는 개인정보에 대한 액세스, 수정, 삭제 또는 처리 제한 등의 권리를 가질 수 있습니다. 요청 사항은 아래 연락처를 통해 문의해 주세요."
+    },
+    "contact": {
+      "title": "7. 문의하기",
+      "description": "본 정책 또는 개인정보 보호 관행에 대해 질문이나 제안이 있으시면 이메일로 문의해 주세요:",
+      "email": "xuanfeng.tech.x@gmail.com"
+    },
+    "disclaimer": "이 페이지는 일반적인 예시 텍스트입니다. 구체적인 내용은 실제 비즈니스, 관할 구역 및 법률 고문의 조언에 따라 완성해야 합니다."
+  },
+  "service": {
+    "metadata": {
+      "title": "서비스 약관 | AI 도구 내비게이션",
+      "description": "플랫폼 사용 규칙과 조건을 이해하기 위해 서비스 약관을 읽어보세요"
+    },
+    "title": "서비스 약관",
+    "lastUpdated": "최종 업데이트: {date}",
+    "intro": "AI 도구 내비게이션 플랫폼에 오신 것을 환영합니다. 본 웹사이트를 사용함으로써 귀하는 다음 서비스 약관을 준수하는 데 동의하는 것으로 간주됩니다. 이 약관을 주의 깊게 읽어주세요.",
+    "section1": {
+      "title": "1. 서비스 설명",
+      "content": "본 플랫폼은 AI 도구의 발견, 비교 및 추천 서비스를 제공합니다. 당사는 사용자에게 정확하고 시기적절한 AI 도구 정보를 제공하기 위해 노력하지만 정보의 완전성이나 정확성을 보장하지 않습니다."
+    },
+    "section2": {
+      "title": "2. 사용자 책임",
+      "content": "본 플랫폼을 사용할 때 귀하는 다음에 동의합니다:",
+      "item1": "진실하고 정확한 정보를 제공할 것",
+      "item2": "불법적이거나 승인되지 않은 활동에 참여하지 않을 것",
+      "item3": "플랫폼의 정상적인 운영을 방해하거나 파괴하지 않을 것",
+      "item4": "타인의 지적 재산권 및 개인정보 보호 권리를 존중할 것"
+    },
+    "section3": {
+      "title": "3. 지적 재산권",
+      "content": "본 플랫폼의 모든 콘텐츠는 다음을 포함하되 이에 국한되지 않습니다:",
+      "item1": "웹사이트 디자인, 레이아웃 및 그래픽",
+      "item2": "텍스트, 이미지 및 멀티미디어 콘텐츠",
+      "item3": "소프트웨어 코드 및 기능",
+      "item4": "상표, 로고 및 브랜드 요소",
+      "footer": "지적 재산권법에 의해 보호됩니다. 허가 없이 콘텐츠를 복사, 배포 또는 수정할 수 없습니다."
+    },
+    "section4": {
+      "title": "4. 제3자 링크",
+      "content": "본 플랫폼에는 제3자 웹사이트로의 링크가 포함될 수 있습니다. 당사는 이러한 외부 웹사이트의 콘텐츠, 개인정보 보호정책 또는 관행에 대해 책임을 지지 않습니다. 제3자 웹사이트에 대한 액세스는 귀하의 책임 하에 이루어집니다."
+    },
+    "section5": {
+      "title": "5. 면책 조항",
+      "content": "본 플랫폼은 '있는 그대로' 서비스를 제공하며 명시적이거나 묵시적인 보증을 제공하지 않습니다. 당사는 본 플랫폼 사용으로 인한 직접적, 간접적, 우발적 또는 결과적 손해에 대해 책임을 지지 않습니다."
+    },
+    "section6": {
+      "title": "6. 약관 변경",
+      "content": "당사는 언제든지 이 서비스 약관을 수정할 권리를 보유합니다. 중요한 변경 사항은 웹사이트 공지 또는 이메일을 통해 사용자에게 알려집니다. 본 플랫폼을 계속 사용하는 것은 수정된 약관에 대한 동의를 나타냅니다."
+    },
+    "section7": {
+      "title": "7. 준거법",
+      "content": "본 서비스 약관은 중화인민공화국 법률에 따릅니다. 본 약관으로 인해 발생하는 분쟁은 우호적인 협상을 통해 해결되어야 하며, 협상이 실패할 경우 관할권이 있는 법원에 제출되어야 합니다."
+    },
+    "contact": {
+      "title": "8. 문의하기",
+      "description": "본 서비스 약관에 대해 질문이 있으시면 다음 방법으로 문의해 주세요:",
+      "email": "xuanfeng.tech.x@gmail.com"
+    },
+    "disclaimer": "이 페이지는 일반적인 예시 텍스트입니다. 구체적인 내용은 실제 비즈니스, 관할 구역 및 법률 고문의 조언에 따라 완성해야 합니다."
+  },
+  "login": {
+    "title": "로그인",
+    "description": "로그인 방법을 선택하여 AI Tool Navigation을 계속 사용하세요",
+    "googleLogin": "Google 계정으로 로그인",
+    "errors": {
+      "signinFailed": "로그인 실패, 이메일과 비밀번호를 확인해주세요",
+      "googleSigninFailed": "Google 로그인 실패, 다시 시도해주세요"
+    }
+  },
+  "dataanalysis": {
+    "overview": {
+      "totalProducts": "총 제품 수",
+      "totalVisits": "총 방문 수",
+      "avgGrowthRate": "평균 성장률",
+      "totalCategories": "카테고리 총 수"
+    },
+    "categoryAnalysis": {
+      "title": "카테고리 분석",
+      "sortByGrowth": "성장률로 정렬",
+      "sortByTraffic": "트래픽으로 정렬",
+      "growthRate": "성장률",
+      "traffic": "트래픽",
+      "productCount": "제품 수",
+      "totalTraffic": "총 트래픽",
+      "viewDetails": "세부 정보 보기"
+    },
+    "opportunityMatrix": {
+      "title": "기회 발견",
+      "subtitle": "소규모 고성장 블루오션 시장",
+      "analyzedCategories": "{count}개 카테고리 분석",
+      "score": "점수",
+      "productCount": "제품 수",
+      "growthRate": "성장률",
+      "highGrowthProducts": "고성장 제품",
+      "noOpportunities": "아직 기회 시장을 찾지 못했습니다",
+      "currentFilters": "현재 필터 조건",
+      "filter1": "제품 수 ≤ 100",
+      "filter2": "평균 성장률 ≥ 5%",
+      "hint": "힌트: 모든 카테고리가 대규모이거나 성장률이 낮을 수 있습니다"
+    },
+    "productDetails": {
+      "visitWebsite": "웹사이트 방문",
+      "goBack": "뒤로 가기",
+      "close": "닫기",
+      "monthlyVisits": "월간 방문 수",
+      "growthRate": "성장률",
+      "visitDuration": "방문 시간",
+      "bounceRate": "이탈률",
+      "productDescription": "제품 설명",
+      "visitTrend": "방문 트렌드",
+      "geographicDistribution": "지리적 분포",
+      "similarProducts": "유사 제품",
+      "similarProductsSubtitle": "카테고리, 트래픽 및 성장률로 매칭",
+      "visits": "방문 수"
+    },
+    "categoryDetails": {
+      "title": "카테고리 세부 정보",
+      "productCount": "제품 수",
+      "avgGrowthRate": "평균 성장률",
+      "avgDuration": "평균 시간",
+      "goBack": "뒤로 가기",
+      "close": "닫기",
+      "growingProductsTags": "🚀 성장 중인 제품 - 관련 태그",
+      "decliningProductsTags": "📉 쇠퇴 중인 제품 - 관련 태그",
+      "top3RelatedCategories": "Top3 관련 카테고리 ({category} 제외)",
+      "positiveGrowthTagsDesc": "성장률이 양수인 제품에서 흔히 볼 수 있는 다른 태그",
+      "negativeGrowthTagsDesc": "성장률이 음수인 제품에서 흔히 볼 수 있는 다른 태그",
+      "positiveGrowthTagsHint": "이러한 태그는 성장 중인 제품에서 \"{category}\"와 함께 자주 나타나며, 잠재적인 시장 기회 및 관련 트랙을 나타낼 수 있습니다.",
+      "negativeGrowthTagsHint": "이러한 태그는 쇠퇴 중인 제품에서 \"{category}\"와 함께 자주 나타나며, 이러한 조합의 시장 위험에 대해 주의해야 할 수 있습니다.",
+      "inGrowingProducts": "{count}개의 성장 중인 제품 중 {tagCount}개가 이 태그를 가지고 있습니다",
+      "inDecliningProducts": "{count}개의 쇠퇴 중인 제품 중 {tagCount}개가 이 태그를 가지고 있습니다",
+      "noGrowingProducts": "성장 중인 제품 또는 관련 태그가 없습니다",
+      "noDecliningProducts": "쇠퇴 중인 제품 또는 관련 태그가 없습니다",
+      "allProducts": "카테고리의 모든 제품",
+      "totalProducts": "총 {count}개 제품",
+      "productName": "제품명",
+      "monthlyVisits": "월간 방문 수",
+      "avgGrowthRate": "평균 성장률",
+      "visitDuration": "방문 시간",
+      "bounceRate": "이탈률"
+    },
+    "dataDiagnostics": {
+      "title": "데이터 진단",
+      "subtitle": "현재 데이터 분포 이해",
+      "expand": "확장",
+      "collapse": "접기",
+      "totalCategories": "총 카테고리 수",
+      "highGrowthCategories": "고성장 카테고리",
+      "growthRateGreaterThan10": "성장률 ≥ 10%",
+      "smallCategories": "소규모 카테고리",
+      "productCountLessThan50": "제품 수 ≤ 50",
+      "opportunityCategories": "기회 카테고리",
+      "smallAndHighGrowth": "소규모+고성장",
+      "categorySizeDistribution": "카테고리 규모 분포",
+      "small": "소형 (≤50)",
+      "medium": "중형 (51-100)",
+      "large": "대형 (>100)",
+      "growthRateDistribution": "성장률 분포",
+      "highGrowth": "고성장 (≥10%)",
+      "mediumGrowth": "중성장 (5-10%)",
+      "lowGrowth": "저성장 (0-5%)",
+      "negativeGrowth": "부정 성장 (<0%)",
+      "top5Potential": "Top 5 잠재 카테고리 (규모≤100)",
+      "productCount": "제품 수",
+      "diagnosticSuggestions": "💡 진단 제안",
+      "noOpportunities": "현재 \"소규모\"(≤50)와 \"고성장\"(≥10%) 조건을 모두 만족하는 카테고리가 없습니다",
+      "noHighGrowth": "모든 카테고리의 평균 성장률이 10% 미만입니다. 중성장 카테고리에 집중하는 것이 좋습니다",
+      "noSmallCategories": "모든 카테고리의 제품 수가 50개를 초과합니다. 시장이 상대적으로 성숙합니다",
+      "topOpportunitiesHint": "규모≤100인 Top 5 잠재 카테고리가 위에 나열되어 있습니다. 집중할 가치가 있습니다"
+    },
+    "dataFilter": {
+      "title": "데이터 품질 필터",
+      "subtitle": "저트래픽 제품을 필터링하여 성장률의 허위 증가를 방지",
+      "filteredCount": "{count}개 제품 필터링 ({percentage}%)",
+      "whyFilter": "왜 필터링이 필요합니까?",
+      "reason1": "저트래픽 제품은 성장률이 허위로 높아지기 쉽습니다 (예: 100에서 200으로 100% 성장)",
+      "reason2": "0 방문 제품은 데이터 수집 이상일 수 있습니다",
+      "reason3": "필터링된 분석 결과가 더 현실적이고 참고 가치가 있습니다",
+      "quickSelect": "빠른 선택",
+      "noFilter": "필터 없음",
+      "noFilterDesc": "모든 데이터 포함",
+      "filterVeryLow": "매우 저트래픽 필터링",
+      "filterVeryLowDesc": "<500 방문",
+      "filterLow": "저트래픽 필터링",
+      "filterLowDesc": "<1000 방문",
+      "filterMediumLow": "중저트래픽 필터링",
+      "filterMediumLowDesc": "<5K 방문",
+      "filterHighOnly": "고트래픽만",
+      "filterHighOnlyDesc": "<10K 방문",
+      "customThreshold": "사용자 정의 임계값",
+      "noFilterLabel": "필터 없음",
+      "visits": "방문",
+      "filterEffect": "필터 효과",
+      "originalProducts": "원본 제품 수",
+      "filtered": "필터링됨",
+      "analyzing": "분석 중",
+      "filteredPercentage": "저품질 데이터의 {percentage}% 필터링",
+      "suggestion": "💡 제안:",
+      "suggestion1": "최소 500의 임계값을 설정하여 매우 저트래픽 제품을 필터링하는 것이 좋습니다",
+      "suggestion2": "현재 설정으로 대부분의 이상 데이터를 필터링할 수 있습니다",
+      "suggestion3": "현재 설정은 일반적인 분석 시나리오에 적합합니다",
+      "suggestion4": "현재 설정은 상위 제품에 집중하는 시나리오에 적합합니다"
+    },
+    "tagCombinationAnalysis": {
+      "title": "태그 조합 분석",
+      "subtitle": "공통 태그를 가진 애플리케이션 그룹 발견 · 총 {count}개 조합",
+      "top10Combinations": "Top 10 태그 조합",
+      "popularCombinations": "인기 태그 조합",
+      "productCount": "제품 수",
+      "totalTraffic": "총 트래픽",
+      "growthRate": "성장률",
+      "viewDetails": "세부 정보 보기",
+      "combinationDetail": "태그 조합 세부 정보",
+      "goBack": "뒤로 가기",
+      "close": "닫기",
+      "whySoManyProducts": "📊 제품 수가 왜 이렇게 많습니까?",
+      "combinationExplanation": "이 조합에는 {count}개 제품이 포함되어 있습니다. 이러한 제품들이 모두 선택된 태그를 모두 포함하고 있기 때문입니다.",
+      "productTagDistribution": "제품 태그 분포:",
+      "avgTagCount": "제품은 평균 {count}개 태그를 가지고 있습니다",
+      "minMaxTagCount": "최소 {min}개 태그, 최대 {max}개 태그",
+      "atLeastTags": "이러한 제품들은 모두 조합에서 최소 {count}개 태그를 포함하고 있습니다",
+      "commonTagsHint": "💡 힌트: 제품 수가 비정상적으로 많은 경우, 이러한 태그가 매우 일반적이고 많은 제품에 이러한 태그가 부착되어 있을 수 있습니다.",
+      "avgGrowthRate": "평균 성장률",
+      "avgVisits": "평균 방문 수",
+      "trafficTrend": "트래픽 트렌드",
+      "totalTrafficLabel": "총 트래픽",
+      "avgTrafficLabel": "평균 트래픽",
+      "includedProducts": "포함된 제품 ({count})",
+      "bounceRate": "이탈률"
+    },
+    "footer": {
+      "dataSource": "데이터 소스: Moge.ai · 업데이트: {time}",
+      "filterEnabled": "🔍 필터 활성화: 최소 방문 수 {minVisits} · {filtered}/{total}개 제품 분석"
+    }
+  },
+  "footer": {
+    "brand": "AI 도구 내비게이션",
+    "description": "AI 도구를 발견, 비교 및 조합할 수 있는 내비게이션 플랫폼",
+    "product": {
+      "title": "인기 제품",
+      "features": "기능 특성",
+      "pricing": "가격",
+      "testimonials": "사용자 평가",
+      "faq": "자주 묻는 질문"
+    },
+    "company": {
+      "title": "회사",
+      "about": "회사 소개",
+      "contact": "문의하기"
+    },
+    "legal": {
+      "title": "법률",
+      "privacy": "개인정보 보호정책",
+      "service": "서비스 약관"
+    }
+  }
+}
+
+
+

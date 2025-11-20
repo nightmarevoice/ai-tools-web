@@ -1,0 +1,591 @@
+{
+  "common": {
+    "language": {
+      "en": "English",
+      "zh": "Chinese",
+      "zh-TW": "Chinese (Taiwan)",
+      "ja": "Japanese",
+      "ko": "Korean"
+    },
+    "chooseLanguage": "Choose language",
+    "visitWebsite": "Visit website",
+    "loading": "Loading...",
+    "loadedAll": "All loaded",
+    "loadMore": "Pull to load more",
+    "searchResults": "Search results",
+    "monthlyVisits": "Monthly visits",
+    "new": "New",
+    "trending": "Trending",
+    "nav": {
+      "home": "Home",
+      "categories": "Categories",
+      "intelligentTools": "Intelligent tools",
+      "dataanalysis": "Website Statistics",
+      "profile": "Profile",
+      "dashboard": "Dashboard",
+      "logIn": "Log in",
+      "logOut": "Log out"
+    }
+  },
+  "loginPrompt": {
+    "title": "Rate Limit Exceeded",
+    "description": "Your request rate has exceeded the limit. Please log in to continue using the service.",
+    "hint": "After logging in, you will get higher rate limits and more features.",
+    "login": "Log In Now",
+    "cancel": "Cancel"
+  },
+  "home": {
+    "metadata": {
+      "title": "AI Research Assistant | Discover, Summarize and Analyze Research Papers",
+      "description": "AI-powered research assistant to help you easily discover, summarize and analyze research papers",
+      "ogAlt": "AI Research Assistant"
+    },
+    "hero": {
+      "title": "All scenarios you need can find corresponding AI tools here",
+      "subtitle": "Dedicated to building an AI tool search engine to help you quickly find the AI tools you need"
+    },
+    "searchBar": {
+      "placeholder": "Find your AI tool",
+      "searchPlaceholder": "Search anything",
+      "mode": "Mode:",
+      "chatMode": "Chat Mode",
+      "agentMode": "Agent Mode",
+      "popularSearches": "Popular Searches",
+      "popularKeywords": {
+        "travelPlanning": "Travel Planning",
+        "interiorDesign": "Interior Design",
+        "podcastProduction": "Podcast Production",
+        "imageGeneration": "Image Generation",
+        "languageTranslation": "Language Translation"
+      }
+    },
+    "whyChooseUs": {
+      "title": "Why Choose Us?",
+      "description": "We carefully select and organize the best AI tools in the market to help you quickly find the most suitable solutions"
+    },
+    "semanticSearch": {
+      "title": "Semantic Description → Matching AI Tools",
+      "description": "Enter a semantic description (e.g., \"Analyze financial reports and visualize\"). The system understands your intent and returns a list of AI tools for that scenario.",
+      "imageCaption": "Image: Unsplash (illustration)",
+      "imageAlt": "Semantic matching concept illustration",
+      "matchedTools": "Matched Tools (Example)",
+      "tool1": {
+        "name": "OpenAI Text Analysis",
+        "description": "Natural Language Processing · Entity Extraction · Topic Clustering"
+      },
+      "tool2": {
+        "name": "LangChain Agent",
+        "description": "Data Processing Chain · Tool Orchestration"
+      },
+      "tool3": {
+        "name": "Plotly",
+        "description": "Interactive Visualization · Dashboard"
+      },
+      "tool4": {
+        "name": "Pandas",
+        "description": "Data Cleaning · Feature Engineering"
+      },
+      "tags": {
+        "nlp": "Natural Language Processing",
+        "analysis": "Analysis",
+        "orchestration": "Orchestration",
+        "pipeline": "Pipeline",
+        "visualization": "Visualization",
+        "charts": "Charts",
+        "data": "Data",
+        "processing": "Processing"
+      },
+      "exampleNote": "This is a static example; actual results will dynamically match based on your semantic query."
+    },
+    "testimonials": {
+      "title": "User Reviews",
+      "description": "Feedback on our AI tool navigation—scenario-driven, tag-based exploration with clear alternatives and side-by-side comparison views to help you choose the right tool faster.",
+      "items": [
+        {
+          "quote": "Describe requirements in natural language, and get production-ready AI tool chains, saving a lot of screening time.",
+          "author": "Chen Ruoxi",
+          "role": "Data Analyst · Internet"
+        },
+        {
+          "quote": "Clear tags and scenario navigation; alternatives and comparisons are practical, helping us make decisions quickly.",
+          "author": "Wang Lei",
+          "role": "Product Manager · Startup"
+        },
+        {
+          "quote": "It connects the paper workflow—from search, summary to visualization—all at once; efficiency significantly improved.",
+          "author": "Liu Shasha",
+          "role": "Graduate Student · Computer Science"
+        },
+        {
+          "quote": "I like the tool orchestration approach: copy the complete pipeline as a starting point, then optimize.",
+          "author": "Zhao Yali",
+          "role": "Backend Engineer"
+        },
+        {
+          "quote": "Favorites and comparison views work great in team reviews; key differences can be seen on one page.",
+          "author": "Moli",
+          "role": "Design Lead"
+        },
+        {
+          "quote": "Search results include not only tools but also workflow templates—perfect for beginners.",
+          "author": "Hank",
+          "role": "Data Science Intern"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Feedback on our AI tool navigation—scenario-driven,",
+      "description": "tag-based exploration with clear alternatives and side-by-side comparison views to help you choose the right tool faster."
+    },
+    "aiToolsTabs": {
+      "title": "Featured AI Tools",
+      "subtitle": "Quickly discover high-quality AI tools through trending, recently added, and editor's picks.",
+      "description": "Quickly discover high-quality AI tools through trending, recently added, and editor's picks.",
+      "tabs": {
+        "trending": "🔥 Trending",
+        "recent": "⭐ Recently Added",
+        "featured": "✨ Editor's Picks"
+      },
+      "error": "Failed to load trending rankings",
+      "empty": "No tool data available",
+      "monthlyVisits": "Monthly visits",
+      "trendingRank": "#{rank} Trending",
+      "categories": {
+        "aiAssistant": "🤖 AI Assistant",
+        "aiVideo": "🎬 AI Video",
+        "aiWriting": "✍️ AI Writing",
+        "audioVoice": "🎵 Audio & Voice",
+        "dataAnalytics": "📊 Data Analysis"
+      },
+      "pricing": {
+        "free": "Free",
+        "freemium": "Freemium",
+        "paid": "Paid"
+      },
+      "tools": {
+        "claude": {
+          "name": "Claude 3.5",
+          "description": "Latest generation AI assistant with enhanced performance"
+        },
+        "runway": {
+          "name": "Runway",
+          "description": "AI video generation and editing platform"
+        },
+        "jasper": {
+          "name": "Jasper",
+          "description": "Enterprise-grade AI copywriting tool"
+        },
+        "synthesia": {
+          "name": "Synthesia",
+          "description": "Create AI videos without a camera"
+        },
+        "perplexity": {
+          "name": "Perplexity",
+          "description": "Tool combining search with AI chat"
+        },
+        "copyai": {
+          "name": "Copy.ai",
+          "description": "Quickly generate AI marketing copy"
+        },
+        "murf": {
+          "name": "Murf.ai",
+          "description": "AI voice generation and text-to-speech"
+        },
+        "beautiful": {
+          "name": "Beautiful.ai",
+          "description": "Automatically create professional presentations"
+        }
+      }
+    },
+    "categoryExploration": {
+      "title": "Browse by Category",
+      "subtitle": "{count} categories",
+      "viewAll": "View All",
+      "loading": "Loading category statistics...",
+      "error": "Failed to load category statistics",
+      "empty": "No category statistics available",
+      "toolCount": "{count} tools",
+      "visits": "{count} visits",
+      "tools": "tools",
+      "timesVisited": "visits"
+    }
+  },
+  "categories": {
+    "loadingPage": "Loading categories page...",
+    "loadingCategories": "Loading categories...",
+    "categoriesFailed": "Failed to load categories: {error}",
+    "chooseOnLeft": "Please choose a category on the left",
+    "hotTools": "Popular tools",
+    "hotToolsOfCategory": "{name} · Popular tools",
+    "search": {
+      "tipWithQuery": "Tools about \"{query}\" (showing up to {limit})",
+      "tip": "Matched tools (showing up to {limit})"
+    },
+    "defaultLoadedCount": "Showing tools in this category. Loaded {loaded}{total, select, 0 {} other { / {total}}}",
+    "searchBox": {
+      "title": "Most Complete and Latest AI Tools Collection",
+      "subtitle": "Enter keywords to quickly filter the tools you need"
+    },
+    "loadMore": "Load more",
+    "loadingMore": "Loading...",
+    "loadAppsFailed": "Failed to load tool list",
+    "loadMoreFailed": "Failed to load more",
+    "searchFailed": "Search failed, please try again later"
+  },
+  "tool": {
+    "breadcrumb": {
+      "categories": "Categories",
+      "detail": "Tool detail"
+    },
+    "loadingDetail": "Loading tool detail...",
+    "failed": "Load failed",
+    "backToCategories": "Back to categories",
+    "backToHome": "Back to Home",
+    "noPreview": "No preview image",
+    "whatIs": "What is {app}?",
+    "alternatives": "Alternatives",
+    "alternativesTo": "Alternative Tools to {app}",
+    "by": "by",
+    "visitWebsite": "Visit Website",
+    "stats": {
+      "monthlyVisits": "Monthly Visits",
+      "avgDuration": "Avg. Duration",
+      "categoryRank": "Category Rank",
+      "bounceRate": "Bounce Rate"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "alternatives": "Alternatives"
+    },
+    "mainFeatures": "Main Features",
+    "similar": {
+      "loading": "Loading similar tools...",
+      "none": "No related tools",
+      "noAlternatives": "No alternative tools found yet. Check back later!"
+    },
+    "similarity": "Similarity: {percent}%",
+    "match": "{percent}% match",
+    "preview": {
+      "aria": "Open official preview"
+    },
+    "metadata": {
+      "notFound": "Tool Not Found"
+    }
+  },
+  "dashboard": {
+    "searchFailed": "Search failed, please try again later."
+  },
+  "recommendedTools": {
+    "title": "🔥 Recommended Tools",
+    "tools": {
+      "chatgpt": "Powerful AI chat assistant that can help with various tasks",
+      "dalle3": "Generate high-quality AI images from text prompts",
+      "githubCopilot": "AI coding assistant that makes coding faster and smarter",
+      "midjourney": "Professional-grade AI art generation tool",
+      "claudeCode": "Next-generation AI assistant with enhanced performance"
+    }
+  },
+  "paperResults": {
+    "emptyPrompt": "Enter keywords to start searching for AI tools. For example:",
+    "emptyExample": "\"AI tools that can generate images\"",
+    "noResults": "No related AI tools found.",
+    "searching": "Searching...",
+    "foundResults": "Found {count} related tools",
+    "findTools": "Find suitable AI tools",
+    "aiSummary": "AI Summary"
+  },
+  "privacy": {
+    "metadata": {
+      "title": "Privacy Policy | AI Tool Navigation",
+      "description": "Learn how we collect, use, and protect your personal information"
+    },
+    "title": "Privacy Policy",
+    "effectiveDate": "Effective Date: {date}",
+    "intro": "We value your privacy and are committed to protecting your personal information. This policy explains how we collect, use, and protect information when you use our website.",
+    "section1": {
+      "title": "1. Information We Collect",
+      "item1": "Content you provide on the site (such as search terms)",
+      "item2": "Site usage data (e.g., browser, language preferences, page visits, etc.)",
+      "item3": "Anonymous identifiers that may be generated for analysis and abuse prevention"
+    },
+    "section2": {
+      "title": "2. How We Use Information",
+      "item1": "Provide and improve site functionality and search results",
+      "item2": "Conduct security and performance monitoring",
+      "item3": "Perform statistical analysis with consent or within legal permissions"
+    },
+    "section3": {
+      "title": "3. Cookies and Local Storage",
+      "content": "We may use cookies and local storage to save language preferences, session information, and anonymous identifiers. You can manage or disable cookies in your browser, but some features may be limited."
+    },
+    "section4": {
+      "title": "4. Data Sharing",
+      "content": "We do not sell your personal information. We only share necessary information with trusted third-party service providers when required to provide services, fulfill legal obligations, or with your consent."
+    },
+    "section5": {
+      "title": "5. Data Security and Retention",
+      "content": "We take reasonable measures to protect data security and retain data for the period necessary to achieve collection purposes, unless a longer retention period is required by law."
+    },
+    "section6": {
+      "title": "6. Your Rights",
+      "content": "Under applicable law, you may have rights to access, correct, delete, or restrict the processing of your personal information. Please contact us through the contact information below to communicate your requests."
+    },
+    "contact": {
+      "title": "7. Contact Us",
+      "description": "If you have any questions or suggestions about this policy or our privacy practices, please contact us via email:",
+      "email": "xuanfeng.tech.x@gmail.com"
+    },
+    "disclaimer": "This page is a general example text. Specific details should be refined according to your actual business, jurisdiction, and legal advisor recommendations."
+  },
+  "service": {
+    "metadata": {
+      "title": "Terms of Service | AI Tool Navigation",
+      "description": "Read our terms of service to understand the rules and conditions for using this platform"
+    },
+    "title": "Terms of Service",
+    "lastUpdated": "Last Updated: {date}",
+    "intro": "Welcome to our AI Tool Navigation platform. By using this website, you agree to comply with the following terms of service. Please read these terms carefully.",
+    "section1": {
+      "title": "1. Service Description",
+      "content": "This platform provides discovery, comparison, and recommendation services for AI tools. We strive to provide users with accurate and timely AI tool information, but do not guarantee the completeness or accuracy of the information."
+    },
+    "section2": {
+      "title": "2. User Responsibilities",
+      "content": "When using this platform, you agree to:",
+      "item1": "Provide truthful and accurate information",
+      "item2": "Not engage in any illegal or unauthorized activities",
+      "item3": "Not interfere with or disrupt the normal operation of the platform",
+      "item4": "Respect the intellectual property and privacy rights of others"
+    },
+    "section3": {
+      "title": "3. Intellectual Property",
+      "content": "All content on this platform, including but not limited to:",
+      "item1": "Website design, layout, and graphics",
+      "item2": "Text, images, and multimedia content",
+      "item3": "Software code and functionality",
+      "item4": "Trademarks, logos, and brand elements",
+      "footer": "are protected by intellectual property law. Without permission, no content may be copied, distributed, or modified."
+    },
+    "section4": {
+      "title": "4. Third-Party Links",
+      "content": "This platform may contain links to third-party websites. We are not responsible for the content, privacy policies, or practices of these external websites. You access third-party websites at your own risk."
+    },
+    "section5": {
+      "title": "5. Disclaimer",
+      "content": "This platform provides services on an 'as is' basis, without any express or implied warranties. We are not liable for any direct, indirect, incidental, or consequential damages resulting from the use of this platform."
+    },
+    "section6": {
+      "title": "6. Terms Changes",
+      "content": "We reserve the right to modify these terms of service at any time. Significant changes will be notified to users through website announcements or email. Continued use of this platform indicates your acceptance of the modified terms."
+    },
+    "section7": {
+      "title": "7. Applicable Law",
+      "content": "These terms of service are governed by the laws of the People's Republic of China. Any disputes arising from these terms should be resolved through amicable negotiation, and if negotiation fails, should be submitted to a court with jurisdiction for adjudication."
+    },
+    "contact": {
+      "title": "8. Contact Us",
+      "description": "If you have any questions about these terms of service, please contact us:",
+      "email": "xuanfeng.tech.x@gmail.com"
+    },
+    "disclaimer": "This page is a general example text. Specific details should be refined according to your actual business, jurisdiction, and legal advisor recommendations."
+  },
+  "login": {
+    "title": "Log In",
+    "description": "Choose a login method to continue using AI Tool Navigation",
+    "googleLogin": "Sign in with Google",
+    "errors": {
+      "signinFailed": "Sign in failed, please check your email and password",
+      "googleSigninFailed": "Google sign in failed, please try again"
+    }
+  },
+  "footer": {
+    "brand": "AI Tool Navigation",
+    "description": "Navigation platform for discovering, comparing, and composing AI tools",
+    "product": {
+      "title": "Curated Products",
+      "features": "Curated Products",
+      "pricing": "Pricing",
+      "testimonials": "Testimonials",
+      "faq": "FAQ"
+    },
+    "company": {
+      "title": "Company",
+      "about": "About",
+      "contact": "Contact"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy",
+      "service": "Terms of Service"
+    }
+  },
+  "dataanalysis": {
+    "overview": {
+      "totalProducts": "Total Products",
+      "totalVisits": "Total Visits",
+      "avgGrowthRate": "Average Growth Rate",
+      "totalCategories": "Total Categories"
+    },
+    "categoryAnalysis": {
+      "title": "Category Analysis",
+      "sortByGrowth": "Sorted by Growth Rate",
+      "sortByTraffic": "Sorted by Traffic",
+      "growthRate": "Growth Rate",
+      "traffic": "Traffic",
+      "productCount": "Product Count",
+      "totalTraffic": "Total Traffic",
+      "viewDetails": "View Details"
+    },
+    "opportunityMatrix": {
+      "title": "Opportunity Discovery",
+      "subtitle": "Small-scale high-growth blue ocean markets",
+      "analyzedCategories": "Analyzed {count} categories",
+      "score": "Score",
+      "productCount": "Product Count",
+      "growthRate": "Growth Rate",
+      "highGrowthProducts": "High Growth Products",
+      "noOpportunities": "No opportunity markets found yet",
+      "currentFilters": "Current filter conditions",
+      "filter1": "Product count ≤ 100",
+      "filter2": "Average growth rate ≥ 5%",
+      "hint": "Hint: All categories may be large-scale or have low growth rates"
+    },
+    "productDetails": {
+      "visitWebsite": "Visit Website",
+      "goBack": "Go Back",
+      "close": "Close",
+      "monthlyVisits": "Monthly Visits",
+      "growthRate": "Growth Rate",
+      "visitDuration": "Visit Duration",
+      "bounceRate": "Bounce Rate",
+      "productDescription": "Product Description",
+      "visitTrend": "Visit Trend",
+      "geographicDistribution": "Geographic Distribution",
+      "similarProducts": "Similar Products",
+      "similarProductsSubtitle": "Matched by category, traffic, and growth rate",
+      "visits": "Visits"
+    },
+    "categoryDetails": {
+      "title": "Category Details",
+      "productCount": "Product Count",
+      "avgGrowthRate": "Average Growth Rate",
+      "avgDuration": "Average Duration",
+      "goBack": "Go Back",
+      "close": "Close",
+      "growingProductsTags": "🚀 Growing Products - Related Tags",
+      "decliningProductsTags": "📉 Declining Products - Related Tags",
+      "top3RelatedCategories": "Top 3 Related Categories (excluding {category})",
+      "positiveGrowthTagsDesc": "Other tags commonly found on products with positive growth rates",
+      "negativeGrowthTagsDesc": "Other tags commonly found on products with negative growth rates",
+      "positiveGrowthTagsHint": "These tags often appear together with \"{category}\" on growing products, potentially representing market opportunities and related tracks.",
+      "negativeGrowthTagsHint": "These tags often appear together with \"{category}\" on declining products, and may require caution about market risks of these combinations.",
+      "inGrowingProducts": "Among {count} growing products, {tagCount} have this tag",
+      "inDecliningProducts": "Among {count} declining products, {tagCount} have this tag",
+      "noGrowingProducts": "No growing products or related tags",
+      "noDecliningProducts": "No declining products or related tags",
+      "allProducts": "All Products in Category",
+      "totalProducts": "Total {count} products",
+      "productName": "Product Name",
+      "monthlyVisits": "Monthly Visits",
+      "avgGrowthRate": "Average Growth Rate",
+      "visitDuration": "Visit Duration",
+      "bounceRate": "Bounce Rate"
+    },
+    "dataDiagnostics": {
+      "title": "Data Diagnostics",
+      "subtitle": "Understand current data distribution",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "totalCategories": "Total Categories",
+      "highGrowthCategories": "High Growth Categories",
+      "growthRateGreaterThan10": "Growth rate ≥ 10%",
+      "smallCategories": "Small Categories",
+      "productCountLessThan50": "Product count ≤ 50",
+      "opportunityCategories": "Opportunity Categories",
+      "smallAndHighGrowth": "Small-scale + High Growth",
+      "categorySizeDistribution": "Category Size Distribution",
+      "small": "Small (≤50)",
+      "medium": "Medium (51-100)",
+      "large": "Large (>100)",
+      "growthRateDistribution": "Growth Rate Distribution",
+      "highGrowth": "High Growth (≥10%)",
+      "mediumGrowth": "Medium Growth (5-10%)",
+      "lowGrowth": "Low Growth (0-5%)",
+      "negativeGrowth": "Negative Growth (<0%)",
+      "top5Potential": "Top 5 Potential Categories (Size ≤100)",
+      "productCount": "Product Count",
+      "diagnosticSuggestions": "💡 Diagnostic Suggestions",
+      "noOpportunities": "Currently no categories meet both \"small-scale\" (≤50) and \"high-growth\" (≥10%) criteria",
+      "noHighGrowth": "All categories have average growth rates below 10%, suggest focusing on medium-growth categories",
+      "noSmallCategories": "All categories have more than 50 products, market is relatively mature",
+      "topOpportunitiesHint": "Top 5 potential categories with size ≤100 are listed above, worth focusing on"
+    },
+    "dataFilter": {
+      "title": "Data Quality Filter",
+      "subtitle": "Filter low-traffic products to avoid inflated growth rates",
+      "filteredCount": "Filtered {count} products ({percentage}%)",
+      "whyFilter": "Why filter?",
+      "reason1": "Low-traffic products tend to have inflated growth rates (e.g., 100% growth from 100 to 200)",
+      "reason2": "Products with 0 visits may be data collection anomalies",
+      "reason3": "Filtered analysis results are more realistic and valuable",
+      "quickSelect": "Quick Select",
+      "noFilter": "No Filter",
+      "noFilterDesc": "Include all data",
+      "filterVeryLow": "Filter Very Low Traffic",
+      "filterVeryLowDesc": "<500 visits",
+      "filterLow": "Filter Low Traffic",
+      "filterLowDesc": "<1000 visits",
+      "filterMediumLow": "Filter Medium-Low Traffic",
+      "filterMediumLowDesc": "<5K visits",
+      "filterHighOnly": "High Traffic Only",
+      "filterHighOnlyDesc": "<10K visits",
+      "customThreshold": "Custom Threshold",
+      "noFilterLabel": "No Filter",
+      "visits": "visits",
+      "filterEffect": "Filter Effect",
+      "originalProducts": "Original Products",
+      "filtered": "Filtered",
+      "analyzing": "Analyzing",
+      "filteredPercentage": "Filtered {percentage}% of low-quality data",
+      "suggestion": "💡 Suggestion:",
+      "suggestion1": "Recommend setting at least 500 threshold to filter out very low-traffic products",
+      "suggestion2": "Current setting can filter most abnormal data",
+      "suggestion3": "Current setting is suitable for general analysis scenarios",
+      "suggestion4": "Current setting is suitable for focusing on top products"
+    },
+    "tagCombinationAnalysis": {
+      "title": "Tag Combination Analysis",
+      "subtitle": "Discover application groups with common tags · {count} combinations total",
+      "top10Combinations": "Top 10 Tag Combinations",
+      "popularCombinations": "Popular Tag Combinations",
+      "productCount": "Product Count",
+      "totalTraffic": "Total Traffic",
+      "growthRate": "Growth Rate",
+      "viewDetails": "View Details",
+      "combinationDetail": "Tag Combination Details",
+      "goBack": "Go Back",
+      "close": "Close",
+      "whySoManyProducts": "📊 Why so many products?",
+      "combinationExplanation": "This combination contains {count} products because these products all contain all selected tags.",
+      "productTagDistribution": "Product Tag Distribution:",
+      "avgTagCount": "Products have an average of {count} tags",
+      "minMaxTagCount": "Minimum {min} tags, maximum {max} tags",
+      "atLeastTags": "All these products contain at least {count} tags from the combination",
+      "commonTagsHint": "💡 Hint: If the product count is unusually high, it may be because these tags are very common and many products have been tagged with them.",
+      "avgGrowthRate": "Average Growth Rate",
+      "avgVisits": "Average Visits",
+      "trafficTrend": "Traffic Trend",
+      "totalTrafficLabel": "Total Traffic",
+      "avgTrafficLabel": "Average Traffic",
+      "includedProducts": "Included Products ({count})",
+      "bounceRate": "Bounce Rate"
+    },
+    "footer": {
+      "dataSource": "Data Source: Moge.ai · Updated: {time}",
+      "filterEnabled": "🔍 Filter Enabled: Min visits {minVisits} · Analyzing {filtered}/{total} products"
+    }
+  }
+}
+
+
+
