@@ -80,6 +80,26 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
       generateUniqueKey()
     }
   }, [])
+
+  // 同步 localStorage 中的 preferredLanguage 到 cookie
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const preferredLanguage = window.localStorage.getItem("preferredLanguage")
+      if (preferredLanguage && locales.includes(preferredLanguage as any)) {
+        // 检查 cookie 是否已存在且与 localStorage 一致
+        const cookieLocale = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("NEXT_LOCALE="))
+          ?.split("=")[1]
+        
+        // 如果 cookie 不存在或与 localStorage 不一致，则更新 cookie
+        if (cookieLocale !== preferredLanguage) {
+          document.cookie = `NEXT_LOCALE=${preferredLanguage}; path=/; max-age=31536000; SameSite=Lax`
+        }
+      }
+    }
+  }, [])
+
   const languageLabelMap: Record<string, string> = {
     en: tCommon("language.en"),
     zh: tCommon("language.zh"),
@@ -103,8 +123,11 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
     }
     
     // 更新 localStorage 中的 preferredLanguage
+    // 同时设置 cookie，以便 next-intl middleware 能够读取
     if (typeof window !== "undefined") {
       window.localStorage.setItem("preferredLanguage", nextLocale)
+      // 设置 cookie，next-intl 会读取这个 cookie
+      document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`
     }
     
     // 从当前 pathname 中提取路径部分（去掉 locale 前缀）
@@ -153,27 +176,27 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  // 路由已移除 locale 前缀，直接使用绝对路径
+  // 路由需要包含 locale 前缀，以保持语言一致性
   const routes = [
     {
-      href: "/",
+      href: `/${locale}`,
       label: tCommon("nav.home"),
-      active: pathname === "/" || pathname === "",
+      active: pathname === `/${locale}` || pathname === "/" || pathname === "",
     },
     {
-      href: "/categories",
+      href: `/${locale}/categories`,
       label: tCommon("nav.categories"),
-      active: pathname.startsWith("/categories"),
+      active: pathname.startsWith(`/${locale}/categories`) || pathname.startsWith("/categories"),
     },
     {
-      href: "/dashboard",
+      href: `/${locale}/dashboard`,
       label: tCommon("nav.intelligentTools"),
-      active: pathname === "/dashboard",
+      active: pathname === `/${locale}/dashboard` || pathname === "/dashboard",
     },
     {
-      href: "/dataanalysis",
+      href: `/${locale}/dataanalysis`,
       label: tCommon("nav.dataanalysis"),
-      active: pathname.startsWith("/dataanalysis"),
+      active: pathname.startsWith(`/${locale}/dataanalysis`) || pathname.startsWith("/dataanalysis"),
     },
   ]
 
@@ -201,7 +224,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
       )}
       <div style={{ width: "80rem" }} className="relative z-10 mx-auto flex h-16 max-w-7xl items-center justify-between px-8">
         <Link
-          href="/"
+          href={`/${locale}`}
           className={cn(
             "mr-6 flex items-center space-x-2 transition-colors",
             "text-[#0057FF] hover:text-primary",
@@ -321,14 +344,14 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" className="flex items-center cursor-pointer">
+                  <Link href={`/${locale}/profile`} className="flex items-center cursor-pointer">
                     <UserIcon className="mr-2 h-4 w-4" />
                     <span>{tCommon("nav.profile")}</span>
                   </Link>
                 </DropdownMenuItem>
                 {user.role === 'admin' && (
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="flex items-center cursor-pointer">
+                    <Link href={`/${locale}/dashboard`} className="flex items-center cursor-pointer">
                       <span>{tCommon("nav.dashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
@@ -353,7 +376,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
                   "bg-[#0057FF]/80 text-white transition-colors  hover:bg-[#0057FF] hover:text-white cursor-pointer",
                 )}
               >
-                <Link href="/login">{tCommon("nav.logIn")}</Link>
+                <Link href={`/${locale}/login`}>{tCommon("nav.logIn")}</Link>
               </Button>
              
             </div>

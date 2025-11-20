@@ -23,7 +23,7 @@ export class ApiClient {
   private defaultLanguage: string = 'en'
 
   constructor(config: ApiClientConfig = {}) {
-    this.baseURL = config.baseURL || 'http://localhost:8000'
+    this.baseURL = config.baseURL || 'http://69.5.14.25:8005'
     this.accessToken = config.accessToken || null
     this.apiKey = config.apiKey || null
     this.apiSecret = config.apiSecret || null
