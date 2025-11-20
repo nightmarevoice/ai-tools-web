@@ -28,12 +28,28 @@ echo -e "${GREEN}[INFO]${NC} 开始部署..."
 cd "$PROJECT_DIR"
 echo -e "${GREEN}[INFO]${NC} 工作目录: $(pwd)"
 
+# 检查环境变量文件
+echo -e "${GREEN}[INFO]${NC} 检查环境变量配置..."
+if [ -f ".env.production" ]; then
+    echo "  ✓ 找到 .env.production"
+    grep "NEXT_PUBLIC_API_BASE_URL" .env.production || echo "  ⚠️  未找到 API_BASE_URL 配置"
+else
+    echo -e "${YELLOW}[WARN]${NC} 未找到 .env.production"
+fi
+
 echo -e "${GREEN}[INFO]${NC} 安装依赖..."
 npm install --silent
 
-echo -e "${GREEN}[INFO]${NC} 构建项目..."
+echo -e "${GREEN}[INFO]${NC} 构建项目 (生产环境)..."
 [ -d ".next" ] && rm -rf .next
-npm run build
+
+# 🔥 关键修复：显式指定 NODE_ENV=production
+NODE_ENV=production npm run build
+
+if [ ! -d ".next" ]; then
+    echo -e "${RED}[ERROR]${NC} 构建失败，.next 目录不存在"
+    exit 1
+fi
 
 PM2_CMD=$(find_pm2)
 echo -e "${GREEN}[INFO]${NC} PM2 路径: $PM2_CMD"
@@ -53,7 +69,9 @@ PID=$(lsof -ti:$PORT 2>/dev/null || echo "")
 }
 
 echo -e "${GREEN}[INFO]${NC} 启动服务 (端口 $PORT)..."
-export PORT=$PORT NODE_ENV=production
+# 🔥 关键修复：确保运行时也使用 production 环境
+export PORT=$PORT
+export NODE_ENV=production
 $PM2_CMD start npm --name "$PM2_APP_NAME" -- start -- -p $PORT
 $PM2_CMD save
 
@@ -62,7 +80,17 @@ echo -e "${GREEN}[INFO]${NC} ============================================"
 echo -e "${GREEN}[INFO]${NC} 部署完成！"
 echo -e "${GREEN}[INFO]${NC} ============================================"
 echo ""
+
+# 验证构建配置
+echo "📋 部署信息："
+echo "  - 项目目录: $PROJECT_DIR"
+echo "  - 服务端口: $PORT"
+echo "  - Node环境: production"
+echo "  - 构建时间: $(stat -c '%y' .next | cut -d'.' -f1)"
+echo ""
+
 $PM2_CMD status
+
 echo ""
 echo "常用命令:"
 echo "  - 查看状态: $PM2_CMD status"
@@ -70,4 +98,7 @@ echo "  - 查看日志: $PM2_CMD logs $PM2_APP_NAME"
 echo "  - 重启服务: $PM2_CMD restart $PM2_APP_NAME"
 echo ""
 echo "访问地址: http://$(hostname -I | awk '{print $1}'):$PORT"
+echo ""
+echo -e "${GREEN}[INFO]${NC} 验证环境变量注入..."
+echo "  API Base URL: $(grep 'NEXT_PUBLIC_API_BASE_URL' .env.production | cut -d'=' -f2)"
 echo ""
