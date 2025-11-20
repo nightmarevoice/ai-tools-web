@@ -22,7 +22,7 @@ PORT=6506
 APP_NAME="ai-tools-web"
 PM2_APP_NAME="ai-tools-web"
 
-# 日志函数
+# 日志函数（需要在参数解析前定义）
 log_info() {
     echo -e "${GREEN}[INFO]${NC} $1"
 }
@@ -34,6 +34,33 @@ log_warn() {
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
+
+# 测试模式标志
+TEST_MODE=false
+
+# 解析命令行参数
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -t|--test)
+            TEST_MODE=true
+            shift
+            ;;
+        -h|--help)
+            echo "用法: $0 [选项]"
+            echo ""
+            echo "选项:"
+            echo "  -t, --test    测试模式：只检查环境，不执行部署"
+            echo "  -h, --help    显示帮助信息"
+            echo ""
+            exit 0
+            ;;
+        *)
+            log_error "未知参数: $1"
+            echo "使用 -h 或 --help 查看帮助"
+            exit 1
+            ;;
+    esac
+done
 
 # 检查是否为 root 用户
 check_root() {
@@ -127,6 +154,13 @@ check_env() {
         log_info "创建 .env.local 文件示例："
         echo "  cp .env.example .env.local  # 如果有示例文件"
         echo "  或手动创建 .env.local 文件"
+        
+        # 测试模式下不询问，直接返回
+        if [ "$TEST_MODE" = true ]; then
+            log_warn "测试模式：跳过交互式确认"
+            return 0
+        fi
+        
         read -p "是否继续部署？(y/n) " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -258,24 +292,43 @@ show_info() {
 
 # 主函数
 main() {
-    log_info "============================================"
-    log_info "开始部署 AI Tools Web 项目"
-    log_info "============================================"
-    echo ""
-    
-    check_root
-    check_node
-    check_pm2
-    check_project_dir
-    install_dependencies
-    check_env
-    build_project
-    stop_old_process
-    start_service
-    check_service
-    show_info
-    
-    log_info "部署脚本执行完成！"
+    if [ "$TEST_MODE" = true ]; then
+        log_info "============================================"
+        log_info "测试模式：检查部署环境"
+        log_info "============================================"
+        echo ""
+        
+        check_root
+        check_node
+        check_pm2
+        check_project_dir
+        check_env
+        
+        log_info "============================================"
+        log_info "环境检查完成！"
+        log_info "============================================"
+        log_info "所有检查项通过，可以执行部署"
+        log_info "运行 './deploy.sh' 开始部署"
+    else
+        log_info "============================================"
+        log_info "开始部署 AI Tools Web 项目"
+        log_info "============================================"
+        echo ""
+        
+        check_root
+        check_node
+        check_pm2
+        check_project_dir
+        install_dependencies
+        check_env
+        build_project
+        stop_old_process
+        start_service
+        check_service
+        show_info
+        
+        log_info "部署脚本执行完成！"
+    fi
 }
 
 # 执行主函数
