@@ -144,7 +144,7 @@ export class ApiClient {
   }
 
   /**
-   * 发送GET请求
+   * 发送GET请求（带超时处理）
    */
   async get<T>(
     endpoint: string,
@@ -152,16 +152,45 @@ export class ApiClient {
     headers?: Record<string, string>
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}${this.buildQueryParams(params)}`
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: this.buildHeaders(headers),
-    })
+    
+    try {
+      // 创建带超时的 fetch 请求（30秒超时）
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 30000)
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: this.buildHeaders(headers),
+        signal: controller.signal,
+      })
+      
+      clearTimeout(timeoutId)
 
-    if (!response.ok) {
-      await this.handleError(response)
+      if (!response.ok) {
+        await this.handleError(response)
+      }
+
+      return response.json()
+    } catch (error) {
+      // 处理超时或网络错误
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          throw new ApiError(
+            '请求超时，请稍后重试',
+            408,
+            { detail: 'Request timeout after 30 seconds' }
+          )
+        }
+        if (error.message.includes('fetch')) {
+          throw new ApiError(
+            `无法连接到服务器: ${this.baseURL}`,
+            0,
+            { detail: error.message }
+          )
+        }
+      }
+      throw error
     }
-
-    return response.json()
   }
 
   /**

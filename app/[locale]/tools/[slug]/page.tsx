@@ -55,6 +55,8 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
       },
     }
   } catch (error) {
+    // 记录错误但不抛出，避免 500 错误
+    console.error(`[generateMetadata] Failed to fetch app ${slug}:`, error)
     return {
       title: t("notFound"),
     }
@@ -75,7 +77,24 @@ export default async function ToolPage({ params }: ToolPageProps) {
   try {
     app = await appsApi.get(appId, locale)
   } catch (error) {
-    console.error(`Failed to fetch app ${appId}:`, error)
+    // 详细记录错误信息，便于排查
+    console.error(`[ToolPage] Failed to fetch app ${appId} (locale: ${locale}):`, error)
+    
+    // 如果是网络错误或 API 错误，记录更多信息
+    if (error instanceof Error) {
+      console.error(`[ToolPage] Error message: ${error.message}`)
+      if ('status' in error) {
+        console.error(`[ToolPage] API status: ${(error as any).status}`)
+      }
+    }
+    
+    // 返回 404 而不是 500
+    notFound()
+  }
+  
+  // 验证 app 数据是否有效
+  if (!app || !app.app_name) {
+    console.error(`[ToolPage] Invalid app data for ID ${appId}`)
     notFound()
   }
 
@@ -99,7 +118,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
     const similarResponse = await appsApi.getSimilar(appId, { lang: locale, limit: 6 })
     similarApps = similarResponse.items || []
   } catch (error) {
-    console.error(`Failed to fetch similar apps for ${appId}:`, error)
+    // 相似应用获取失败不影响主页面显示，只记录错误
+    console.error(`[ToolPage] Failed to fetch similar apps for ${appId}:`, error)
+    // 确保 similarApps 是空数组，避免渲染错误
+    similarApps = []
   }
 
   return (

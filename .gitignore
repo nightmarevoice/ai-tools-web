@@ -25,3 +25,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+PORT_8000_ISSUE_ANALYSIS.md
+500_ERROR_DIAGNOSIS.md
