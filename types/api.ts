@@ -291,6 +291,7 @@ export type TopAppsMetric = 'visits' | 'duration' | 'rating'
 export interface TopApp {
   id: number
   app_name: string
+  icon_url: string
   monthly_visits: number
   avg_duration_seconds: number
   rating: number
