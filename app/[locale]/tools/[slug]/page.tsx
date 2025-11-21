@@ -23,9 +23,11 @@ export async function generateStaticParams(): Promise<Array<{ slug: string; loca
   return []
 }
 
-// 启用动态路由，允许动态参数
-export const dynamic = 'force-dynamic'
+// 允许动态参数，确保所有动态路由都能正常访问
 export const dynamicParams = true
+
+// 强制动态渲染，确保每次请求都重新生成页面
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: ToolPageProps): Promise<Metadata> {
   const { slug, locale } = await params
