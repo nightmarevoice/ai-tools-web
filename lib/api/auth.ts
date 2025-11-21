@@ -91,6 +91,12 @@ export const authApi = {
     const callbackPath = locale ? `/${locale}/auth/callback` : '/auth/callback'
     const redirectTo = `${window.location.origin}${callbackPath}`
 
+    // 调试信息：在开发环境输出回调 URL
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[OAuth] 回调 URL:', redirectTo)
+      console.log('[OAuth] 当前域名:', window.location.origin)
+    }
+
     try {
       const supabase = createClient()
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -101,11 +107,41 @@ export const authApi = {
       })
 
       if (error) {
-        throw new Error(`Google OAuth 失败: ${error.message}`)
+        // 提供更详细的错误信息
+        const errorMessage = error.message || '未知错误'
+        console.error('[OAuth] Supabase 错误:', error)
+        console.error('[OAuth] 尝试使用的回调 URL:', redirectTo)
+        
+        // 如果错误提示回调 URL 不被允许，提供明确的修复建议
+        if (errorMessage.includes('redirect') || errorMessage.includes('callback')) {
+          throw new Error(
+            `OAuth 回调 URL 配置错误。\n\n` +
+            `当前使用的回调 URL: ${redirectTo}\n\n` +
+            `请确保在 Supabase Dashboard 中配置了此 URL：\n` +
+            `1. 访问 https://app.supabase.com\n` +
+            `2. 选择你的项目\n` +
+            `3. 进入 Authentication > URL Configuration\n` +
+            `4. 在 "Redirect URLs" 中添加: ${redirectTo}\n\n` +
+            `详细说明请查看: OAUTH_REDIRECT_FIX.md`
+          )
+        }
+        
+        throw new Error(`Google OAuth 失败: ${errorMessage}`)
       }
 
       if (!data.url) {
         throw new Error('未获取到 OAuth URL')
+      }
+
+      // 调试信息：检查返回的 URL 是否包含 localhost（可能是配置问题）
+      if (data.url.includes('localhost') && !window.location.origin.includes('localhost')) {
+        console.warn(
+          '[OAuth] ⚠️ 警告: 返回的 OAuth URL 包含 localhost，但当前域名不是 localhost。\n' +
+          `当前域名: ${window.location.origin}\n` +
+          `OAuth URL: ${data.url}\n` +
+          `这通常表示 Supabase 或 Google OAuth 配置中缺少生产环境的回调 URL。\n` +
+          `请查看 OAUTH_REDIRECT_FIX.md 了解如何修复。`
+        )
       }
 
       return { url: data.url }
@@ -113,7 +149,7 @@ export const authApi = {
       // 如果是环境变量配置错误，提供更清晰的提示
       if (error instanceof Error && error.message.includes('required')) {
         throw new Error(
-          `Supabase 环境变量未配置。请检查 .env.local 文件中的 NEXT_PUBLIC_SUPABASE_URL 和 NEXT_PUBLIC_SUPABASE_ANON_KEY。\n\n` +
+          `Supabase 环境变量未配置。请检查环境变量中的 NEXT_PUBLIC_SUPABASE_URL 和 NEXT_PUBLIC_SUPABASE_ANON_KEY。\n\n` +
             `详细配置说明请查看: ENV_SETUP.md`
         )
       }
