@@ -273,7 +273,7 @@ export class ApiError extends Error {
  * 创建默认API客户端实例
  */
 export const apiClient = new ApiClient({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8005',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://69.5.14.25:8005',
 })
 
 // 在客户端环境中，从 localStorage 读取 token 并设置

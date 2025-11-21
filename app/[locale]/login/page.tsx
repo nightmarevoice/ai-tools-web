@@ -52,6 +52,7 @@ export default function LoginPage() {
 
     try {
       const { url } = await authApi.signInWithGoogle(locale)
+      debugger;
       // 重定向到 Google OAuth 页面
       window.location.href = url
     } catch (err) {
