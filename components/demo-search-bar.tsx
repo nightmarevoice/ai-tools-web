@@ -125,8 +125,7 @@ export function DemoSearchBar() {
                         {quotaStatus.need_login
                           ? tQuota("warning.anonymousDescription", {
                               limit: quotaStatus.limit,
-                              current: quotaStatus.current_count,
-                              authLimit: 50
+                              current: quotaStatus.current_count
                             })
                           : tQuota("warning.authenticatedDescription", {
                               current: quotaStatus.current_count,

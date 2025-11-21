@@ -36,13 +36,13 @@
     "warning": {
       "anonymousTitle": "검색 횟수가 소진되었습니다",
       "authenticatedTitle": "오늘의 검색 한도에 도달했습니다",
-      "anonymousDescription": "익명 사용자는 하루에 {limit}번의 검색으로 제한됩니다. {current}번 사용했습니다. 로그인하면 더 많은 검색 횟수({authLimit}회/일)를 이용할 수 있습니다.",
+      "anonymousDescription": "익명 사용자는 하루에 {limit}번의 검색으로 제한됩니다. {current}번 사용했습니다. 로그인하면 더 많은 쿼리와 향상된 Agent 기능을 이용할 수 있습니다.",
       "authenticatedDescription": "오늘 {current}/{limit}번의 검색을 사용했습니다. 내일 다시 시도하세요.",
       "loginButton": "지금 로그인"
     },
     "info": {
       "remainingHint": "💡 팁: {remaining}번의 검색이 남아 있습니다",
-      "loginSuffix": ". 로그인하면 더 많은 검색을 이용할 수 있습니다."
+      "loginSuffix": ". 로그인하면 더 많은 쿼리와 향상된 Agent 기능을 이용할 수 있습니다."
     }
   },
   "home": {
