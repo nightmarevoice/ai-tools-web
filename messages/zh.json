@@ -49,16 +49,17 @@
   },
   "home": {
     "metadata": {
-      "title": "AI 研究助手 | 发现、总结和分析研究论文",
-      "description": "AI 驱动的研究助手，帮助您轻松发现、总结和分析研究论文",
-      "ogAlt": "AI 研究助手"
+      "title": "AI 检索助手 | 快速发现,匹配最合适的AI工具",
+      "description": "AI 检索助手 根据场景帮助您快速制定AI工具使用方案",
+      "ogAlt": "AI 检索助手"
     },
     "hero": {
       "title": "所有你需要的场景,在这里都能找到对应的AI工具",
       "subtitle": "致力于打造一个AI工具的搜索引擎,帮助你快速找到你需要的AI工具"
     },
     "searchBar": {
-      "placeholder": "找到你的 AI 工具",
+      "placeholder": "帮我找到适合生成漫画书的工具",
+      "agentPlaceholder": "我要做一个影视剧的剪辑，请给我制定一个方案",
       "searchPlaceholder": "搜索任何内容",
       "mode": "模式:",
       "chatMode": "Chat 模式",
@@ -286,7 +287,8 @@
     }
   },
   "dashboard": {
-    "searchFailed": "搜索失败，请稍后重试。"
+    "searchFailed": "搜索失败，请稍后重试。",
+    "placeholder": "策划一场社交媒体营销活动"
   },
   "recommendedTools": {
     "title": "🔥 推荐工具",

@@ -5,13 +5,15 @@ import { useEffect } from "react"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import {Search} from "lucide-react"
+import {Search,ArrowRight} from "lucide-react"
+import { useTranslations } from "next-intl"
 interface DashboardSearchProps {
   onSearch: (query: string) => void
   initialQuery?: string
 }
 
 export function DashboardSearch({ onSearch, initialQuery }: DashboardSearchProps) {
+  const t = useTranslations("dashboard")
   const [query, setQuery] = useState('')
   const [isSearching, setIsSearching] = useState(false)
 
@@ -35,31 +37,35 @@ export function DashboardSearch({ onSearch, initialQuery }: DashboardSearchProps
   }
 
   return (
-    <form onSubmit={handleSubmit} className="relative">
-      <div className="relative">
-      <input
+    <form onSubmit={handleSubmit} className="relative group">
+      <div className="relative transition-all duration-300 transform group-hover:-translate-y-0.5 group-hover:shadow-lg rounded-xl shadow-md bg-white">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+          <Search className="h-5 w-5 text-primary/60" />
+        </div>
+        <input
           type="text"
-          placeholder=""
-          className="h-11 file:text-foreground hover:border-[#0057FF] placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm flex items-center justify-start text-2xl aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+          className="w-full h-14 pl-12 border hover:border-[#0057FF] focus:border-[#0057FF] pr-12 rounded-xl border-0.5 bg-transparent text-base placeholder:text-muted-foreground  focus:outline-none"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           disabled={isSearching}
+          placeholder={t("placeholder")}
         />
         <button
           type="submit"
           aria-label="Search"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-          disabled={!query.trim() || isSearching}
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors disabled:opacity-50"
+          disabled={query.trim() === "" || isSearching}
+          style={{color:query.trim() ? "#0057FF" : ""}}
+          
         >
           {isSearching ? (
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
           ) : (
-            <Search className="h-5 w-5 text-[#c5c5c5] cursor-pointer" />
+            <ArrowRight className="h-5 w-5" />
           )}
         </button>
-
-        
       </div>
     </form>
+    
   )
 }

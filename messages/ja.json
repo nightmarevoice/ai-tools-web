@@ -47,16 +47,17 @@
   },
   "home": {
     "metadata": {
-      "title": "AI リサーチアシスタント | 研究論文の発見、要約、分析",
-      "description": "研究論文を簡単に発見、要約、分析できる AI 駆動のリサーチアシスタント",
-      "ogAlt": "AI リサーチアシスタント"
+      "title": "AI ツール検索 | 最適な AI ツールを素早く発見・マッチング",
+      "description": "AI ツール検索は、シナリオに基づいて AI ツールの使用計画を迅速に作成するのに役立ちます",
+      "ogAlt": "AI ツール検索"
     },
     "hero": {
       "title": "必要なすべてのシナリオに対応する AI ツールがここで見つかります",
       "subtitle": "AI ツールの検索エンジンを構築し、必要な AI ツールをすばやく見つけるお手伝いをします"
     },
     "searchBar": {
-      "placeholder": "AI ツールを見つける",
+      "placeholder": "漫画本を生成するのに適したツールを見つけてください",
+      "agentPlaceholder": "テレビドラマの編集をしたいので、計画を立ててください",
       "searchPlaceholder": "何でも検索",
       "mode": "モード:",
       "chatMode": "Chat モード",
@@ -295,7 +296,8 @@
     }
   },
   "dashboard": {
-    "searchFailed": "検索に失敗しました。後でもう一度お試しください。"
+    "searchFailed": "検索に失敗しました。後でもう一度お試しください。",
+    "placeholder": "ソーシャルメディアマーケティングキャンペーンを企画する"
   },
   "recommendedTools": {
     "title": "🔥 おすすめツール",

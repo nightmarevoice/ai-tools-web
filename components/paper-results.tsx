@@ -52,14 +52,6 @@ export function PaperResults({ results, loading, error, query }: PaperResultsPro
       )
     }
 
-    if (error) {
-      return (
-        <Card>
-          <CardContent className="py-6 text-sm text-destructive">{error}</CardContent>
-        </Card>
-      )
-    }
-
     if (searchResults.length === 0) {
       return (
         <Card>

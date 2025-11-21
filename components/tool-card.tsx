@@ -104,15 +104,15 @@ export function ToolCard({ tool }: { tool: Tool }) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        {tool.category && <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-2">
             <span className="px-3 py-1 text-xs font-medium bg-blue-100/70 text-blue-600 rounded-full border border-blue-200/60">
               {tool.category}
             </span>
             
           </div>
-         
         </div>
+}
       </div>
     </Link>
   )

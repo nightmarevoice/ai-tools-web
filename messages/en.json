@@ -49,16 +49,17 @@
   },
   "home": {
     "metadata": {
-      "title": "AI Research Assistant | Discover, Summarize and Analyze Research Papers",
-      "description": "AI-powered research assistant to help you easily discover, summarize and analyze research papers",
-      "ogAlt": "AI Research Assistant"
+      "title": "AI Tool Search | Quickly Discover and Match the Most Suitable AI Tools",
+      "description": "AI Tool Search helps you quickly create AI tool usage plans based on scenarios",
+      "ogAlt": "AI Tool Search"
     },
     "hero": {
       "title": "All scenarios you need can find corresponding AI tools here",
       "subtitle": "Dedicated to building an AI tool search engine to help you quickly find the AI tools you need"
     },
     "searchBar": {
-      "placeholder": "Find your AI tool",
+      "placeholder": "Help me find tools suitable for generating comic books",
+      "agentPlaceholder": "I want to edit a TV series, please create a plan for me",
       "searchPlaceholder": "Search anything",
       "mode": "Mode:",
       "chatMode": "Chat Mode",
@@ -286,7 +287,8 @@
     }
   },
   "dashboard": {
-    "searchFailed": "Search failed, please try again later."
+    "searchFailed": "Search failed, please try again later.",
+    "placeholder": "Plan a social media marketing campaign"
   },
   "recommendedTools": {
     "title": "🔥 Recommended Tools",

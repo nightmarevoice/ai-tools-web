@@ -2,7 +2,8 @@ import {getRequestConfig} from 'next-intl/server'
 
 export const locales = ['zh','en', 'ja', 'ko'] as const
 export type AppLocale = (typeof locales)[number]
-export const defaultLocale: AppLocale = 'zh'
+// 默认语言改为英语，如果浏览器语言不支持，则使用英语
+export const defaultLocale: AppLocale = 'en'
 
 // next-intl 全局配置文件，供服务端 getMessages / 中间件等使用
 export default getRequestConfig(async ({requestLocale}: {requestLocale: Promise<string>}) => {

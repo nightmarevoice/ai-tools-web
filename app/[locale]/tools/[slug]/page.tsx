@@ -23,6 +23,10 @@ export async function generateStaticParams(): Promise<Array<{ slug: string; loca
   return []
 }
 
+// 启用动态路由，允许动态参数
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
+
 export async function generateMetadata({ params }: ToolPageProps): Promise<Metadata> {
   const { slug, locale } = await params
   const t = await getTranslations("tool.metadata")

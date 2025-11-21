@@ -12,8 +12,8 @@ export function Footer() {
 
   return (
     <footer className="border-t bg-background">
-      <div className="w-full px-4 py-4 md:px-6 md:py-10">
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+      <div className="w-full px-4 py-4 md:px-6 md:py-10 max-w-7xl  mx-auto">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Logo />
@@ -26,25 +26,25 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 
-                <Link href="/tools/845" className="text-muted-foreground hover:text-foreground">
+                <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
                   
                   Canva
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <a href="https://readdy.ai/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
                   Readdy
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <a href="https://www.lovart.ai/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
                   Lovart
-                </Link>
+                </a>
               </li>
              
             </ul>
           </div>
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="text-sm font-medium">{t("company.title")}</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -71,7 +71,7 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium">{t("legal.title")}</h3>
             <ul className="space-y-2 text-sm">

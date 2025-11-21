@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Search, ArrowRight } from "lucide-react"
+import {Search,ArrowRight} from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { searchApi } from "@/lib/api/search"
@@ -87,7 +87,7 @@ function CategoriesPageContent() {
   const [inputValue, setInputValue] = useState<string>("")
   const [loadingCategories, setLoadingCategories] = useState<boolean>(false)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
-  const [searchType, setSearchType] = useState<string>("category")
+  const [searchType ,setSearchType] = useState<string>("category")
   const searchParams = useSearchParams()
   const typeParam = searchParams?.get("type") ?? undefined
   const navRef = useRef<HTMLDivElement | null>(null)
@@ -122,6 +122,10 @@ function CategoriesPageContent() {
   const [searching, setSearching] = useState<boolean>(false)
   const [searchError, setSearchError] = useState<string | null>(null)
   const [searchResults, setSearchResults] = useState<Application[]>([])
+  const [searchPage, setSearchPage] = useState<number>(1)
+  const [searchTotal, setSearchTotal] = useState<number>(0)
+  const [searchLoadingMore, setSearchLoadingMore] = useState<boolean>(false)
+  const containerRef = useRef<HTMLDivElement | null>(null)
   // 远程拉取分类数据
   useEffect(() => {
     let aborted = false
@@ -144,6 +148,10 @@ function CategoriesPageContent() {
       aborted = true
     }
   }, [resolvedLang, t])
+
+  
+
+  
 
   const handleNavClick = useCallback((e: React.MouseEvent, key: string) => {
     e.preventDefault()
@@ -264,17 +272,23 @@ function CategoriesPageContent() {
       aborted = true
     }
   }, [activeCategoryId, appsLoadingMore, appsPage, appsPages, apps, resolvedLang, appsTotal, t])
-  const performSearch = async (term: string) => {
+  const performSearch = useCallback(async (term: string, page: number = 1, append: boolean = false) => {
     const trimmed = term.trim()
     setQuery(trimmed)
     if (!trimmed) {
       setSearchResults([])
       setSearching(false)
       setSearchError(null)
+      setSearchPage(1)
+      setSearchTotal(0)
       return
     }
     let aborted = false
-    setSearching(true)
+    if (page === 1) {
+      setSearching(true)
+    } else {
+      setSearchLoadingMore(true)
+    }
     setSearchError(null)
     try {
       const preferredLang = (() => {
@@ -286,10 +300,12 @@ function CategoriesPageContent() {
           return resolvedLang as Language | undefined
         }
       })()
+      // 计算 top_k：第一页使用默认值，后续页面增加
+      const topK = page === 1 ? DEFAULT_APP_LIMIT : DEFAULT_APP_LIMIT * page
       const response = await searchApi.query({
         user_query: trimmed,
         enable_llm_summary: false,
-        top_k: DEFAULT_APP_LIMIT,
+        top_k: topK,
         lang: preferredLang,
       })
       if (aborted) return
@@ -330,21 +346,63 @@ function CategoriesPageContent() {
         is_deleted: app.is_deleted,
         language: app.language,
       }))
-      setSearchResults(appsFromApi)
+      
+      // 处理结果：如果是追加模式，只添加新结果
+      if (append) {
+        // 使用函数式更新，避免依赖 searchResults
+        setSearchResults(prev => {
+          if (prev.length === 0) {
+            return appsFromApi
+          }
+          // 找出新结果（不在现有结果中的）
+          const existingIds = new Set(prev.map(app => app.id))
+          const newApps = appsFromApi.filter(app => !existingIds.has(app.id))
+          
+          if (newApps.length > 0) {
+            return [...prev, ...newApps]
+          }
+          // 如果没有新结果，说明已经加载完所有结果，返回原结果
+          return prev
+        })
+      } else {
+        setSearchResults(appsFromApi)
+      }
+      
+      // 更新总数和页数
+      const total = (response as SemanticSearchResponse)?.total ?? appsFromApi.length
+      setSearchTotal(total)
+      setSearchPage(page)
       setSearchType("search")
     } catch (e: any) {
       if (aborted) return
-      setSearchResults([])
-
+      if (page === 1) {
+        setSearchResults([])
+      }
       setSearchError(e?.message ?? t("searchFailed"))
     } finally {
       setSearchType("search")
-      if (!aborted) setSearching(false)
+      if (page === 1) {
+        if (!aborted) setSearching(false)
+      } else {
+        if (!aborted) setSearchLoadingMore(false)
+      }
     }
-  }
-  const handleSubmit = async (e: React.FormEvent) => {
+  }, [resolvedLang, t])
+  
+  const loadMoreSearchResults = useCallback(async () => {
+    if (!query.trim()) return
+    if (searchLoadingMore) return
+    // 如果当前结果数已经达到或超过总数，不再加载
+    if (searchTotal > 0 && searchResults.length >= searchTotal) return
+    
+    const nextPage = searchPage + 1
+    await performSearch(query, nextPage, true)
+  }, [query, searchLoadingMore, searchPage, searchResults.length, searchTotal, performSearch])
+  const handleSubmit = async(e: React.FormEvent) => {  
     e.preventDefault()
-    await performSearch(inputValue)
+    setSearchPage(1)
+    setSearchResults([])
+    await performSearch(inputValue, 1, false)
   }
   const formatNumber = (value?: number) => {
     if (typeof value !== "number" || Number.isNaN(value)) return "—"
@@ -356,106 +414,77 @@ function CategoriesPageContent() {
     const trimmed = inputValue.trim()
     setQuery(trimmed)
   }, [inputValue])
-
+  
   // 支持通过 URL 参数 q 触发搜索并回填输入框
   useEffect(() => {
     const qParam = (searchParams?.get("q") ?? "").trim()
     if (qParam) {
       setInputValue(qParam)
+      setSearchPage(1)
+      setSearchResults([])
       // 异步执行以确保状态更新后再搜索
-      Promise.resolve().then(() => performSearch(qParam))
+      Promise.resolve().then(() => performSearch(qParam, 1, false))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
-
+  
+  // 滚动到底部自动加载更多
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return
+      
+      const container = containerRef.current
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      
+      // 当滚动到距离底部 200px 时触发加载
+      const threshold = 200
+      const isNearBottom = scrollTop + windowHeight >= documentHeight - threshold
+      
+      if (isNearBottom) {
+        if (searchType === "search") {
+          // 搜索模式：加载更多搜索结果
+          // 如果 searchTotal > 0，则检查是否还有更多结果
+          // 如果 searchTotal === 0，则尝试加载（可能是首次加载或 API 未返回总数）
+          const hasMore = searchTotal === 0 || searchResults.length < searchTotal
+          if (!searchLoadingMore && !searching && searchResults.length > 0 && hasMore) {
+            loadMoreSearchResults()
+          }
+        } else {
+          // 分类模式：加载更多应用
+          if (!appsLoadingMore && !appsLoading && appsPage < appsPages && apps.length > 0) {
+            loadMoreApps()
+          }
+        }
+      }
+    }
+    
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [searchType, searchLoadingMore, searchResults.length, searchTotal, appsLoadingMore, appsPage, appsPages, apps.length, loadMoreSearchResults, loadMoreApps])
+  
   return (
     <div
+      ref={containerRef}
       className="flex min-h-screen flex-col"
-      style={
-        {
-          // Scope theme to this page (values as HSL triplets for Tailwind)
-          ["--primary" as any]: "217 100% 54%",
-          ["--primary-foreground" as any]: "0 0% 100%",
-          ["--ring" as any]: "217 100% 54%",
-          ["--sidebar-primary" as any]: "217 100% 54%",
-          ["--sidebar-primary-foreground" as any]: "0 0% 100%",
-        } as React.CSSProperties
-      }
+      
     >
-      <Navbar transparentAtTop={true} />
+      <Navbar />
+      <main className="flex-1">
+        
 
-      {/* Hero Section with Search */}
-      <section
-        className="relative overflow-hidden pt-24 pb-12 md:pt-32 md:pb-16 text-slate-900 z-10"
-      >
-        {/* Background Layers */}
-        <div className="pointer-events-none absolute h-full inset-0 z-0">
-          <div className="absolute inset-0 bg-white" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsla(var(--primary)_/_0.35),transparent_55%),radial-gradient(circle_at_top_right,hsla(var(--primary)_/_0.22),transparent_60%)] opacity-90" />
-          <div className="absolute inset-0 opacity-35 bg-[linear-gradient(120deg,hsla(var(--primary)_/_0.18)_0%,rgba(255,255,255,0)_65%)]" />
-          <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,hsla(var(--primary)_/_0.14)_1px,transparent_1px),linear-gradient(to_bottom,hsla(var(--primary)_/_0.14)_1px,transparent_1px)] bg-[size:120px_120px]" />
-          <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-white via-white/85 to-transparent" />
-        </div>
-
-        <div className="relative w-full px-4 md:px-10 z-10">
-          <div className="flex flex-col justify-center items-center space-y-8 text-center">
-            <div className="space-y-4 max-w-2xl">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                {t("searchBox.title")}
-              </h1>
-              <p className="text-base text-slate-600 md:text-lg">
-                {t("searchBox.subtitle")}
-              </p>
-            </div>
-
-            <div className="w-full max-w-2xl">
-              <form onSubmit={handleSubmit} className="relative group">
-                <div className="relative transition-all duration-300 transform group-hover:-translate-y-0.5 group-hover:shadow-lg rounded-xl shadow-md bg-white">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                    <Search className="h-5 w-5 text-primary/60" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder={t("searchBox.placeholder") || "Search AI tools..."}
-                    className="w-full h-14 pl-12 pr-12 rounded-xl border-0 bg-transparent text-base placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    disabled={searching}
-                  />
-                  <button
-                    type="submit"
-                    aria-label="Search"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors disabled:opacity-50"
-                    disabled={searching}
-                  >
-                    {searching ? (
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    ) : (
-                      <ArrowRight className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </form>
-
-              {loadingCategories ? (
-                <div className="mt-3 text-xs text-muted-foreground text-center animate-pulse">{t("loadingCategories")}</div>
-              ) : categoriesError ? (
-                <div className="mt-3 text-xs text-red-500 text-center">{categoriesError}</div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <main className="flex-1 bg-white">
-        <section className="relative py-8 text-slate-900">
-          <div className="relative z-10 mx-auto px-4 max-w-7xl">
-            <div className="grid gap-8 md:grid-cols-[240px_1fr] lg:grid-cols-[260px_1fr]">
-              <aside className="hidden md:block sticky top-24 h-[calc(100vh-6rem)]">
+        <section className="relative py-8 md:py-12 text-slate-900 ">
+         
+          <div className="relative z-10 mx-auto px-3 max-w-7xl">
+            <div className=" grid gap-8 md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr]">
+              <aside className="sticky top-20 h-max">
                 <nav
                   ref={navRef}
                   id="category-nav"
-                  className="relative space-y-1 overflow-y-auto h-full pr-2 pb-10"
+                  className="relative space-y-2 overflow-y-auto max-h-[calc(100vh-5rem)] pr-1"
                   aria-busy={loadingCategories}
                   aria-live="polite"
                 >
@@ -483,13 +512,13 @@ function CategoriesPageContent() {
                           href="javascript:void(0)"
                           data-category-id={category.id}
                           onClick={(e) => handleNavClick(e, category.id)}
-                          className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 ${isActive
-                              ? "bg-primary text-primary-foreground shadow-md translate-x-1"
-                              : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                            }`}
+                          className={`flex items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors ${
+                            isActive ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-accent"
+                          }`}
                         >
-                          <Icon className={`h-4 w-4 ${isActive ? "text-white" : "text-slate-400"}`} />
+                          <Icon className="h-4 w-4" />
                           <span className="truncate">{category.name}</span>
+                          
                         </a>
                       )
                     })
@@ -505,105 +534,136 @@ function CategoriesPageContent() {
                   }
                 `}</style>
               </aside>
+              <div className="space-y-8">
+                 {/* 查询 */}
+                 <div className="rounded-lg max-w-2xl mx-auto bg-card p-3">
+                   <div className="mb-2 text-center p-6">
+                     <div className="text-lg font-medium">{t("searchBox.title")}</div>
+                     <div className="text-xs text-muted-foreground">{t("searchBox.subtitle")}</div>
+                   </div>
+                   <div className="flex justify-center items-center gap-2">
+                     <div className="relative " style={{width:500}}>
+                     <form onSubmit={handleSubmit} className="relative group">
+                      <div className="relative transition-all duration-300 transform group-hover:-translate-y-0.5 group-hover:shadow-lg rounded-xl shadow-md bg-white">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                          <Search className="h-5 w-5 text-primary/60" />
+                        </div>
+                        <input
+                          type="text"
+                          // placeholder={t("searchBox.placeholder") || "Search AI tools..."}
+                          className="w-full h-14 pl-12 border hover:border-[#0057FF] focus:border-[#0057FF] pr-12 rounded-xl border-0.5 bg-transparent text-base placeholder:text-muted-foreground  focus:outline-none"
+                          value={inputValue}
+                          onChange={(e) => setInputValue(e.target.value)}
+                          disabled={searching}
+                          placeholder={"查找一个制作动画短视频的工具"}
+                        />
+                        <button
+                          type="submit"
+                          aria-label="Search"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors disabled:opacity-50"
+                          disabled={inputValue.trim() === "" || searching}
+                          style={{color:inputValue.trim() ? "#0057FF" : ""}}
+                          
+                        >
+                          {searching ? (
+                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          ) : (
+                            <ArrowRight className="h-5 w-5" />
+                          )}
+                        </button>
+                      </div>
+                    </form>
 
-              <div className="space-y-6 min-w-0">
-                {/* Mobile Category Selector (Visible only on small screens) */}
-                <div className="md:hidden mb-6">
-                  <select
-                    className="w-full p-3 rounded-lg border border-slate-200 bg-white text-slate-700 focus:ring-2 focus:ring-primary/20 outline-none"
-                    value={activeCategoryId || ""}
-                    onChange={(e) => {
-                      const catId = e.target.value;
-                      setActiveCategoryId(catId);
-                    }}
-                  >
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                      
+                     </div>
+                     
+                   </div>
+                   {loadingCategories ? (
+                     <div className="mt-3 text-xs text-muted-foreground text-center">{t("loadingCategories")}</div>
+                   ) : categoriesError ? (
+                     <div className="mt-3 text-xs text-red-500 text-center">{categoriesError}</div>
+                   ) : null}
+                 </div>
 
-                {activeCategory ? (null) : (
-                  <div className="rounded-xl border border-dashed bg-slate-50/50 p-12 text-center">
+                 {activeCategory ? (null) : (
+                  <div className="rounded-xl border bg-card p-8 text-center">
                     <p className="text-muted-foreground">{t("chooseOnLeft")}</p>
                   </div>
-                )}
+                 )}
 
-                <div className="rounded-xl border bg-card p-5 shadow-sm">
-                  <div className="mb-6 flex items-center justify-between gap-3 flex-wrap border-b pb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900">
-                        {searchType === "search"
-                          ? tCommon("searchResults")
-                          : activeCategory
-                            ? t("hotToolsOfCategory", { name: activeCategory.name })
-                            : t("hotTools")}
-                      </h3>
-                      <p className="text-sm text-slate-500 mt-1">
-                        {searchType === "search"
-                          ? (query
-                            ? t("search.tipWithQuery", { query, limit: DEFAULT_APP_LIMIT })
-                            : t("search.tip", { limit: DEFAULT_APP_LIMIT }))
-                          : t("defaultLoadedCount", { loaded: apps.length, total: appsTotal })}
-                      </p>
-                    </div>
-
-                  </div>
-                  {(appsLoading || searching) && (
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className="rounded-lg border p-4">
-                          <div className="flex items-start gap-3">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted animate-pulse" />
-                            <div className="flex-1 space-y-2">
-                              <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
-                              <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
-                            </div>
-                          </div>
-                          <div className="mt-4 flex items-center justify-between text-xs">
-                            <div className="h-3 w-24 bg-muted rounded animate-pulse" />
-                            <div className="h-3 w-16 bg-muted rounded animate-pulse" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                 <div className="rounded-xl border bg-card p-5">
+                   <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
+                     <div>
+                       <h3 className="text-lg font-semibold">
+                         {searchType === "search"
+                           ? tCommon("searchResults")
+                           : activeCategory
+                           ? t("hotToolsOfCategory", { name: activeCategory.name })
+                           : t("hotTools")}
+                       </h3>
+                       <p className="text-sm text-muted-foreground">
+                         {searchType === "search"
+                           ? (query
+                               ? t("search.tipWithQuery", { query, limit: DEFAULT_APP_LIMIT })
+                               : t("search.tip", { limit: DEFAULT_APP_LIMIT }))
+                           : t("defaultLoadedCount", { loaded: apps.length, total: appsTotal })}
+                       </p>
+                     </div>
+                     
+                   </div>
+                 {(appsLoading || searching || (searchType === "search" && searchLoadingMore && searchResults.length > 0)) && (
+                   <div className="grid gap-4 sm:grid-cols-2">
+                     {Array.from({ length: 6 }).map((_, i) => (
+                       <div key={i} className="rounded-lg border p-4">
+                         <div className="flex items-start gap-3">
+                           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted animate-pulse" />
+                           <div className="flex-1 space-y-2">
+                             <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
+                             <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
+                           </div>
+                         </div>
+                         <div className="mt-4 flex items-center justify-between text-xs">
+                           <div className="h-3 w-24 bg-muted rounded animate-pulse" />
+                           <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+                         </div>
+                       </div>
+                     ))}
+                   </div>
+                  ) }
                   {
                     apps.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-2">
-                        {apps.map((app: Application) => (
+                       {apps.map((app: Application) => (
                           <div
                             key={app.id}
-                            className="group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md hover:border-primary/50 bg-white"
+                            className="rounded-lg border p-4 transition hover:border-primary"
                           >
-                            <div className="flex items-start gap-4">
-                              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-50 border overflow-hidden">
-                                <img
-                                  src={app.icon_url}
-                                  alt={app.app_name}
-                                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                                  loading="lazy"
-                                />
+                            <div className="flex items-start gap-3">
+                              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
+                                  <img
+                                    src={app.icon_url}
+                                    alt={app.app_name}
+                                    className="h-full w-full rounded-lg object-cover"
+                                    loading="lazy"
+                                  />
                               </div>
-                              <div className="space-y-1 min-w-0 flex-1">
+                              <div className="space-y-2">
                                 <Link
                                   href={`/tools/${app.id}`}
-                                  className="text-base font-bold text-slate-900 hover:text-primary line-clamp-1"
+                                  className="text-base font-semibold hover:underline line-clamp-1"
                                 >
                                   {app.app_name}
                                 </Link>
                                 {app.product_description ? (
-                                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                                  <p className="text-sm text-muted-foreground line-clamp-2">
                                     {app.product_description}
                                   </p>
                                 ) : null}
-                                <div className="flex flex-wrap gap-2 pt-1">
-                                  {app.categories?.slice(0, 3).map((cat: string) => (
+                                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                 {app.categories?.slice(0, 3).map((cat: string) => (
                                     <span
                                       key={cat}
-                                      className="inline-flex items-center rounded-md bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10"
+                                      className="rounded-full border px-2 py-0.5"
                                     >
                                       {cat}
                                     </span>
@@ -611,20 +671,15 @@ function CategoriesPageContent() {
                                 </div>
                               </div>
                             </div>
-                            <div className="mt-4 flex items-center justify-between border-t pt-3 text-xs text-slate-500">
-                              <span className="flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                {tCommon("monthlyVisits")}: {formatNumber(app.monthly_visits)}
-                              </span>
+                            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+                              <span>{tCommon("monthlyVisits")}：{formatNumber(app.monthly_visits)}</span>
                               <a
                                 href={app.official_website ?? app.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center gap-1 text-primary font-medium hover:underline"
-                                onClick={(e) => e.stopPropagation()}
+                                className="text-primary hover:underline"
                               >
                                 {tCommon("visitWebsite")}
-                                <ArrowRight className="h-3 w-3" />
                               </a>
                             </div>
                           </div>
@@ -633,62 +688,65 @@ function CategoriesPageContent() {
                     )
                   }
 
-                  {searchType !== "search" && !appsLoading && apps.length > 0 ? (
-                    <div className="mt-8 flex items-center justify-center">
-                      {appsPage < appsPages ? (
-                        <Button
-                          onClick={loadMoreApps}
-                          disabled={appsLoadingMore}
-                          variant="outline"
-                          className="min-w-[120px]"
-                        >
-                          {appsLoadingMore ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              {t("loadingMore")}
-                            </>
-                          ) : t("loadMore")}
-                        </Button>
-                      ) : (
-                        <span className="text-xs text-muted-foreground bg-slate-50 px-3 py-1 rounded-full">{tCommon("loadedAll")}</span>
-                      )}
+                  {/* 滚动加载提示 */}
+                  {searchType === "search" && searchLoadingMore && searchResults.length > 0 ? (
+                    <div className="mt-6 flex items-center justify-center">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>{t("loadingMore")}</span>
+                      </div>
+                    </div>
+                  ) : searchType === "search" && searchResults.length > 0 && searchResults.length >= searchTotal && searchTotal > 0 ? (
+                    <div className="mt-6 flex items-center justify-center">
+                      <span className="text-xs text-muted-foreground">{tCommon("loadedAll")}</span>
+                    </div>
+                  ) : searchType !== "search" && appsLoadingMore ? (
+                    <div className="mt-6 flex items-center justify-center">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>{t("loadingMore")}</span>
+                      </div>
+                    </div>
+                  ) : searchType !== "search" && !appsLoading && apps.length > 0 && appsPage >= appsPages ? (
+                    <div className="mt-6 flex items-center justify-center">
+                      <span className="text-xs text-muted-foreground">{tCommon("loadedAll")}</span>
                     </div>
                   ) : null}
 
                   {
                     searchResults?.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-2">
-                        {searchResults?.map((app: Application) => (
+                       {searchResults?.map((app: Application) => (
                           <div
                             key={app.id}
-                            className="group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md hover:border-primary/50 bg-white"
+                            className="rounded-lg border p-4 transition hover:border-primary"
                           >
-                            <div className="flex items-start gap-4">
-                              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-50 border overflow-hidden">
-                                <img
-                                  src={app.icon_url}
-                                  alt={app.app_name}
-                                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                                  loading="lazy"
-                                />
+                            <div className="flex items-start gap-3">
+                              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
+                                  <img
+                                    src={app.icon_url}
+                                    alt={app.app_name}
+                                    className="h-full w-full rounded-lg object-cover"
+                                    loading="lazy"
+                                  />
                               </div>
-                              <div className="space-y-1 min-w-0 flex-1">
+                              <div className="space-y-2">
                                 <Link
                                   href={`/tools/${app.id}`}
-                                  className="text-base font-bold text-slate-900 hover:text-primary line-clamp-1"
+                                  className="text-base font-semibold hover:underline line-clamp-1"
                                 >
                                   {app.app_name}
                                 </Link>
                                 {app.product_description ? (
-                                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                                  <p className="text-sm text-muted-foreground line-clamp-2">
                                     {app.product_description}
                                   </p>
                                 ) : null}
-                                <div className="flex flex-wrap gap-2 pt-1">
-                                  {app.categories?.slice(0, 3).map((cat: string) => (
+                                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                 {app.categories?.slice(0, 3).map((cat: string) => (
                                     <span
                                       key={cat}
-                                      className="inline-flex items-center rounded-md bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10"
+                                      className="rounded-full border px-2 py-0.5"
                                     >
                                       {cat}
                                     </span>
@@ -696,28 +754,23 @@ function CategoriesPageContent() {
                                 </div>
                               </div>
                             </div>
-                            <div className="mt-4 flex items-center justify-between border-t pt-3 text-xs text-slate-500">
-                              <span className="flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                {tCommon("monthlyVisits")}: {formatNumber(app.monthly_visits)}
-                              </span>
+                            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+                              <span>{tCommon("monthlyVisits")}：{formatNumber(app.monthly_visits)}</span>
                               <a
                                 href={app.official_website ?? app.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center gap-1 text-primary font-medium hover:underline"
-                                onClick={(e) => e.stopPropagation()}
+                                className="text-primary hover:underline"
                               >
                                 {tCommon("visitWebsite")}
-                                <ArrowRight className="h-3 w-3" />
                               </a>
                             </div>
                           </div>
                         ))}
                       </div>
-                    )
+                    ) 
                   }
-                </div>
+                 </div>
               </div>
             </div>
           </div>
@@ -727,3 +780,4 @@ function CategoriesPageContent() {
     </div>
   )
 }
+

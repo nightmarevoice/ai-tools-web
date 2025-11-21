@@ -46,7 +46,7 @@ export function HomeContent() {
           <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,hsla(var(--primary)_/_0.14)_1px,transparent_1px),linear-gradient(to_bottom,hsla(var(--primary)_/_0.14)_1px,transparent_1px)] bg-[size:120px_120px]" />
           <div className="absolute inset-x-0 top-[60vh] h-[40vh] bg-gradient-to-b from-transparent via-white/85 to-white" />
         </div>
-        <div className="relative w-full py-12 md:pb-32 px-8 md:px-10">
+        <div className="relative w-full py-12 md:pb-32 px-8 md:px-10" style={{ paddingBottom: '240px' }}>
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center space-y-10 text-center">
               <div className="space-y-5 flex flex-col justify-center items-center">

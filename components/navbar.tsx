@@ -81,21 +81,67 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
     }
   }, [])
 
-  // 同步 localStorage 中的 preferredLanguage 到 cookie
+  // 检测浏览器语言并设置默认语言（仅在首次访问时）
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      const preferredLanguage = window.localStorage.getItem("preferredLanguage")
-      if (preferredLanguage && locales.includes(preferredLanguage as any)) {
-        // 检查 cookie 是否已存在且与 localStorage 一致
-        const cookieLocale = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("NEXT_LOCALE="))
-          ?.split("=")[1]
+      // 检查 localStorage 中是否已有 preferredLanguage
+      let preferredLanguage = window.localStorage.getItem("preferredLanguage")
+      // 检查 cookie 中是否已有语言设置
+      const cookieLocale = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("NEXT_LOCALE="))
+        ?.split("=")[1]
+      
+      // 如果 localStorage 和 cookie 都没有，检测浏览器语言
+      if ((!preferredLanguage || !locales.includes(preferredLanguage as any)) && !cookieLocale) {
+        const browserLanguage = navigator.language || (navigator as any).userLanguage || 'en'
         
-        // 如果 cookie 不存在或与 localStorage 不一致，则更新 cookie
+        // 语言映射：将浏览器语言代码映射到支持的语言
+        const languageMap: Record<string, string> = {
+          // 中文变体
+          'zh': 'zh',
+          'zh-cn': 'zh',
+          'zh-hans': 'zh',
+          'zh-hans-cn': 'zh',
+          'zh-tw': 'zh',
+          'zh-hant': 'zh',
+          'zh-hant-tw': 'zh',
+          // 英语
+          'en': 'en',
+          'en-us': 'en',
+          'en-gb': 'en',
+          'en-au': 'en',
+          'en-ca': 'en',
+          // 日语
+          'ja': 'ja',
+          'ja-jp': 'ja',
+          // 韩语
+          'ko': 'ko',
+          'ko-kr': 'ko',
+        }
+        
+        const browserLangLower = browserLanguage.toLowerCase()
+        
+        // 精确匹配
+        if (languageMap[browserLangLower]) {
+          preferredLanguage = languageMap[browserLangLower]
+        } else {
+          // 只匹配语言代码（如 zh-CN -> zh）
+          const langCode = browserLangLower.split('-')[0]
+          preferredLanguage = languageMap[langCode] || 'en'
+        }
+        
+        // 保存到 localStorage 和 cookie
+        window.localStorage.setItem("preferredLanguage", preferredLanguage)
+        document.cookie = `NEXT_LOCALE=${preferredLanguage}; path=/; max-age=31536000; SameSite=Lax`
+      } else if (preferredLanguage && locales.includes(preferredLanguage as any)) {
+        // 如果 localStorage 中有有效的语言设置，同步到 cookie
         if (cookieLocale !== preferredLanguage) {
           document.cookie = `NEXT_LOCALE=${preferredLanguage}; path=/; max-age=31536000; SameSite=Lax`
         }
+      } else if (cookieLocale && locales.includes(cookieLocale as any)) {
+        // 如果 cookie 中有有效的语言设置，同步到 localStorage
+        window.localStorage.setItem("preferredLanguage", cookieLocale)
       }
     }
   }, [])

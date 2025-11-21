@@ -52,77 +52,65 @@ export function AiToolsTabs() {
 
   const tools = {
     trending: trendingApps.map(convertToTool),
-    recent: [
-      {
-        id: 5,
-        name: t("tools.claude.name"),
-        description: t("tools.claude.description"),
-        category: t("categories.aiAssistant"),
-        pricing: t("pricing.free"),
-        isNew: true,
-        isTrending: false,
-      },
-      {
-        id: 6,
-        name: t("tools.runway.name"),
-        description: t("tools.runway.description"),
-        category: t("categories.aiVideo"),
-        pricing: t("pricing.freemium"),
-        isNew: true,
-        isTrending: false,
-      },
-      {
-        id: 7,
-        name: t("tools.jasper.name"),
-        description: t("tools.jasper.description"),
-        category: t("categories.aiWriting"),
-        pricing: t("pricing.paid"),
-        isNew: true,
-        isTrending: false,
-      },
-      {
-        id: 8,
-        name: t("tools.synthesia.name"),
-        description: t("tools.synthesia.description"),
-        category: t("categories.aiVideo"),
-        pricing: t("pricing.paid"),
-        isNew: true,
-        isTrending: false,
-      },
-    ],
+   
     featured: [
       {
-        id: 9,
-        name: t("tools.perplexity.name"),
-        description: t("tools.perplexity.description"),
-        category: t("categories.aiAssistant"),
+        id: 1004,
+        name: 'matterport',
+        description:"3D空间数字化平台,采集环境数据并生成可交互的三维模型",
+        categories: [
+          "ai-digital-marketing",
+          "ai-3d-model-generator",
+          "ai-interior-design"
+        ],
+        icon: "http://cdn.deepinsightqa.com/collect_icon/matterport.png",
+        monthly_visits:11730000,
         pricing: t("pricing.free"),
         isNew: false,
         isTrending: false,
       },
       {
-        id: 10,
-        name: t("tools.copyai.name"),
-        description: t("tools.copyai.description"),
-        category: t("categories.aiWriting"),
+        id: 4745,
+        name: "cloudflare",
+        description: "云网络服务平台,提供内容分发、DDoS防护、Web应用防火墙和边缘计算功能",
+        categories: [
+          "ai-agent-development",
+          "ai-developer-tools",
+          "ai-web-scraper"
+        ],
+        icon: "http://cdn.deepinsightqa.com/collect_icon/cloudflare.png",
+        monthly_visits:32850000,
         pricing: t("pricing.free"),
         isNew: false,
         isTrending: false,
       },
       {
-        id: 11,
+        id: 125,
         name: t("tools.murf.name"),
-        description: t("tools.murf.description"),
-        category: t("categories.audioVoice"),
+        description: "全栈Web应用生成平台,根据自然语言描述自动生成前端代码并部署",
+        categories:  [
+          "ai-app-builder",
+          "ai-low-code-no-code"
+        ],
+        icon: "http://cdn.deepinsightqa.com/collect_icon/lovabledev.png",
+        monthly_visits:19890000,
         pricing: t("pricing.freemium"),
         isNew: false,
         isTrending: false,
       },
       {
-        id: 12,
+        id: 6560,
         name: t("tools.beautiful.name"),
-        description: t("tools.beautiful.description"),
-        category: t("categories.dataAnalytics"),
+        description: "AI文本检测工具,识别ChatGPT等模型生成的文本内容",
+        categories: [
+          "ai-plagiarism-detector",
+          "ai-grammar-checker",
+          "ai-detector",
+          "ai-content-detector",
+          "ai-essay-checker"
+        ],
+        icon: "http://cdn.deepinsightqa.com/collect_icon/zerogpt.png",
+        monthly_visits: 28910000,
         pricing: t("pricing.freemium"),
         isNew: false,
         isTrending: false,
@@ -133,7 +121,7 @@ export function AiToolsTabs() {
   const currentTools = tools[activeTab as keyof typeof tools]
 
   return (
-    <section className="py-16 sm:py-24 bg-background">
+    <section className="py-6 sm:py-6 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 标题与描述 */}
         <div className="mb-10">
@@ -149,7 +137,6 @@ export function AiToolsTabs() {
         <div className="flex gap-2 mb-12 border-b border-border">
           {[
             { id: "trending", label: t("tabs.trending") },
-            { id: "recent", label: t("tabs.recent") },
             { id: "featured", label: t("tabs.featured") },
           ].map((tab) => (
             <button

@@ -2,28 +2,36 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Search, ArrowRight, Flame, MessageSquare, Bot, AlertCircle } from "lucide-react"
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { searchApi } from "@/lib/api/search"
 import type { QuotaStatus } from "@/types/api"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 export function DemoSearchBar() {
   const t = useTranslations("home.searchBar")
   const tQuota = useTranslations("quota")
+  const tLoginPrompt = useTranslations("loginPrompt")
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [mode, setMode] = useState<"chat" | "agent">("chat")
   const [quotaStatus, setQuotaStatus] = useState<QuotaStatus | null>(null)
   const [showQuotaWarning, setShowQuotaWarning] = useState(false)
+  const [showQuotaInfo, setShowQuotaInfo] = useState(false)
   const [isCheckingQuota, setIsCheckingQuota] = useState(false)
   const router = useRouter()
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const checkQuotaStatus = async () => {
     setIsCheckingQuota(true)
@@ -40,7 +48,7 @@ export function DemoSearchBar() {
     }
   }
 
-  // 当弹窗打开时检查配额状态
+  // 当下拉打开时检查配额状态
   useEffect(() => {
     if (isOpen) {
       checkQuotaStatus()
@@ -48,18 +56,59 @@ export function DemoSearchBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
+
+  // 点击外部关闭下拉
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isOpen &&
+        containerRef.current &&
+        dropdownRef.current &&
+        !containerRef.current.contains(event.target as Node) &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside)
+      }
+    }
+  }, [isOpen])
+
   const handleInputClick = () => {
     setIsOpen(true)
   }
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSearch = async (e?: React.FormEvent | React.MouseEvent) => {
+    e?.preventDefault()
     if (!searchQuery.trim()) return
 
-    // 预检查配额
-    if (quotaStatus && !quotaStatus.allowed) {
+    // 先查询配额
+    let currentQuotaStatus = quotaStatus
+    if (!currentQuotaStatus) {
+      try {
+        currentQuotaStatus = await searchApi.checkQuota()
+        setQuotaStatus(currentQuotaStatus)
+      } catch (error) {
+        console.error("Failed to check quota status:", error)
+        // 如果检查失败,允许继续搜索
+        currentQuotaStatus = null
+      }
+    }
+
+    // 检查配额是否允许
+    if (currentQuotaStatus && !currentQuotaStatus.allowed) {
       setShowQuotaWarning(true)
       return
+    }
+
+    // 如果配额允许但剩余 <= 2，显示信息提示（不阻止跳转）
+    if (currentQuotaStatus && currentQuotaStatus.quota_enabled && currentQuotaStatus.remaining <= 2 && currentQuotaStatus.remaining > 0) {
+      setShowQuotaInfo(true)
     }
 
     setIsOpen(false)
@@ -68,12 +117,39 @@ export function DemoSearchBar() {
   }
 
   const handleLogin = () => {
+    setShowQuotaWarning(false)
     setIsOpen(false)
     router.push("/login")
   }
 
-  const handlePopularSearchClick = (searchTerm: string) => {
+  const handlePopularSearchClick = async (searchTerm: string) => {
     setSearchQuery(searchTerm)
+
+    // 先查询配额
+    let currentQuotaStatus = quotaStatus
+    if (!currentQuotaStatus) {
+      try {
+        currentQuotaStatus = await searchApi.checkQuota()
+        setQuotaStatus(currentQuotaStatus)
+      } catch (error) {
+        console.error("Failed to check quota status:", error)
+        // 如果检查失败,允许继续搜索
+        currentQuotaStatus = null
+      }
+    }
+
+    // 检查配额是否允许
+    if (currentQuotaStatus && !currentQuotaStatus.allowed) {
+      setShowQuotaWarning(true)
+      setIsOpen(false)
+      return
+    }
+
+    // 如果配额允许但剩余 <= 2，显示信息提示（不阻止跳转）
+    if (currentQuotaStatus && currentQuotaStatus.quota_enabled && currentQuotaStatus.remaining <= 2 && currentQuotaStatus.remaining > 0) {
+      setShowQuotaInfo(true)
+    }
+
     setIsOpen(false)
     const dest = mode === "chat" ? "/categories" : "/dashboard"
     router.push(`${dest}?q=${encodeURIComponent(searchTerm)}`)
@@ -88,103 +164,39 @@ export function DemoSearchBar() {
   ]
 
   return (
-    <>
-      <div className="relative w-full max-w-2xl mx-auto">
-        <div className="relative">
-          <div
-            
-            className="w-full flex items-center justify-start pl-4 pr-12 h-15 rounded-xl border border-input bg-background px-4 py-2 text-base hover:border-[#0057FF] focus:border-[#0057FF] focus:border-[0.5px] transition-colors cursor-pointer"
-           
-            onClick={handleInputClick}
-            
-          >
-          {t("placeholder")}
-          </div>
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-        </div>
+    <div className="relative w-full max-w-2xl mx-auto" ref={containerRef}>
+      <div className="relative">
+        <input
+          className="w-full flex items-center justify-start pl-4 pr-12 h-15 rounded-xl border border-input bg-background px-4 py-2 text-base hover:border-[#0057FF] focus:border-[#0057FF] focus:border-[0.5px] focus:outline-none focus-visible:outline-none transition-colors cursor-pointer"
+          onClick={handleInputClick}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch(e)
+            }
+          }}
+          placeholder={mode === "chat" ? t("placeholder") : t("agentPlaceholder")}
+        />
+        <button
+          type="button"
+          onClick={handleSearch}
+          style={{color:searchQuery.trim() ? "#0057FF" : "#c5c5c5"}}
+          className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground hover:text-[#0057FF] transition-colors cursor-pointer"
+          aria-label="Search"
+        >
+          <Search className="h-5 w-5" />
+        </button>
       </div>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}  >
-        <DialogContent className="w-4xl p-0 gap-0" style={{ width: '900px !important' }} showCloseButton={false}>
-          <div className="p-6 space-y-6">
-            {/* Quota Warning */}
-            {showQuotaWarning && quotaStatus && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 flex-shrink-0">
-                    <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
-                  </div>
-                  <div className="flex-1 space-y-3">
-                    <div>
-                      <h3 className="font-semibold text-red-900 dark:text-red-100 text-base mb-1">
-                        {quotaStatus.need_login
-                          ? tQuota("warning.anonymousTitle")
-                          : tQuota("warning.authenticatedTitle")}
-                      </h3>
-                      <p className="text-sm text-red-800 dark:text-red-200">
-                        {quotaStatus.need_login
-                          ? tQuota("warning.anonymousDescription", {
-                              limit: quotaStatus.limit,
-                              current: quotaStatus.current_count
-                            })
-                          : tQuota("warning.authenticatedDescription", {
-                              current: quotaStatus.current_count,
-                              limit: quotaStatus.limit
-                            })}
-                      </p>
-                    </div>
-                    {quotaStatus.need_login && (
-                      <Button
-                        onClick={handleLogin}
-                        className="bg-red-600 hover:bg-red-700 text-white"
-                      >
-                        {tQuota("warning.loginButton")}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Quota Info - Show remaining searches */}
-            {!showQuotaWarning && quotaStatus && quotaStatus.quota_enabled && quotaStatus.remaining <= 2 && quotaStatus.remaining > 0 && (
-              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
-                <p className="text-sm text-amber-900 dark:text-amber-100">
-                  {tQuota("info.remainingHint", { remaining: quotaStatus.remaining })}
-                  {!quotaStatus.is_authenticated && tQuota("info.loginSuffix")}
-                </p>
-              </div>
-            )}
-
-            {/* Search Box */}
-            <form onSubmit={handleSearch} className="relative">
-              <div className="relative">
-
-                <input
-                  type="text"
-                  placeholder={t("searchPlaceholder")}
-                  className="w-full pl-4 pr-12 h-14 rounded-xl border-[#c6c3c3] border-[0.5px]  bg-background px-4 py-2 text-base hover:border-primary focus:border-primary focus:border-[0.5px] transition-colors cursor-pointer"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  disabled={isCheckingQuota}
-                />
-                <button
-                  type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isCheckingQuota || !searchQuery.trim()}
-                >
-                  {isCheckingQuota ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : (
-                    <ArrowRight className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-            </form>
-
-            {/* Divider */}
-            <div className="border-t border-border" />
-
+      {/* Dropdown Panel */}
+      {isOpen && (
+        <div
+          ref={dropdownRef}
+          className="absolute top-full left-0  mt-2 bg-background border border-border rounded-xl shadow-lg z-50 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2"
+          style={{ width: '672px' }}
+        >
+          <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
             {/* Mode Selection */}
             <div className="space-y-3">
               
@@ -194,7 +206,8 @@ export function DemoSearchBar() {
                   type="button"
                   variant={mode === "chat" ? "default" : "outline"}
                   onClick={() => setMode("chat")}
-                  className=" gap-2"
+                  className={mode === "chat" ? "bg-[#0057FF] text-[#fff]" : "bg-transparent"}
+                  style={{ backgroundColor: mode === "chat" ? "#0057FF" : "transparent" }}
                 >
                   <MessageSquare className="h-4 w-4" />
                   <span>{t("chatMode")}</span>
@@ -203,7 +216,8 @@ export function DemoSearchBar() {
                   type="button"
                   variant={mode === "agent" ? "default" : "outline"}
                   onClick={() => setMode("agent")}
-                  className=" gap-2"
+                  className={mode === "agent" ? "bg-[#0057FF] text-[#fff]" : "bg-transparent"}
+                  style={{ backgroundColor: mode === "agent" ? "#0057FF" : "transparent" }}
                 >
                   <Bot className="h-4 w-4" />
                   <span>{t("agentMode")}</span>
@@ -231,11 +245,67 @@ export function DemoSearchBar() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      )}
 
-            
+      {/* Quota Warning Dialog */}
+      <Dialog open={showQuotaWarning} onOpenChange={setShowQuotaWarning}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 flex-shrink-0">
+                <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+              </div>
+              <div className="flex-1">
+                <DialogTitle className="text-xl">
+                    {tLoginPrompt("title")}
+                </DialogTitle>
+                <DialogDescription className="text-base pt-2 ">
+                    {tLoginPrompt("description")}
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          {quotaStatus?.need_login && (
+           
+              <div className="flex justify-center" >
+                <Button
+                  onClick={handleLogin}
+                  variant="outline"
+                  className="bg-primary text-[#fff] hover:text-[#fff] cursor-pointer hover:bg-primary/90"
+                >
+                  {tQuota("warning.loginButton")}
+                </Button>
+              </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Quota Info Dialog */}
+      <Dialog open={showQuotaInfo} onOpenChange={setShowQuotaInfo}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
+                <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+              </div>
+              <DialogTitle className="text-xl">{tLoginPrompt("title")}</DialogTitle>
+            </div>
+            <DialogDescription className="text-base pt-2">
+              {tLoginPrompt("description")}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center">
+            <Button
+              onClick={() => setShowQuotaInfo(false)}
+              variant="outline"
+            >
+              {tLoginPrompt("cancel")}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   )
 }
