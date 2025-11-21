@@ -92,11 +92,9 @@ export const authApi = {
     const redirectTo = `${window.location.origin}${callbackPath}`
 
     // 调试信息：在开发环境输出回调 URL
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[OAuth] 回调 URL:', redirectTo)
-      console.log('[OAuth] 当前域名:', window.location.origin)
-    }
-
+    console.log('[OAuth] 回调 URL:', redirectTo)
+    console.log('[OAuth] 当前域名:', window.location.origin)
+    debugger;
     try {
       const supabase = createClient()
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -105,7 +103,7 @@ export const authApi = {
           redirectTo,
         },
       })
-
+      console.log(data,error,"返回信息");
       if (error) {
         // 提供更详细的错误信息
         const errorMessage = error.message || '未知错误'

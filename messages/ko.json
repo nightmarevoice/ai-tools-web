@@ -247,7 +247,8 @@
     "defaultLoadedCount": "이 카테고리의 도구를 표시합니다. {loaded}{total, select, 0 {} other { / {total}}}개 로드됨",
     "searchBox": {
       "title": "가장 포괄적이고 최신의 AI 도구 컬렉션",
-      "subtitle": "키워드를 입력하여 필요한 도구를 빠르게 필터링"
+      "subtitle": "키워드를 입력하여 필요한 도구를 빠르게 필터링",
+      "placeholder": "애니메이션 짧은 동영상을 만드는 도구 찾기"
     },
     "loadMore": "더 로드하기",
     "loadingMore": "로딩 중...",

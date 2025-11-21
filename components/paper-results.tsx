@@ -8,7 +8,7 @@ import type { SearchResult, SemanticSearchResponse } from "@/types/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 
 interface PaperResultsProps {
   results: SemanticSearchResponse | null
@@ -19,6 +19,7 @@ interface PaperResultsProps {
 
 export function PaperResults({ results, loading, error, query }: PaperResultsProps) {
   const t = useTranslations("paperResults")
+  const locale = useLocale()
   const searchResults = results?.results ?? []
   const summary = results?.llm_summary ?? ""
 
@@ -93,7 +94,7 @@ export function PaperResults({ results, loading, error, query }: PaperResultsPro
                       if (appId) {
                         return (
                           <Link
-                            href={`/tools/${appId}`}
+                            href={`/${locale}/tools/${appId}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary hover:underline font-medium"
@@ -111,7 +112,7 @@ export function PaperResults({ results, loading, error, query }: PaperResultsPro
                       if (appNameMatch) {
                         return (
                           <Link
-                            href={`/tools/${appNameMatch[1]}`}
+                            href={`/${locale}/tools/${appNameMatch[1]}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary hover:underline font-medium"

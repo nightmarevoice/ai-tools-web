@@ -55,7 +55,7 @@ export default function LoginPage() {
     try {
       const { url } = await authApi.signInWithGoogle()
       // 重定向到 Google OAuth 页面
-      window.location.href = url
+     // window.location.href = url
     } catch (err) {
       console.error('Google 登录失败:', err)
       setError(err instanceof Error ? err.message : 'Google 登录失败,请重试')

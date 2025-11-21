@@ -33,7 +33,7 @@ import {
 import { categoriesApi } from "@/lib/api/categories"
 import { appsApi } from "@/lib/api/apps"
 import type { Application, Category, Language, SemanticSearchResponse } from "@/types/api"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 
 const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
   "chat-agents": MessageSquare,
@@ -79,6 +79,7 @@ export function CategoriesContent() {
 }
 
 function CategoriesPageContent() {
+  const locale = useLocale()
   const t = useTranslations("categories")
   const tCommon = useTranslations("common")
   const [categories, setCategories] = useState<Category[]>([])
@@ -550,12 +551,11 @@ function CategoriesPageContent() {
                         </div>
                         <input
                           type="text"
-                          // placeholder={t("searchBox.placeholder") || "Search AI tools..."}
                           className="w-full h-14 pl-12 border hover:border-[#0057FF] focus:border-[#0057FF] pr-12 rounded-xl border-0.5 bg-transparent text-base placeholder:text-muted-foreground  focus:outline-none"
                           value={inputValue}
                           onChange={(e) => setInputValue(e.target.value)}
                           disabled={searching}
-                          placeholder={"查找一个制作动画短视频的工具"}
+                          placeholder={t("searchBox.placeholder")}
                         />
                         <button
                           type="submit"
@@ -649,7 +649,7 @@ function CategoriesPageContent() {
                               </div>
                               <div className="space-y-2">
                                 <Link
-                                  href={`/tools/${app.id}`}
+                                  href={`/${locale}/tools/${app.id}`}
                                   className="text-base font-semibold hover:underline line-clamp-1"
                                 >
                                   {app.app_name}
@@ -732,7 +732,7 @@ function CategoriesPageContent() {
                               </div>
                               <div className="space-y-2">
                                 <Link
-                                  href={`/tools/${app.id}`}
+                                  href={`/${locale}/tools/${app.id}`}
                                   className="text-base font-semibold hover:underline line-clamp-1"
                                 >
                                   {app.app_name}

@@ -247,7 +247,8 @@
     "defaultLoadedCount": "このカテゴリーのツールを表示しています。{loaded}{total, select, 0 {} other { / {total}}} 件を読み込み済み",
     "searchBox": {
       "title": "最も包括的で最新の AI ツールコレクション",
-      "subtitle": "キーワードを入力して必要なツールをすばやくフィルタリング"
+      "subtitle": "キーワードを入力して必要なツールをすばやくフィルタリング",
+      "placeholder": "アニメーション短編動画を作成するツールを探す"
     },
     "loadMore": "さらに読み込む",
     "loadingMore": "読み込み中...",

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { SearchResult } from "@/types/api"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 
 // 推荐工具静态数据（不包含需要国际化的文本）
 const RECOMMENDED_TOOLS = [
@@ -52,6 +52,7 @@ const RECOMMENDED_TOOLS = [
 
 export function RecommendedTools() {
   const t = useTranslations("recommendedTools")
+  const locale = useLocale()
   
   return (
     <div className="sticky top-6">
@@ -68,7 +69,7 @@ export function RecommendedTools() {
               <div className="p-3 rounded-lg border border-gray-200/60 bg-white/40 hover:border-blue-400/70 hover:bg-white/80 hover:shadow-md transition-all duration-200">
                 <div className="flex items-start justify-between gap-2">
                   <Link
-                    href={`/tools/${tool.id}`}
+                    href={`/${locale}/tools/${tool.id}`}
                     className="flex-1 min-w-0"
                   >
                     <div className="flex items-center gap-2">

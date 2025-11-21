@@ -238,7 +238,8 @@
     "defaultLoadedCount": "Showing tools in this category. Loaded {loaded}{total, select, 0 {} other { / {total}}}",
     "searchBox": {
       "title": "Most Complete and Latest AI Tools Collection",
-      "subtitle": "Enter keywords to quickly filter the tools you need"
+      "subtitle": "Enter keywords to quickly filter the tools you need",
+      "placeholder": "Find a tool for creating animated short videos"
     },
     "loadMore": "Load more",
     "loadingMore": "Loading...",

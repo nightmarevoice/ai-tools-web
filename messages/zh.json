@@ -238,7 +238,8 @@
     "defaultLoadedCount": "默认展示该分类下的工具，已加载 {loaded}{total, select, 0 {} other { / {total}}} 个",
     "searchBox": {
       "title": "收录最全最新的 AI Tool",
-      "subtitle": "输入关键字快速筛选所需工具"
+      "subtitle": "输入关键字快速筛选所需工具",
+      "placeholder": "查找一个制作动画短视频的工具"
     },
     "loadMore": "加载更多",
     "loadingMore": "加载中...",
