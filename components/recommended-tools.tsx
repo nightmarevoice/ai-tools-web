@@ -9,12 +9,12 @@ import { useTranslations, useLocale } from "next-intl"
 // 推荐工具静态数据（不包含需要国际化的文本）
 const RECOMMENDED_TOOLS = [
   {
-    id: 1202,
-    app_name: "ChatGPT",
+    id: 1199,
+    app_name: "google-gemini",
     relevance_score: 0.95,
-    url: "https://chat.openai.com",
-    icon_url: "https://chat.openai.com/favicon.ico",
-    descriptionKey: "chatgpt" as const,
+    url: "https://gemini.google/",
+    icon_url: "http://cdn.deepinsightqa.com/collect_icon/google-gemini.png",
+    descriptionKey: "googleGemini" as const,
   },
   {
     id: 394,

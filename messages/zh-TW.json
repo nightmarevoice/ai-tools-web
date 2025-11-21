@@ -14,6 +14,8 @@
     "loadMore": "下拉加載更多",
     "searchResults": "搜索結果",
     "monthlyVisits": "月訪問量",
+    "new": "新",
+    "trending": "趨勢",
     "nav": {
       "home": "首頁",
       "categories": "分類",
@@ -277,6 +279,8 @@
     }
   },
   "dashboard": {
+    "title": "智能化生成 AI 工具流程解決方案",
+    "description": "描述你的場景，我們將為你智能化生成完美的 AI 工具流程解決方案",
     "searchFailed": "搜索失敗，請稍後重試。",
     "placeholder": "策劃一場社交媒體營銷活動"
   },
@@ -287,7 +291,8 @@
       "dalle3": "從文本提示生成高質量 AI 圖像",
       "githubCopilot": "AI 編程助手，讓編碼更快更智能",
       "midjourney": "專業級 AI 藝術生成工具",
-      "claudeCode": "新一代 AI 助手，性能更強大"
+      "claudeCode": "新一代 AI 助手，性能更強大",
+      "googleGemini": "Google Gemini 是 Google 開發的大規模語言模型"
     }
   },
   "paperResults": {

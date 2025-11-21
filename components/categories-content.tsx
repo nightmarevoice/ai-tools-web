@@ -649,7 +649,7 @@ function CategoriesPageContent() {
                               <div className="space-y-2">
                                 <Link
                                   href={`/${locale}/tools/${app.id}`}
-                                  className="text-base font-semibold hover:underline line-clamp-1"
+                                  className="text-base hover:text-[#0057FF] font-semibold hover:underline line-clamp-1"
                                 >
                                   {app.app_name}
                                 </Link>
