@@ -43,6 +43,7 @@ export function AiToolsTabs() {
     monthly_visits: app.monthly_visits,
     categories: app.categories ,
     description: app.short_description || "",
+    icon: app.icon_url,
     category: t("categories.aiAssistant"), // 可以根据实际情况从 app 数据中获取
     pricing: t("pricing.free"), // 可以根据实际情况从 app 数据中获取
     isNew: false,

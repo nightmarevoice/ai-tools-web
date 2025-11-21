@@ -28,9 +28,9 @@
     }
   },
   "loginPrompt": {
-    "title": "Rate Limit Exceeded",
-    "description": "Your request rate has exceeded the limit. Please log in to continue using the service.",
-    "hint": "After logging in, you will get higher rate limits and more features.",
+    "title": "Unlock More Services",
+    "description": "Log in to enjoy more premium services and features for a better experience.",
+    "hint": "After logging in, you will get access to more features and better service.",
     "login": "Log In Now",
     "cancel": "Cancel"
   },

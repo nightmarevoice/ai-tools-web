@@ -1,7 +1,7 @@
 "use client"
 
-import React from "react"
-import { ExternalLink, Star } from "lucide-react"
+import React, { useState } from "react"
+import { ExternalLink, Star, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 
@@ -15,10 +15,16 @@ export interface Tool {
   isNew: boolean
   isTrending: boolean
   categories?: string[]
+  icon?: string
+  icon_url?: string
 }
 
 export function ToolCard({ tool }: { tool: Tool }) {
   const t = useTranslations("common")
+  const [iconError, setIconError] = useState(false)
+  
+  const iconUrl = tool.icon || tool.icon_url
+  const showIcon = iconUrl && !iconError
   
   const pricingBadgeStyle = {
     Free: "bg-green-100/80 text-green-700 border border-green-300/50",
@@ -37,6 +43,23 @@ export function ToolCard({ tool }: { tool: Tool }) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
+              {/* 图标 */}
+              <div className="flex-shrink-0">
+                {showIcon ? (
+                  <img
+                    src={iconUrl}
+                    alt={tool.name}
+                    className="w-8 h-8 rounded-lg border border-gray-200/60 object-cover"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={() => setIconError(true)}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-200/40">
+                    <Sparkles className="w-4 h-4 text-blue-500" />
+                  </div>
+                )}
+              </div>
               <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition">{tool.name}</h3>
               {tool.isNew && (
                 <span className="px-2 py-1 text-xs font-medium bg-green-100/90 text-green-700 rounded-full border border-green-300/50">
