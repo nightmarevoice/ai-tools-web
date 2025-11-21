@@ -32,6 +32,19 @@
     "login": "今すぐログイン",
     "cancel": "キャンセル"
   },
+  "quota": {
+    "warning": {
+      "anonymousTitle": "検索回数が上限に達しました",
+      "authenticatedTitle": "本日の検索上限に達しました",
+      "anonymousDescription": "匿名ユーザーは1日{limit}回の検索に制限されています。{current}回使用しました。ログインすると、より多くの検索回数({authLimit}回/日)をご利用いただけます。",
+      "authenticatedDescription": "本日{current}/{limit}回の検索を使用しました。明日また試してください。",
+      "loginButton": "今すぐログイン"
+    },
+    "info": {
+      "remainingHint": "💡 ヒント: 残り{remaining}回の検索が可能です",
+      "loginSuffix": "。ログインするとより多くの検索回数をご利用いただけます。"
+    }
+  },
   "home": {
     "metadata": {
       "title": "AI リサーチアシスタント | 研究論文の発見、要約、分析",

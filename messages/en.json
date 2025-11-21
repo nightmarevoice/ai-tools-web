@@ -34,6 +34,19 @@
     "login": "Log In Now",
     "cancel": "Cancel"
   },
+  "quota": {
+    "warning": {
+      "anonymousTitle": "Search Quota Exhausted",
+      "authenticatedTitle": "Daily Quota Limit Reached",
+      "anonymousDescription": "Anonymous users are limited to {limit} searches per day. You have used {current} searches. Log in to get more searches ({authLimit}/day).",
+      "authenticatedDescription": "You have used {current}/{limit} searches today. Please try again tomorrow.",
+      "loginButton": "Log In Now"
+    },
+    "info": {
+      "remainingHint": "💡 Tip: You have {remaining} searches remaining",
+      "loginSuffix": ". Log in to get more searches."
+    }
+  },
   "home": {
     "metadata": {
       "title": "AI Research Assistant | Discover, Summarize and Analyze Research Papers",

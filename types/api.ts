@@ -435,5 +435,17 @@ export interface PerformanceTrendsParams {
   days?: number // 1-365
 }
 
+// ==================== 配额管理 ====================
+
+export interface QuotaStatus {
+  allowed: boolean          // 是否允许下次搜索
+  remaining: number          // 剩余搜索次数
+  need_login: boolean        // 是否需要登录
+  current_count: number      // 当前已使用次数
+  is_authenticated: boolean  // 用户是否已认证
+  limit: number              // 该用户类型的总限制次数
+  quota_exceeded: boolean    // 是否已超过配额
+  quota_enabled: boolean     // 配额功能是否启用
+}
 
 

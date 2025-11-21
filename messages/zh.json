@@ -34,6 +34,19 @@
     "login": "立即登录",
     "cancel": "取消"
   },
+  "quota": {
+    "warning": {
+      "anonymousTitle": "搜索次数已用完",
+      "authenticatedTitle": "今日配额已达上限",
+      "anonymousDescription": "匿名用户每日限制 {limit} 次搜索,您已使用 {current} 次。登录后可获得更多搜索次数({authLimit}次/天)。",
+      "authenticatedDescription": "您今日已使用 {current}/{limit} 次搜索,请明天再试。",
+      "loginButton": "立即登录"
+    },
+    "info": {
+      "remainingHint": "💡 提示: 您还剩 {remaining} 次搜索机会",
+      "loginSuffix": "。登录后可获得更多搜索次数。"
+    }
+  },
   "home": {
     "metadata": {
       "title": "AI 研究助手 | 发现、总结和分析研究论文",

@@ -7,6 +7,7 @@ import type {
   SemanticSearchRequest,
   SemanticSearchResponse,
   SearchHealth,
+  QuotaStatus,
 } from "@/types/api"
 
 function getVisitorId(): string | undefined {
@@ -20,6 +21,23 @@ function getVisitorId(): string | undefined {
 }
 
 export const searchApi = {
+  /**
+   * 检查搜索配额状态（不消耗次数）
+   */
+  async checkQuota(): Promise<QuotaStatus> {
+    const visitorId = getVisitorId()
+    const params: Record<string, string> = {}
+
+    if (visitorId) {
+      params.visitor_id = visitorId
+    }
+
+    return apiClient.get<QuotaStatus>(
+      "/app-search/quota-status",
+      params,
+    )
+  },
+
   /**
    * 语义搜索
    */

@@ -32,6 +32,19 @@
     "login": "立即登錄",
     "cancel": "取消"
   },
+  "quota": {
+    "warning": {
+      "anonymousTitle": "搜索次數已用完",
+      "authenticatedTitle": "今日配額已達上限",
+      "anonymousDescription": "匿名用戶每日限制 {limit} 次搜索,您已使用 {current} 次。登錄後可獲得更多搜索次數({authLimit}次/天)。",
+      "authenticatedDescription": "您今日已使用 {current}/{limit} 次搜索,請明天再試。",
+      "loginButton": "立即登錄"
+    },
+    "info": {
+      "remainingHint": "💡 提示: 您還剩 {remaining} 次搜索機會",
+      "loginSuffix": "。登錄後可獲得更多搜索次數。"
+    }
+  },
   "home": {
     "metadata": {
       "title": "AI 研究助手 | 發現、總結和分析研究論文",
