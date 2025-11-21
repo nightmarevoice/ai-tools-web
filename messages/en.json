@@ -412,6 +412,15 @@
     "errors": {
       "signinFailed": "Sign in failed, please check your email and password",
       "googleSigninFailed": "Google sign in failed, please try again"
+    },
+    "callback": {
+      "loading": "Loading...",
+      "completingGoogleLogin": "Completing Google sign in",
+      "syncingAccount": "Please wait, syncing your account information...",
+      "loginFailed": "Sign in failed",
+      "redirectingToLogin": "Redirecting to login page...",
+      "noSessionRetry": "Failed to get login session, please try again",
+      "noValidSession": "No valid login session found"
     }
   },
   "footer": {

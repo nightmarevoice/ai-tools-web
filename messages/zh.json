@@ -412,6 +412,15 @@
     "errors": {
       "signinFailed": "登录失败,请检查邮箱和密码",
       "googleSigninFailed": "Google 登录失败,请重试"
+    },
+    "callback": {
+      "loading": "正在加载...",
+      "completingGoogleLogin": "正在完成 Google 登录",
+      "syncingAccount": "请稍候,正在同步您的账户信息...",
+      "loginFailed": "登录失败",
+      "redirectingToLogin": "正在跳转到登录页面...",
+      "noSessionRetry": "未获取到登录会话，请重试",
+      "noValidSession": "未找到有效的登录会话"
     }
   },
   "footer": {

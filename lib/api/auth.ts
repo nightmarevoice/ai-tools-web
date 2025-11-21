@@ -94,7 +94,7 @@ export const authApi = {
     // 调试信息：在开发环境输出回调 URL
     console.log('[OAuth] 回调 URL:', redirectTo)
     console.log('[OAuth] 当前域名:', window.location.origin)
-    debugger;
+    
     try {
       const supabase = createClient()
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -141,7 +141,6 @@ export const authApi = {
           `请查看 OAUTH_REDIRECT_FIX.md 了解如何修复。`
         )
       }
-
       return { url: data.url }
     } catch (error) {
       // 如果是环境变量配置错误，提供更清晰的提示

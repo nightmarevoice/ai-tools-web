@@ -631,7 +631,7 @@ function CategoriesPageContent() {
                    </div>
                   ) }
                   {
-                    apps.length > 0 && (
+                    searchType === "category" && apps.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-2">
                        {apps.map((app: Application) => (
                           <div
@@ -714,7 +714,7 @@ function CategoriesPageContent() {
                   ) : null}
 
                   {
-                    searchResults?.length > 0 && (
+                    searchType === "search" && searchResults?.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-2">
                        {searchResults?.map((app: Application) => (
                           <div

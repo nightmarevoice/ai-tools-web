@@ -401,6 +401,15 @@
     "errors": {
       "signinFailed": "登錄失敗,請檢查郵箱和密碼",
       "googleSigninFailed": "Google 登錄失敗,請重試"
+    },
+    "callback": {
+      "loading": "正在加載...",
+      "completingGoogleLogin": "正在完成 Google 登錄",
+      "syncingAccount": "請稍候,正在同步您的賬戶信息...",
+      "loginFailed": "登錄失敗",
+      "redirectingToLogin": "正在跳轉到登錄頁面...",
+      "noSessionRetry": "未獲取到登錄會話，請重試",
+      "noValidSession": "未找到有效的登錄會話"
     }
   },
   "dataanalysis": {

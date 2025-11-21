@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams, useParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { authApi } from '@/lib/api'
 import { setAccessToken, setUser } from '@/lib/auth/storage'
@@ -13,24 +14,30 @@ import { setAccessToken, setUser } from '@/lib/auth/storage'
 export default function AuthCallbackPage() {
   return (
     <Suspense
-      fallback={
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4">
-          <div className="text-center space-y-4">
-            <div className="relative">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-primary mx-auto" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="h-8 w-8 rounded-full bg-primary/20" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-lg font-medium text-slate-900">正在加载...</p>
-            </div>
-          </div>
-        </div>
-      }
+      fallback={<AuthCallbackFallback />}
     >
       <AuthCallbackContent />
     </Suspense>
+  )
+}
+
+function AuthCallbackFallback() {
+  const t = useTranslations('login.callback')
+  
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4">
+      <div className="text-center space-y-4">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-primary mx-auto" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-primary/20" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <p className="text-lg font-medium text-slate-900">{t('loading')}</p>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -39,6 +46,7 @@ function AuthCallbackContent() {
   const searchParams = useSearchParams()
   const params = useParams()
   const locale = params.locale as string
+  const t = useTranslations('login.callback')
   const [errorMessage, setErrorMessage] = useState<string>('')
 
   useEffect(() => {
@@ -87,7 +95,7 @@ function AuthCallbackContent() {
 
             if (retryError || !retrySession) {
               console.error('未获取到 session')
-              setErrorMessage('未获取到登录会话，请重试')
+              setErrorMessage(t('noSessionRetry'))
               setTimeout(() => {
                 router.push(`/${locale}/login?error=no_session`)
               }, 2000)
@@ -111,7 +119,7 @@ function AuthCallbackContent() {
 
           if (sessionError || !session) {
             console.error('未找到有效的 session')
-            setErrorMessage('未找到有效的登录会话')
+            setErrorMessage(t('noValidSession'))
             setTimeout(() => {
               router.push(`/${locale}/login?error=no_session`)
             }, 2000)
@@ -122,7 +130,7 @@ function AuthCallbackContent() {
         }
       } catch (error) {
         console.error('OAuth 回调处理失败:', error)
-        const message = error instanceof Error ? error.message : '未知错误'
+        const message = error instanceof Error ? error.message : t('loginFailed')
         setErrorMessage(message)
         setTimeout(() => {
           router.push(`/${locale}/login?error=sync_failed&message=${encodeURIComponent(message)}`)
@@ -161,9 +169,9 @@ function AuthCallbackContent() {
         {errorMessage ? (
           <div className="space-y-2">
             <div className="text-red-500 text-xl">⚠️</div>
-            <p className="text-lg font-medium text-red-600">登录失败</p>
+            <p className="text-lg font-medium text-red-600">{t('loginFailed')}</p>
             <p className="text-sm text-slate-600">{errorMessage}</p>
-            <p className="text-xs text-slate-500">正在跳转到登录页面...</p>
+            <p className="text-xs text-slate-500">{t('redirectingToLogin')}</p>
           </div>
         ) : (
           <>
@@ -174,8 +182,8 @@ function AuthCallbackContent() {
               </div>
             </div>
             <div className="space-y-2">
-              <p className="text-lg font-medium text-slate-900">正在完成 Google 登录</p>
-              <p className="text-sm text-slate-500">请稍候,正在同步您的账户信息...</p>
+              <p className="text-lg font-medium text-slate-900">{t('completingGoogleLogin')}</p>
+              <p className="text-sm text-slate-500">{t('syncingAccount')}</p>
             </div>
           </>
         )}
