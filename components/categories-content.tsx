@@ -560,9 +560,8 @@ function CategoriesPageContent() {
                         <button
                           type="submit"
                           aria-label="Search"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors disabled:opacity-50"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 cursor-pointer rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors disabled:opacity-50"
                           disabled={inputValue.trim() === "" || searching}
-                          style={{color:inputValue.trim() ? "#0057FF" : ""}}
                           
                         >
                           {searching ? (

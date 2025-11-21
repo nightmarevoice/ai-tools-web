@@ -239,11 +239,11 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
       label: tCommon("nav.intelligentTools"),
       active: pathname === `/${locale}/dashboard` || pathname === "/dashboard",
     },
-    {
-      href: `/${locale}/dataanalysis`,
-      label: tCommon("nav.dataanalysis"),
-      active: pathname.startsWith(`/${locale}/dataanalysis`) || pathname.startsWith("/dataanalysis"),
-    },
+    // {
+    //   href: `/${locale}/dataanalysis`,
+    //   label: tCommon("nav.dataanalysis"),
+    //   active: pathname.startsWith(`/${locale}/dataanalysis`) || pathname.startsWith("/dataanalysis"),
+    // },
   ]
 
   const shouldElevate = transparentAtTop ? isScrolled : (!isHome || isScrolled)
