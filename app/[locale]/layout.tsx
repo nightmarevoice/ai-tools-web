@@ -5,6 +5,7 @@ import { locales } from '@/i18n'
 import { Toaster } from '@/components/ui/sonner'
 import { LoginPromptProvider } from '@/components/login-prompt-provider'
 import { LocaleSync } from '@/components/locale-sync'
+import { AnalyticsProvider } from '@/components/analytics-provider'
 
 export default async function LocaleLayout({
   children,
@@ -45,6 +46,7 @@ export default async function LocaleLayout({
           }}
         />
         <NextIntlClientProvider messages={messages}>
+          <AnalyticsProvider />
           <LocaleSync currentLocale={locale} />
           {children}
           <Toaster />
