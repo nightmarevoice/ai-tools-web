@@ -82,49 +82,38 @@ export function DashboardContent() {
   return (
     <div className="flex min-h-screen flex-col theme-0057ff">
       <Navbar />
-      <main className="flex-1">
-        <div className="relative py-8 md:py-12 z-10 mx-auto px-3 max-w-7xl">
-          <div className="grid gap-8 md:grid-cols-[240px_1fr] lg:grid-cols-[240px_1fr]">
-            {/* 左侧推荐工具列表 */}
-            <aside className="sticky top-20 h-max">
-              <div className="relative overflow-y-auto max-h-[calc(100vh-5rem)] pr-1">
-                <RecommendedTools />
-              </div>
-            </aside>
-            
-            {/* 右侧搜索结果 */}
-            <div className="space-y-8">
-              <section style={{marginBottom: "0px"}} className="relative overflow-hidden  text-slate-900">
-                
-                <div className="relative z-10 px-4 md:px-6">
-                  <div className="max-w-7xl mx-auto py-6">
-                    <div className="mb-2 text-center p-6" >
-                      <div className="text-3xl text-center text-lg font-medium mb-3 text-slate-900">
-                        {t("title")}
-                      </div>
-                      <div className="text-xs text-center text-muted-foreground">
-                        {t("description")}
-                      </div>
-                    </div>
-                    <div className="mx-auto text-center mb-8" style={{width: "500px"}}>
-                      
-                      <DashboardSearch onSearch={handleSearch} initialQuery={(searchParams?.get("q") ?? "")} />
-                    </div>
-                  </div>
-                </div>
-              </section>
-              <PaperResults 
-                results={searchResults}
-                loading={isSearching}
-                error={error}
-                query={currentQuery}
-              />
+      <section className="relative overflow-hidden pt-12 md:pt-16 text-slate-900">
+        <BackgroundPattern />
+        <div className="relative z-10 px-4 md:px-6">
+          <div className="max-w-7xl mx-auto py-6 md:py-8">
+            <div className="w-150 mx-auto">
+              <DashboardSearch onSearch={handleSearch} initialQuery={(searchParams?.get("q") ?? "")} />
             </div>
           </div>
         </div>
-        
-        
-      </main>
+      </section>
+      <div className="flex-1">
+        <div className="px-4 md:px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex gap-6 py-6 md:py-8">
+              {/* 左侧推荐工具列表 */}
+              <aside className="hidden sticky top-20 lg:block w-64 flex-shrink-0">
+                <RecommendedTools />
+              </aside>
+              
+              {/* 右侧搜索结果 */}
+              <div className="flex-1 min-w-0">
+                <PaperResults 
+                  results={searchResults}
+                  loading={isSearching}
+                  error={error}
+                  query={currentQuery}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   )
