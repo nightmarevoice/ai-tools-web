@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { authApi } from '@/lib/api'
 import { setAccessToken, setUser } from '@/lib/auth/storage'
+import { Card, CardContent } from '@/components/ui/card'
 
 /**
  * OAuth 回调页面
@@ -23,20 +24,24 @@ export default function AuthCallbackPage() {
 
 function AuthCallbackFallback() {
   const t = useTranslations('login.callback')
-  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4">
-      <div className="text-center space-y-4">
-        <div className="relative">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-primary mx-auto" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-8 w-8 rounded-full bg-primary/20" />
+      <Card className="w-full max-w-md shadow-lg">
+        <CardContent className="pt-10 pb-10">
+          <div className="flex flex-col items-center justify-center space-y-6 text-center">
+            <div className="relative">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-primary mx-auto" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-8 w-8 rounded-full bg-primary/20" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-lg font-medium text-slate-900">{t('loading')}</p>
+            </div>
           </div>
-        </div>
-        <div className="space-y-2">
-          <p className="text-lg font-medium text-slate-900">{t('loading')}</p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
@@ -165,29 +170,39 @@ function AuthCallbackContent() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4">
-      <div className="text-center space-y-4">
-        {errorMessage ? (
-          <div className="space-y-2">
-            <div className="text-red-500 text-xl">⚠️</div>
-            <p className="text-lg font-medium text-red-600">{t('loginFailed')}</p>
-            <p className="text-sm text-slate-600">{errorMessage}</p>
-            <p className="text-xs text-slate-500">{t('redirectingToLogin')}</p>
-          </div>
-        ) : (
-          <>
-            <div className="relative">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-primary mx-auto" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="h-8 w-8 rounded-full bg-primary/20" />
+      <Card className="w-full max-w-md shadow-lg">
+        <CardContent className="pt-10 pb-10">
+          <div className="flex flex-col items-center justify-center space-y-6 text-center">
+            {errorMessage ? (
+              <div className="space-y-4 w-full">
+                <div className="mx-auto w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                  <span className="text-2xl">⚠️</span>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-lg font-medium text-red-600">{t('loginFailed')}</p>
+                  <p className="text-sm text-slate-600 bg-slate-50 p-3 rounded-md border border-slate-100 break-all">
+                    {errorMessage}
+                  </p>
+                  <p className="text-xs text-slate-500 pt-2">{t('redirectingToLogin')}</p>
+                </div>
               </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-lg font-medium text-slate-900">{t('completingGoogleLogin')}</p>
-              <p className="text-sm text-slate-500">{t('syncingAccount')}</p>
-            </div>
-          </>
-        )}
-      </div>
+            ) : (
+              <>
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-primary mx-auto" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="h-8 w-8 rounded-full bg-primary/20" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-lg font-medium text-slate-900">{t('completingGoogleLogin')}</p>
+                  <p className="text-sm text-slate-500">{t('syncingAccount')}</p>
+                </div>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
