@@ -103,6 +103,7 @@ export function CategoryExploration() {
           </div>
           <Link
             href="/categories"
+            prefetch={true}
             className="text-sm font-medium text-primary hover:underline"
           >
             {t("viewAll")}
@@ -126,17 +127,18 @@ export function CategoryExploration() {
                 <Link
                   key={category.category}
                   href={`/categories?type=${encodeURIComponent(category.category)}`}
-                  className="group relative flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0057FF]/50 hover:shadow-lg hover:shadow-blue-100/50 overflow-hidden"
+                  prefetch={true}
+                  className="group relative flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-150 hover:-translate-y-1 hover:border-[#0057FF]/50 hover:shadow-lg hover:shadow-blue-100/50 overflow-hidden"
                 >
                   {/* 悬停背景渐变效果 */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/80 group-hover:to-indigo-50/60 transition-all duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/80 group-hover:to-indigo-50/60 transition-all duration-150"></div>
                   
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-3xl group-hover:scale-110 transition-transform duration-150">
                         {meta.emoji}
                       </span>
-                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#0057FF] transition-colors duration-300">
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#0057FF] transition-colors duration-150">
                         {category.category_name}
                       </h3>
                     </div>
@@ -146,8 +148,8 @@ export function CategoryExploration() {
                       
                       <div className="flex items-center gap-2 pt-2 flex-wrap">
                         {/* 工具数量卡片 */}
-                        <div className="flex items-center gap-1.5 px-3 py-1  bg-blue-50 rounded-full border border-blue-200 group-hover:bg-blue-100 group-hover:border-blue-300 group-hover:shadow-sm transition-all duration-300">
-                          <span className="text-blue-600 text-xs group-hover:scale-110 transition-transform duration-300">
+                        <div className="flex items-center gap-1.5 px-3 py-1  bg-blue-50 rounded-full border border-blue-200 group-hover:bg-blue-100 group-hover:border-blue-300 group-hover:shadow-sm transition-all duration-150">
+                          <span className="text-blue-600 text-xs group-hover:scale-110 transition-transform duration-150">
                             🔧
                           </span>
                           <div className="flex items-baseline gap-1">
@@ -159,8 +161,8 @@ export function CategoryExploration() {
                         </div>
                         
                         {/* 访问量卡片 */}
-                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 group-hover:bg-emerald-100 group-hover:border-emerald-300 group-hover:shadow-sm transition-all duration-300">
-                          <span className="text-xs group-hover:scale-110 transition-transform duration-300">
+                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 group-hover:bg-emerald-100 group-hover:border-emerald-300 group-hover:shadow-sm transition-all duration-150">
+                          <span className="text-xs group-hover:scale-110 transition-transform duration-150">
                             📊
                           </span>
                           <div className="flex items-baseline gap-1">

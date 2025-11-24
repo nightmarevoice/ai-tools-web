@@ -4,7 +4,6 @@ import React, { useState } from "react"
 import { ExternalLink, Star, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useTranslations, useLocale } from "next-intl"
-import { useTracking } from "@/hooks/useTracking"
 
 export interface Tool {
   id: number
@@ -24,19 +23,9 @@ export function ToolCard({ tool }: { tool: Tool }) {
   const t = useTranslations("common")
   const locale = useLocale()
   const [iconError, setIconError] = useState(false)
-  const { trackTool } = useTracking()
   
   const iconUrl = tool.icon || tool.icon_url
   const showIcon = iconUrl && !iconError
-  
-  const handleClick = () => {
-    trackTool(tool.id, tool.name, 'click', {
-      category: tool.category,
-      isNew: tool.isNew,
-      isTrending: tool.isTrending,
-      monthlyVisits: tool.monthly_visits,
-    })
-  }
   
   const pricingBadgeStyle = {
     Free: "bg-green-100/80 text-green-700 border border-green-300/50",
@@ -47,8 +36,8 @@ export function ToolCard({ tool }: { tool: Tool }) {
   return (
     <Link
       href={`/${locale}/tools/${tool.id}`}
-      onClick={handleClick}
-      className="group p-6 rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-300 hover:-translate-y-1 block"
+      prefetch={true}
+      className="group p-6 rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
     >
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all pointer-events-none"></div>
 
