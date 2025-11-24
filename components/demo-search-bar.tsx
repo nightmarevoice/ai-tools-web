@@ -27,7 +27,6 @@ export function DemoSearchBar() {
   const [mode, setMode] = useState<"chat" | "agent">("chat")
   const [quotaStatus, setQuotaStatus] = useState<QuotaStatus | null>(null)
   const [showQuotaWarning, setShowQuotaWarning] = useState(false)
-  const [showQuotaInfo, setShowQuotaInfo] = useState(false)
   const [isCheckingQuota, setIsCheckingQuota] = useState(false)
   const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -106,10 +105,7 @@ export function DemoSearchBar() {
       return
     }
 
-    // 如果配额允许但剩余 <= 2，显示信息提示（不阻止跳转）
-    if (currentQuotaStatus && currentQuotaStatus.quota_enabled && currentQuotaStatus.remaining <= 2 && currentQuotaStatus.remaining > 0) {
-      setShowQuotaInfo(true)
-    }
+    
 
     setIsOpen(false)
     const dest = mode === "chat" ? "/categories" : "/dashboard"
@@ -145,10 +141,6 @@ export function DemoSearchBar() {
       return
     }
 
-    // 如果配额允许但剩余 <= 2，显示信息提示（不阻止跳转）
-    if (currentQuotaStatus && currentQuotaStatus.quota_enabled && currentQuotaStatus.remaining <= 2 && currentQuotaStatus.remaining > 0) {
-      setShowQuotaInfo(true)
-    }
 
     setIsOpen(false)
     const dest = mode === "chat" ? "/categories" : "/dashboard"
@@ -282,30 +274,7 @@ export function DemoSearchBar() {
         </DialogContent>
       </Dialog>
 
-      {/* Quota Info Dialog */}
-      <Dialog open={showQuotaInfo} onOpenChange={setShowQuotaInfo}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
-                <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <DialogTitle className="text-xl">{tLoginPrompt("title")}</DialogTitle>
-            </div>
-            <DialogDescription className="text-base pt-2">
-              {tLoginPrompt("description")}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-center">
-            <Button
-              onClick={() => setShowQuotaInfo(false)}
-              variant="outline"
-            >
-              {tLoginPrompt("cancel")}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+     
     </div>
   )
 }
