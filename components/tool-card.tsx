@@ -36,7 +36,8 @@ export function ToolCard({ tool }: { tool: Tool }) {
   return (
     <Link
       href={`/${locale}/tools/${tool.id}`}
-      className="group p-6 rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-300 hover:-translate-y-1 block"
+      prefetch={true}
+      className="group p-6 rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
     >
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all pointer-events-none"></div>
 

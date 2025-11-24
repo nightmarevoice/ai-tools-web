@@ -127,28 +127,61 @@ function CategoriesPageContent() {
   const [searchTotal, setSearchTotal] = useState<number>(0)
   const [searchLoadingMore, setSearchLoadingMore] = useState<boolean>(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
-  // 远程拉取分类数据
+  // 远程拉取分类数据（优化：并行加载初始数据）
   useEffect(() => {
     let aborted = false
     const fetchData = async () => {
       try {
         setLoadingCategories(true)
+        setAppsLoading(true)
         setCategoriesError(null)
-        const response = await categoriesApi.list(resolvedLang)
+        setAppsError(null)
+
+        // 并行获取分类列表和初始应用数据
+        const [categoriesResponse, appsResponse] = await Promise.all([
+          categoriesApi.list(resolvedLang),
+          appsApi.list({
+            lang: (resolvedLang as Language | undefined) ?? undefined,
+            page: 1,
+            limit: DEFAULT_APP_LIMIT,
+          })
+        ])
+
         if (aborted) return
-        setCategories(response.categories ?? [])
+
+        const cats = categoriesResponse.categories ?? []
+        setCategories(cats)
+
+        // 如果有 URL 参数指定的分类，使用它；否则使用第一个分类
+        const targetCategoryId = typeParam && cats.some(c => c.id === typeParam)
+          ? typeParam
+          : cats[0]?.id
+
+        if (targetCategoryId) {
+          setActiveCategoryId(targetCategoryId)
+
+          // 如果初始应用数据匹配目标分类，直接使用；否则重新获取
+          setApps(appsResponse.items ?? [])
+          setAppsPage(appsResponse.page ?? 1)
+          setAppsPages(appsResponse.pages ?? 1)
+          setAppsTotal(appsResponse.total ?? 0)
+        }
       } catch (e: any) {
         if (aborted) return
         setCategoriesError(e?.message || t("loadAppsFailed"))
+        setAppsError(e?.message ?? t("loadAppsFailed"))
       } finally {
-        if (!aborted) setLoadingCategories(false)
+        if (!aborted) {
+          setLoadingCategories(false)
+          setAppsLoading(false)
+        }
       }
     }
     fetchData()
     return () => {
       aborted = true
     }
-  }, [resolvedLang, t])
+  }, [resolvedLang, t, typeParam])
 
   
 
@@ -165,16 +198,17 @@ function CategoriesPageContent() {
     }
   }, [])
 
-  useEffect(() => {
-    if (categories.length === 0) return
-    if (typeParam && categories.some((category) => category.id === typeParam)) {
-      setActiveCategoryId(typeParam)
-      return
-    }
-    if (!activeCategoryId) {
-      setActiveCategoryId(categories[0].id)
-    }
-  }, [categories, typeParam, activeCategoryId])
+  // 移除此 useEffect，因为 activeCategoryId 现在在初始加载时设置
+  // useEffect(() => {
+  //   if (categories.length === 0) return
+  //   if (typeParam && categories.some((category) => category.id === typeParam)) {
+  //     setActiveCategoryId(typeParam)
+  //     return
+  //   }
+  //   if (!activeCategoryId) {
+  //     setActiveCategoryId(categories[0].id)
+  //   }
+  // }, [categories, typeParam, activeCategoryId])
 
   useEffect(() => {
     if (!typeParam) return
@@ -195,9 +229,19 @@ function CategoriesPageContent() {
     [categories, activeCategoryId]
   )
 
-  // 拉取分类下的应用列表（分页）
+  // 拉取分类下的应用列表（仅在切换分类时执行，初始加载已在上面并行完成）
+  const [initialLoadDone, setInitialLoadDone] = useState(false)
+
   useEffect(() => {
-    if (!activeCategoryId) return
+    // 标记初始加载完成
+    if (categories.length > 0 && activeCategoryId && !initialLoadDone) {
+      setInitialLoadDone(true)
+      return
+    }
+
+    // 仅在初始加载完成后，切换分类时才执行
+    if (!activeCategoryId || !initialLoadDone) return
+
     let aborted = false
 
     async function fetchFirstPage() {
@@ -236,7 +280,7 @@ function CategoriesPageContent() {
     return () => {
       aborted = true
     }
-  }, [activeCategoryId, resolvedLang, t])
+  }, [activeCategoryId, resolvedLang, t, initialLoadDone, categories.length])
 
   const loadMoreApps = useCallback(async () => {
     if (!activeCategoryId) return
