@@ -8,7 +8,6 @@ import { Footer } from "@/components/footer"
 import { appsApi } from "@/lib/api/apps"
 import { notFound } from "next/navigation"
 import { getTranslations } from "next-intl/server"
-import { ToolPageTracker } from "@/components/tool-page-tracker"
 
 interface ToolPageProps {
   params: Promise<{
@@ -222,7 +221,6 @@ export default async function ToolPage({ params }: ToolPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <ToolPageTracker toolId={appId} toolName={app.app_name} locale={locale} />
       <Navbar />
       <div className="flex-1 bg-gradient-to-b from-blue-50/50 to-white">
         <div className="relative z-10 mx-auto px-6 py-6 max-w-7xl">
@@ -306,15 +304,6 @@ export default async function ToolPage({ params }: ToolPageProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex"
-                      onClick={() => {
-                        if (typeof window !== 'undefined' && (window as any).va) {
-                          ;(window as any).va('track', 'visit_website', {
-                            toolId: appId,
-                            toolName: app.app_name,
-                            website: app.official_website,
-                          })
-                        }
-                      }}
                     >
                       <Button variant="outline" className="gap-2 cursor-pointer text-white hover:text-white bg-blue-600 hover:bg-blue-700">
                         <Globe className="w-4 h-4" />

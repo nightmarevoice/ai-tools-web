@@ -21,7 +21,6 @@ import { Logo } from "@/components/logo"
 import { useAuth } from "@/hooks/useAuth"
 import { useLocale, useTranslations } from "next-intl"
 import { locales } from "@/i18n"
-import { useTracking } from "@/hooks/useTracking"
 
 // Lazy load the sheet content for mobile menu
 const MobileMenuContent = dynamic(() => import("@/components/mobile-menu-content"), {
@@ -40,7 +39,6 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
   const { user, isAuthenticated, logout, loading } = useAuth()
   const [isLangOpen, setIsLangOpen] = React.useState(false)
   const tCommon = useTranslations("common")
-  const { trackNav, trackAction } = useTracking()
 
   // 生成并存储唯一 key (IP + UUID)
   React.useEffect(() => {
@@ -294,7 +292,6 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
               <Link
                 key={route.href}
                 href={route.href}
-                onClick={() => trackNav(route.href, pathname)}
                 aria-current={route.active ? "page" : undefined}
                 className={cn(
                   "text-sm font-medium transition-colors",

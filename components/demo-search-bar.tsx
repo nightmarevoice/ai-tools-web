@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { searchApi } from "@/lib/api/search"
 import type { QuotaStatus } from "@/types/api"
-import { useTracking } from "@/hooks/useTracking"
 import {
   Dialog,
   DialogContent,
@@ -33,7 +32,6 @@ export function DemoSearchBar() {
   const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { trackSearch, trackAction } = useTracking()
 
   const checkQuotaStatus = async () => {
     setIsCheckingQuota(true)
@@ -115,17 +113,7 @@ export function DemoSearchBar() {
 
     setIsOpen(false)
     const dest = mode === "chat" ? "/categories" : "/dashboard"
-    const query = searchQuery.trim()
-    
-    // 追踪搜索事件
-    trackSearch(query, {
-      mode,
-      destination: dest,
-      quotaStatus: currentQuotaStatus?.allowed ? 'allowed' : 'blocked',
-      remainingQuota: currentQuotaStatus?.remaining,
-    })
-    
-    router.push(`${dest}?q=${encodeURIComponent(query)}`)
+    router.push(`${dest}?q=${encodeURIComponent(searchQuery.trim())}`)
   }
 
   const handleLogin = () => {
@@ -164,16 +152,6 @@ export function DemoSearchBar() {
 
     setIsOpen(false)
     const dest = mode === "chat" ? "/categories" : "/dashboard"
-    
-    // 追踪热门搜索点击
-    trackSearch(searchTerm, {
-      mode,
-      destination: dest,
-      source: 'popular_search',
-      quotaStatus: currentQuotaStatus?.allowed ? 'allowed' : 'blocked',
-      remainingQuota: currentQuotaStatus?.remaining,
-    })
-    
     router.push(`${dest}?q=${encodeURIComponent(searchTerm)}`)
   }
 
@@ -227,10 +205,7 @@ export function DemoSearchBar() {
                 <Button
                   type="button"
                   variant={mode === "chat" ? "default" : "outline"}
-                  onClick={() => {
-                    setMode("chat")
-                    trackAction("click", { element: "search_mode", mode: "chat" })
-                  }}
+                  onClick={() => setMode("chat")}
                   className={mode === "chat" ? "bg-[#0057FF] text-[#fff]" : "bg-transparent"}
                   style={{ backgroundColor: mode === "chat" ? "#0057FF" : "transparent" }}
                 >
@@ -240,10 +215,7 @@ export function DemoSearchBar() {
                 <Button
                   type="button"
                   variant={mode === "agent" ? "default" : "outline"}
-                  onClick={() => {
-                    setMode("agent")
-                    trackAction("click", { element: "search_mode", mode: "agent" })
-                  }}
+                  onClick={() => setMode("agent")}
                   className={mode === "agent" ? "bg-[#0057FF] text-[#fff]" : "bg-transparent"}
                   style={{ backgroundColor: mode === "agent" ? "#0057FF" : "transparent" }}
                 >

@@ -11,8 +11,6 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2 } from 'lucide-react'
-import { useAuth } from '@/hooks/useAuth'
-import { useTracking } from '@/hooks/useTracking'
 
 /**
  * 登录页面
@@ -23,8 +21,6 @@ export default function LoginPage() {
   const params = useParams()
   const locale = params.locale as string
   const t = useTranslations('login')
-  const { login } = useAuth()
-  const { trackAuth } = useTracking()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -40,10 +36,6 @@ export default function LoginPage() {
     try {
       const response = await authApi.signin({ email, password })
       console.log('登录成功:', response.user)
-      
-      // 使用 useAuth 的 login 方法（会自动追踪）
-      login(response.session.access_token, response.user, 'password')
-      
       router.push(`/${locale}`)
     } catch (err) {
       console.error('登录失败:', err)
@@ -59,9 +51,6 @@ export default function LoginPage() {
     setGoogleLoading(true)
 
     try {
-      // 追踪 Google 登录尝试
-      trackAuth('login', 'google')
-      
       const { url } = await authApi.signInWithGoogle(locale)
       console.log('Google OAuth URL:', url)
       // 重定向到 Google OAuth 页面

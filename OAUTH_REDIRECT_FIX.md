@@ -33,8 +33,6 @@
    https://ai-tool-web.zeabur.app/en/auth/callback
    ```
 
-http://69.5.20.105:6506
-
    **注意**：如果你的应用支持多语言，需要为每种语言的路径添加回调 URL。
 
 5. 点击 **Save** 保存配置

@@ -14,6 +14,8 @@
     "loadMore": "さらに読み込む",
     "searchResults": "検索結果",
     "monthlyVisits": "月間訪問数",
+    "new": "新着",
+    "trending": "トレンド",
     "nav": {
       "home": "ホーム",
       "categories": "カテゴリー",
@@ -297,6 +299,8 @@
     }
   },
   "dashboard": {
+    "title": "インテリジェント AI ツールワークフローソリューション生成",
+    "description": "シナリオを説明すると、完璧な AI ツールワークフローソリューションをインテリジェントに生成します",
     "searchFailed": "検索に失敗しました。後でもう一度お試しください。",
     "placeholder": "ソーシャルメディアマーケティングキャンペーンを企画する"
   },
@@ -307,7 +311,8 @@
       "dalle3": "テキストプロンプトから高品質な AI 画像を生成",
       "githubCopilot": "コーディングをより速く、よりスマートにする AI コーディングアシスタント",
       "midjourney": "プロフェッショナルグレードの AI アート生成ツール",
-      "claudeCode": "パフォーマンスが向上した次世代 AI アシスタント"
+      "claudeCode": "パフォーマンスが向上した次世代 AI アシスタント",
+      "googleGemini": "Google Gemini は Google が開発した大規模言語モデルです"
     }
   },
   "paperResults": {
