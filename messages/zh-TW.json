@@ -116,32 +116,32 @@
       "description": "關於我們的 AI 工具導航的反饋——場景驅動、基於標籤的探索，提供清晰的替代方案和並排比較視圖，幫助您更快地選擇合適的工具。",
       "items": [
         {
-          "quote": "用自然語言描述需求，就能返回生產就緒的 AI 工具鏈，節省了大量篩選時間。",
+          "quote": "用自然語言描述需求，系統就能智能匹配到最合適的 AI 工具，再也不用在海量工具中盲目篩選了。",
           "author": "陳若曦",
           "role": "數據分析師 · 互聯網"
         },
         {
-          "quote": "標籤和場景導航清晰；替代方案和比較很實用，幫助我們快速決策。",
+          "quote": "分類導航和標籤系統很清晰，每個工具都有詳細的替代方案說明，幫助我們快速做出選擇。",
           "author": "王磊",
           "role": "產品經理 · 創業公司"
         },
         {
-          "quote": "它將論文工作流——從搜索、總結到可視化——一次性連接起來；效率顯著提升。",
+          "quote": "Agent 模式特別實用，輸入場景需求就能自動生成完整的工具使用方案，大大提升了工作效率。",
           "author": "劉莎莎",
           "role": "研究生 · 計算機系"
         },
         {
-          "quote": "我喜歡工具編排的方法：複製完整的流水線作為起點，然後進行優化。",
+          "quote": "作為開發者，我經常需要對比不同 AI 工具的功能差異，這裡的工具詳情頁和比較功能非常專業。",
           "author": "趙亞歷",
           "role": "後端工程師"
         },
         {
-          "quote": "收藏和比較視圖在團隊評審中很好用；關鍵差異在一個頁面上就能看到。",
+          "quote": "收藏功能讓我可以建立自己的工具庫，在團隊討論時能快速分享和對比，協作效率明顯提升。",
           "author": "茉莉",
           "role": "設計負責人"
         },
         {
-          "quote": "搜索結果不僅包括工具，還包括工作流模板——非常適合新手。",
+          "quote": "語義搜索真的很智能，即使描述得不夠準確，也能找到相關的工具，對新手非常友好。",
           "author": "漢克",
           "role": "數據科學實習生"
         }
@@ -163,11 +163,11 @@
     },
     "aiToolsTabs": {
       "title": "精選 AI 工具",
-      "subtitle": "通過趨勢、最新和編輯推薦快速發現高質量 AI 工具",
+      "subtitle": "通過熱門推薦、趨勢推薦快速發現高質量 AI 工具",
       "tabs": {
-        "trending": "🔥 熱門",
+        "trending": "🔥 熱門推薦",
         "recent": "⭐ 最新",
-        "featured": "✨ 編輯推薦"
+        "featured": "✨ 趨勢推薦"
       },
       "tools": {
         "chatgpt": {
@@ -266,16 +266,36 @@
     "loadingDetail": "正在加載應用詳情...",
     "failed": "加載失敗",
     "backToCategories": "返回分類",
+    "backToHome": "返回首頁",
     "noPreview": "無預覽圖片",
-    "whatIs": "什麼是{app}",
+    "whatIs": "什麼是 {app}?",
     "alternatives": "替代工具",
+    "alternativesTo": "{app} 的替代工具",
+    "by": "由",
+    "visitWebsite": "訪問網站",
+    "stats": {
+      "monthlyVisits": "月訪問量",
+      "avgDuration": "平均停留時間",
+      "categoryRank": "分類排名",
+      "bounceRate": "跳出率"
+    },
+    "tabs": {
+      "overview": "概覽",
+      "alternatives": "替代工具"
+    },
+    "mainFeatures": "{app} 的主要功能有哪些",
     "similar": {
       "loading": "正在加載相似工具...",
-      "none": "暫無相關工具"
+      "none": "暫無相關工具",
+      "noAlternatives": "暫無替代工具，請稍後查看！"
     },
     "similarity": "相似度：{percent}%",
+    "match": "{percent}% 匹配",
     "preview": {
       "aria": "打開官網預覽"
+    },
+    "metadata": {
+      "notFound": "工具未找到"
     }
   },
   "dashboard": {

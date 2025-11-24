@@ -34,7 +34,7 @@ export function PaperResults({ results, loading, error, query }: PaperResultsPro
       )
     }
 
-    if (!loading) {
+    if (loading) {
       return (
         <Card>
           <CardContent className="py-12">
@@ -161,9 +161,7 @@ export function PaperResults({ results, loading, error, query }: PaperResultsPro
 
       {summary ? (
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">{t("aiSummary")}</CardTitle>
-          </CardHeader>
+        
           <CardContent>
             <div className="prose prose-sm max-w-none dark:prose-invert">
               <ReactMarkdown

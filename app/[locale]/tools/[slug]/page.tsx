@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, ExternalLink, Star, TrendingUp, Clock, Globe, BarChart3, Users } from "lucide-react"
+import { ArrowLeft, ExternalLink, Star, TrendingUp, Clock, Globe, BarChart3, Users, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Navbar } from "@/components/navbar"
@@ -227,7 +227,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
           {/* Back Button */}
           <div className="mb-6">
             <Link href={`/${locale}`}>
-              <Button variant="ghost" size="sm" className="gap-1">
+              <Button variant="ghost" size="sm" className="gap-1 border cursor-pointer border-[#0057FF] text-[#0057FF] hover:bg-[#0057FF] hover:text-white hover:bg-[#0057FF] px-4 py-2">
                 <ArrowLeft className="h-4 w-4" />
                 {t("backToHome")}
               </Button>
@@ -243,7 +243,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
                   <img
                     src={app.icon_url}
                     alt={app.app_name}
-                    className="w-24 h-24 rounded-2xl border-2 border-blue-200 shadow-md"
+                    className="w-16 h-16 rounded-2xl border-2 border-blue-200 shadow-md"
                   />
                 </div>
               ) : (
@@ -314,9 +314,24 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 </div>
               </div>
               <div className="flex-1" >
-                {app.screenshot_url && (
+                {app.screenshot_url && (app.official_website || app.url) && (
+                    <div className="bg-white rounded-xl border border-blue-100 p-1.5 shadow-sm">
+                      <a
+                        href={app.official_website || app.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block cursor-pointer group"
+                      >
+                        <img
+                          src={app.screenshot_url}
+                          alt={`${app.app_name} screenshot`}
+                          className="w-full rounded-lg border border-gray-200 transition-all duration-300 group-hover:opacity-90 group-hover:shadow-lg group-hover:scale-[1.02]"
+                        />
+                      </a>
+                    </div>
+                  )}
+                {app.screenshot_url && !app.official_website && !app.url && (
                     <div className="bg-white rounded-xl border border-blue-100 p-1 shadow-sm">
-                     
                       <img
                         src={app.screenshot_url}
                         alt={`${app.app_name} screenshot`}
@@ -336,10 +351,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
           <Tabs defaultValue="overview" className="mt-8">
             <TabsList className="bg-white border border-blue-100 p-1 rounded-lg">
               <TabsTrigger value="overview" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 cursor-pointer">
-                {t("whatIs", { app: app.app_name })}
+                {t("tabs.overview")}
               </TabsTrigger>
               <TabsTrigger value="alternatives" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 cursor-pointer">
-                {t("alternatives")}
+                {t("tabs.alternatives")}
               </TabsTrigger>
             </TabsList>
 
@@ -407,20 +422,22 @@ export default async function ToolPage({ params }: ToolPageProps) {
                
                 {app.product_description && (
                   <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">
-                      {app.app_name}
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4   pb-3">
+                     {t("whatIs", { app: app.app_name })}
                     </h2>
-                    <div className="prose prose-blue max-w-none mb-6">
+                    <div className="prose prose-blue max-w-none mb-8">
                       <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                         {app.product_description}
                       </p>
                     </div>
-
+                    <div className="border-b border-[#0057FF]/50  mb-6"></div>
                     {/* Main Features with formatted list */}
                     {app.main_features && (
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-bold text-gray-900">{t("mainFeatures")}</h3>
-                        <div className="space-y-3">
+                      <>
+                        
+                        <div className="space-y-4">
+                          <h3 className="text-xl font-bold text-gray-900  mb-4 border-[#0057FF]/50 pb-3">{t("mainFeatures", { app: app.app_name })}?</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {app.main_features.split('||').map((feature, index) => {
                             const trimmedFeature = feature.trim()
                             const colonIndex = trimmedFeature.indexOf(':')
@@ -430,25 +447,32 @@ export default async function ToolPage({ params }: ToolPageProps) {
                               const description = trimmedFeature.substring(colonIndex + 1).trim()
                               
                               return (
-                                <div key={index} className="flex gap-2">
-                                  <span className="text-blue-600 mt-1">•</span>
-                                  <div>
-                                    <span className="font-bold text-gray-900">{title}:</span>
-                                    <span className="text-gray-700"> {description}</span>
+                                <div key={index} className="flex gap-3">
+                                  <div className="flex-shrink-0 mt-0.5">
+                                    <Check className="w-5 h-5 text-green-600" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="font-bold text-gray-900 mb-1">{title}</div>
+                                    <div className="text-gray-700 text-sm leading-relaxed">{description}</div>
                                   </div>
                                 </div>
                               )
                             } else {
                               return (
-                                <div key={index} className="flex gap-2">
-                                  <span className="text-blue-600 mt-1">•</span>
-                                  <span className="text-gray-700">{trimmedFeature}</span>
+                                <div key={index} className="flex gap-3">
+                                  <div className="flex-shrink-0 mt-0.5">
+                                    <Check className="w-5 h-5 text-green-600" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="text-gray-700 text-sm leading-relaxed">{trimmedFeature}</div>
+                                  </div>
                                 </div>
                               )
                             }
                           })}
                         </div>
-                      </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 )}

@@ -116,32 +116,32 @@
       "description": "Feedback on our AppHub AI—scenario-driven, tag-based exploration with clear alternatives and side-by-side comparison views to help you choose the right tool faster.",
       "items": [
         {
-          "quote": "Describe requirements in natural language, and get production-ready AI tool chains, saving a lot of screening time.",
+          "quote": "Describe your needs in natural language, and the system intelligently matches the most suitable AI tools. No more blindly searching through countless tools.",
           "author": "Chen Ruoxi",
           "role": "Data Analyst · Internet"
         },
         {
-          "quote": "Clear tags and scenario navigation; alternatives and comparisons are practical, helping us make decisions quickly.",
+          "quote": "The category navigation and tag system are very clear. Each tool has detailed alternative options, helping us make quick decisions.",
           "author": "Wang Lei",
           "role": "Product Manager · Startup"
         },
         {
-          "quote": "It connects the paper workflow—from search, summary to visualization—all at once; efficiency significantly improved.",
+          "quote": "Agent mode is particularly useful. Just input your scenario requirements and it automatically generates a complete tool usage plan, greatly improving work efficiency.",
           "author": "Liu Shasha",
           "role": "Graduate Student · Computer Science"
         },
         {
-          "quote": "I like the tool orchestration approach: copy the complete pipeline as a starting point, then optimize.",
+          "quote": "As a developer, I often need to compare functional differences between AI tools. The tool detail pages and comparison features here are very professional.",
           "author": "Zhao Yali",
           "role": "Backend Engineer"
         },
         {
-          "quote": "Favorites and comparison views work great in team reviews; key differences can be seen on one page.",
+          "quote": "The favorites feature lets me build my own tool library. I can quickly share and compare during team discussions, significantly improving collaboration efficiency.",
           "author": "Moli",
           "role": "Design Lead"
         },
         {
-          "quote": "Search results include not only tools but also workflow templates—perfect for beginners.",
+          "quote": "Semantic search is really intelligent. Even if the description isn't precise, it can still find relevant tools, making it very beginner-friendly.",
           "author": "Hank",
           "role": "Data Science Intern"
         }
@@ -153,12 +153,12 @@
     },
     "aiToolsTabs": {
       "title": "Featured AI Tools",
-      "subtitle": "Quickly discover high-quality AI tools through trending, recently added, and editor's picks.",
-      "description": "Quickly discover high-quality AI tools through trending, recently added, and editor's picks.",
+      "subtitle": "Quickly discover high-quality AI tools through popular recommendations and trending recommendations.",
+      "description": "Quickly discover high-quality AI tools through popular recommendations and trending recommendations.",
       "tabs": {
-        "trending": "🔥 Trending",
+        "trending": "🔥 Popular Recommendations",
         "recent": "⭐ Recently Added",
-        "featured": "✨ Editor's Picks"
+        "featured": "✨ Trending Recommendations"
       },
       "error": "Failed to load trending rankings",
       "empty": "No tool data available",
@@ -272,7 +272,7 @@
       "overview": "Overview",
       "alternatives": "Alternatives"
     },
-    "mainFeatures": "Main Features",
+    "mainFeatures": "What are the main features of {app}?",
     "similar": {
       "loading": "Loading similar tools...",
       "none": "No related tools",

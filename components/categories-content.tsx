@@ -133,38 +133,61 @@ function CategoriesPageContent() {
     const fetchData = async () => {
       try {
         setLoadingCategories(true)
-        setAppsLoading(true)
         setCategoriesError(null)
         setAppsError(null)
 
-        // 并行获取分类列表和初始应用数据
-        const [categoriesResponse, appsResponse] = await Promise.all([
-          categoriesApi.list(resolvedLang),
-          appsApi.list({
-            lang: (resolvedLang as Language | undefined) ?? undefined,
-            page: 1,
-            limit: DEFAULT_APP_LIMIT,
-          })
-        ])
+        // 检查是否有搜索查询参数
+        const qParam = (searchParams?.get("q") ?? "").trim()
+        
+        if (qParam) {
+          // 如果有搜索参数，只加载分类列表，不加载应用列表
+          const categoriesResponse = await categoriesApi.list(resolvedLang)
+          
+          if (aborted) return
+          
+          const cats = categoriesResponse.categories ?? []
+          setCategories(cats)
+          
+          // 如果有 URL 参数指定的分类，使用它；否则使用第一个分类
+          const targetCategoryId = typeParam && cats.some(c => c.id === typeParam)
+            ? typeParam
+            : cats[0]?.id
+          
+          if (targetCategoryId) {
+            setActiveCategoryId(targetCategoryId)
+          }
+        } else {
+          // 如果没有搜索参数，并行获取分类列表和初始应用数据
+          setAppsLoading(true)
+          
+          const [categoriesResponse, appsResponse] = await Promise.all([
+            categoriesApi.list(resolvedLang),
+            appsApi.list({
+              lang: (resolvedLang as Language | undefined) ?? undefined,
+              page: 1,
+              limit: DEFAULT_APP_LIMIT,
+            })
+          ])
 
-        if (aborted) return
+          if (aborted) return
 
-        const cats = categoriesResponse.categories ?? []
-        setCategories(cats)
+          const cats = categoriesResponse.categories ?? []
+          setCategories(cats)
 
-        // 如果有 URL 参数指定的分类，使用它；否则使用第一个分类
-        const targetCategoryId = typeParam && cats.some(c => c.id === typeParam)
-          ? typeParam
-          : cats[0]?.id
+          // 如果有 URL 参数指定的分类，使用它；否则使用第一个分类
+          const targetCategoryId = typeParam && cats.some(c => c.id === typeParam)
+            ? typeParam
+            : cats[0]?.id
 
-        if (targetCategoryId) {
-          setActiveCategoryId(targetCategoryId)
+          if (targetCategoryId) {
+            setActiveCategoryId(targetCategoryId)
 
-          // 如果初始应用数据匹配目标分类，直接使用；否则重新获取
-          setApps(appsResponse.items ?? [])
-          setAppsPage(appsResponse.page ?? 1)
-          setAppsPages(appsResponse.pages ?? 1)
-          setAppsTotal(appsResponse.total ?? 0)
+            // 如果初始应用数据匹配目标分类，直接使用；否则重新获取
+            setApps(appsResponse.items ?? [])
+            setAppsPage(appsResponse.page ?? 1)
+            setAppsPages(appsResponse.pages ?? 1)
+            setAppsTotal(appsResponse.total ?? 0)
+          }
         }
       } catch (e: any) {
         if (aborted) return
@@ -181,7 +204,7 @@ function CategoriesPageContent() {
     return () => {
       aborted = true
     }
-  }, [resolvedLang, t, typeParam])
+  }, [resolvedLang, t, typeParam, searchParams])
 
   
 

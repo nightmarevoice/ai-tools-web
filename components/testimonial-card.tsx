@@ -20,8 +20,7 @@ export function TestimonialCard({ quote, author, role, avatarSrc }: TestimonialC
       viewport={{ once: true, margin: "-100px" }}
     >
       <Card className="h-full">
-        <CardContent className="pt-6">
-          <div className="mb-4 text-4xl text-primary">"</div>
+        <CardContent className="">
           <p className="text-muted-foreground">{quote}</p>
         </CardContent>
         <CardFooter>

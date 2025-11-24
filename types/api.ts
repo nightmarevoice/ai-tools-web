@@ -298,6 +298,7 @@ export interface TopApp {
   rank: number
   categories?:string
   short_description?:string
+  screenshot_url?:string
 }
 
 export interface TopAppsResponse {
@@ -318,6 +319,39 @@ export interface TrendsParams {
 
 export interface TopAppsParams {
   metric?: TopAppsMetric
+  limit?: number
+  lang?: Language
+}
+
+// ==================== 增长趋势应用 ====================
+
+export interface TrendingAppCategory {
+  category_key: string
+  translations: Record<string, string>
+}
+
+export interface TrendingApp {
+  id: number
+  app_name: string
+  url: string
+  icon_url: string
+  categories: TrendingAppCategory[]
+  region: string
+  short_description?: string
+  monthly_visits: number
+  rating?: number | null
+  growth_rate: number
+  trend_data?: Record<string, number>
+  screenshot_url?:string
+}
+
+export interface TrendingAppsResponse {
+  apps: TrendingApp[]
+  total: number
+}
+
+export interface TrendingAppsParams {
+  category?: string
   limit?: number
   lang?: Language
 }

@@ -17,6 +17,7 @@ export interface Tool {
   categories?: string[]
   icon?: string
   icon_url?: string
+  screenshot_url?:string
 }
 
 export function ToolCard({ tool }: { tool: Tool }) {
@@ -37,21 +38,34 @@ export function ToolCard({ tool }: { tool: Tool }) {
     <Link
       href={`/${locale}/tools/${tool.id}`}
       prefetch={true}
-      className="group p-4 rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
+      className="group  rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
     >
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all pointer-events-none"></div>
 
       <div className="relative z-10">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-start justify-between">
+          <div className="flex-1 ">
+            {/*缩略图*/}
+            <div className="pb-2">
+              {tool.screenshot_url && (
+                  <img
+                    src={tool.screenshot_url}
+                    alt={tool.name}
+                    className="w-full rounded-lg gap-2 border border-gray-200/60 object-cover"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                  />
+                )}
+            </div>
+            <div className="flex items-center gap-2 py-2 px-4">
+              
               {/* 图标 */}
               <div className="flex-shrink-0">
                 {showIcon ? (
                   <img
                     src={iconUrl}
                     alt={tool.name}
-                    className="w-8 h-8 rounded-lg border border-gray-200/60 object-cover"
+                    className="w-8 h-8  border border-gray-200/60 object-cover"
                     loading="lazy"
                     referrerPolicy="no-referrer"
                     onError={() => setIconError(true)}
@@ -62,7 +76,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                   </div>
                 )}
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition">{tool.name}</h3>
+              <h3 className="text-lg  font-semibold text-gray-900 group-hover:text-blue-600 transition">{tool.name}</h3>
               {tool.isNew && (
                 <span className="px-2 py-1 text-xs font-medium bg-green-100/90 text-green-700 rounded-full border border-green-300/50">
                   🆕 {t("new")}
@@ -74,14 +88,14 @@ export function ToolCard({ tool }: { tool: Tool }) {
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-600 leading-relaxed mb-2">{tool.description}</p>
+            <p className="text-sm  px-4 text-gray-600 leading-relaxed mb-2 line-clamp-1">{tool.description}</p>
             
             {tool.categories && tool.categories.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5 mb-2">
+              <div className="flex  px-4 mb-4 flex-wrap items-center gap-1.5">
                 {tool.categories.slice(0, 2).map((category, index) => (
                   <span
                     key={index}
-                    className="px-2 py-0.5 text-xs font-medium bg-[#0057FF]/10 text-[#0057FF] rounded border border-[#0057FF]/30"
+                    className="px-2 py-0.5 text-xs font-medium bg-[#0057FF]/10 text-[#0057FF] rounded-lg border border-[#0057FF]/30"
                   >
                     {category}
                   </span>
@@ -92,14 +106,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                   </span>
                 )}
               </div>
-            )}
-            
-            {tool.monthly_visits && (
-              <p className="text-xs text-gray-500">
-                📊 {tool.monthly_visits.toLocaleString()} {t("monthlyVisits")}
-              </p>
-            )}
-            
+            )} 
           </div>
          
         </div>

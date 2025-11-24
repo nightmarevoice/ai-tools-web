@@ -4,14 +4,16 @@ import { useState, useEffect } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { ToolCard } from "./tool-card"
 import { statsApi } from "@/lib/api/stats"
-import type { TopApp } from "@/types/api"
+import type { TopApp, TrendingApp } from "@/types/api"
 
 type TabKey = "trending" | "recent" | "featured"
 
 export function AiToolsTabs() {
   const [activeTab, setActiveTab] = useState<TabKey>("trending")
   const [trendingApps, setTrendingApps] = useState<TopApp[]>([])
+  const [featuredApps, setFeaturedApps] = useState<TrendingApp[]>([])
   const [loading, setLoading] = useState(false)
+  const [featuredLoading, setFeaturedLoading] = useState(false)
   const t = useTranslations("home.aiToolsTabs")
   const locale = useLocale()
 
@@ -36,15 +38,50 @@ export function AiToolsTabs() {
     fetchTrendingApps()
   }, [locale])
 
+  // 获取增长趋势应用数据
+  useEffect(() => {
+    const fetchFeaturedApps = async () => {
+      setFeaturedLoading(true)
+      try {
+        const response = await statsApi.getTrendingApps({
+          limit: 9,
+          lang: locale
+        })
+        setFeaturedApps(response.apps)
+      } catch (error) {
+        console.error('Failed to fetch featured apps:', error)
+      } finally {
+        setFeaturedLoading(false)
+      }
+    }
+
+    fetchFeaturedApps()
+  }, [locale])
+
   // 将 API 返回的 TopApp 转换为 Tool 格式
   const convertToTool = (app: TopApp) => ({
     id: app.id,
     name: app.app_name,
     monthly_visits: app.monthly_visits,
-    categories: app.categories ,
+    categories: app.categories ? (typeof app.categories === 'string' ? [app.categories] : app.categories) : undefined,
     description: app.short_description || "",
     icon: app.icon_url,
+    screenshot_url:app.screenshot_url,
     category: t("categories.aiAssistant"), // 可以根据实际情况从 app 数据中获取
+    pricing: t("pricing.free"), // 可以根据实际情况从 app 数据中获取
+    isNew: false,
+    isTrending: true,
+  })
+
+  // 将 API 返回的 TrendingApp 转换为 Tool 格式
+  const convertTrendingAppToTool = (app: TrendingApp) => ({
+    id: app.id,
+    name: app.app_name,
+    monthly_visits: app.monthly_visits,
+    categories: app.categories.map(cat => cat.translations[locale] || cat.translations['zh'] || cat.category_key),
+    description: app.short_description || "",
+    icon: app.icon_url,
+    screenshot_url: app.screenshot_url,
     pricing: t("pricing.free"), // 可以根据实际情况从 app 数据中获取
     isNew: false,
     isTrending: true,
@@ -52,70 +89,7 @@ export function AiToolsTabs() {
 
   const tools = {
     trending: trendingApps.map(convertToTool),
-   
-    featured: [
-      {
-        id: 1004,
-        name: 'matterport',
-        description:"3D空间数字化平台,采集环境数据并生成可交互的三维模型",
-        categories: [
-          "ai-digital-marketing",
-          "ai-3d-model-generator",
-          "ai-interior-design"
-        ],
-        icon: "http://cdn.deepinsightqa.com/collect_icon/matterport.png",
-        monthly_visits:11730000,
-        pricing: t("pricing.free"),
-        isNew: false,
-        isTrending: false,
-      },
-      {
-        id: 4745,
-        name: "cloudflare",
-        description: "云网络服务平台,提供内容分发、DDoS防护、Web应用防火墙和边缘计算功能",
-        categories: [
-          "ai-agent-development",
-          "ai-developer-tools",
-          "ai-web-scraper"
-        ],
-        icon: "http://cdn.deepinsightqa.com/collect_icon/cloudflare.png",
-        monthly_visits:32850000,
-        pricing: t("pricing.free"),
-        isNew: false,
-        isTrending: false,
-      },
-      {
-        id: 125,
-        name: t("tools.murf.name"),
-        description: "全栈Web应用生成平台,根据自然语言描述自动生成前端代码并部署",
-        categories:  [
-          "ai-app-builder",
-          "ai-low-code-no-code"
-        ],
-        icon: "http://cdn.deepinsightqa.com/collect_icon/lovabledev.png",
-        monthly_visits:19890000,
-        pricing: t("pricing.freemium"),
-        isNew: false,
-        isTrending: false,
-      },
-      {
-        id: 6560,
-        name: t("tools.beautiful.name"),
-        description: "AI文本检测工具,识别ChatGPT等模型生成的文本内容",
-        categories: [
-          "ai-plagiarism-detector",
-          "ai-grammar-checker",
-          "ai-detector",
-          "ai-content-detector",
-          "ai-essay-checker"
-        ],
-        icon: "http://cdn.deepinsightqa.com/collect_icon/zerogpt.png",
-        monthly_visits: 28910000,
-        pricing: t("pricing.freemium"),
-        isNew: false,
-        isTrending: false,
-      },
-    ],
+    featured: featuredApps.map(convertTrendingAppToTool),
   }
 
   const currentTools = tools[activeTab as keyof typeof tools]
@@ -166,18 +140,22 @@ export function AiToolsTabs() {
 
         {/* 工具卡片网格 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading && activeTab === "trending" ? (
+          {(loading && activeTab === "trending") || (featuredLoading && activeTab === "featured") ? (
             // 加载状态
             <div className="col-span-full flex items-center justify-center py-12">
               <div className="flex flex-col items-center gap-3">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0057FF]"></div>
-                <p className="text-sm text-muted-foreground">Loading trending tools...</p>
+                <p className="text-sm text-muted-foreground">
+                  {activeTab === "trending" ? "Loading trending tools..." : "Loading featured tools..."}
+                </p>
               </div>
             </div>
-          ) : currentTools.length === 0 && activeTab === "trending" ? (
+          ) : currentTools.length === 0 ? (
             // 空状态
             <div className="col-span-full flex items-center justify-center py-12">
-              <p className="text-muted-foreground">No trending tools available</p>
+              <p className="text-muted-foreground">
+                {activeTab === "trending" ? "No trending tools available" : "No featured tools available"}
+              </p>
             </div>
           ) : (
             // 正常显示工具卡片

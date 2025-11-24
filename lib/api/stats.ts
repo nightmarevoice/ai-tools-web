@@ -9,9 +9,11 @@ import type {
   RegionStatsResponse,
   TrendsResponse,
   TopAppsResponse,
+  TrendingAppsResponse,
   CategoryStatsParams,
   TrendsParams,
   TopAppsParams,
+  TrendingAppsParams,
 } from '@/types/api'
 
 export const statsApi = {
@@ -48,6 +50,13 @@ export const statsApi = {
    */
   async getTopApps(params?: TopAppsParams): Promise<TopAppsResponse> {
     return apiClient.get<TopAppsResponse>('/stats/top-apps', params)
+  },
+
+  /**
+   * 增长趋势应用（最近访问量增长较快的应用）
+   */
+  async getTrendingApps(params?: TrendingAppsParams): Promise<TrendingAppsResponse> {
+    return apiClient.get<TrendingAppsResponse>('/stats/trending-apps', params)
   },
 }
 

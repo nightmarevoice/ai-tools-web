@@ -34,8 +34,8 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
   const pathname = usePathname()
   const router = useRouter()
   const locale = useLocale()
-  // 首页现在不再带有 locale 前缀，直接使用根路径判断
-  const isHome = pathname === "/" || pathname === ""
+  // 首页判断：支持根路径和带 locale 前缀的路径
+  const isHome = pathname === "/" || pathname === "" || pathname === `/${locale}` || pathname === `/${locale}/`
   const { user, isAuthenticated, logout, loading } = useAuth()
   const [isLangOpen, setIsLangOpen] = React.useState(false)
   const tCommon = useTranslations("common")
@@ -227,7 +227,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
     {
       href: `/${locale}`,
       label: tCommon("nav.home"),
-      active: pathname === `/${locale}` || pathname === "/" || pathname === "",
+      active: pathname === `/${locale}` || pathname === `/${locale}/` || pathname === "/" || pathname === "",
     },
     {
       href: `/${locale}/categories`,
@@ -288,21 +288,25 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
         </Link>
         <nav className="hidden md:flex md:items-center md:justify-between">
           <div className="flex gap-6 justify-center">
-            {routes.map((route) => (
-              <Link
-                key={route.href}
-                href={route.href}
-                aria-current={route.active ? "page" : undefined}
-                className={cn(
-                  "text-sm font-medium transition-colors px-2",
-                  route.active
-                    ? "text-primary"
-                    : "text-slate-600 hover:text-[#0057FF]",
-                )}
-              >
-                {route.label}
-              </Link>
-            ))}
+            {routes.map((route) => {
+              const isActive = route.active || (pathname.startsWith(route.href) && route.href !== `/${locale}` && route.href !== `/${locale}/`)
+              console.log(isActive, route.href, pathname)
+              return  (
+                <Link
+                  key={route.href}
+                  href={route.href}
+                  aria-current={route.active ? "page" : undefined}
+                  className={cn(
+                    "text-sm font-medium transition-colors px-2",
+                    isActive
+                      ? "text-[#0057FF]"
+                      : "text-slate-600 hover:text-[#0057FF]",
+                  )}
+                >
+                  {route.label}
+                </Link>
+              )
+            })}
           </div>
         </nav>
         <nav className="flex items-center">

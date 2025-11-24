@@ -198,7 +198,7 @@ export function DemoSearchBar() {
                   type="button"
                   variant={mode === "chat" ? "default" : "outline"}
                   onClick={() => setMode("chat")}
-                  className={mode === "chat" ? "bg-[#0057FF] text-[#fff]" : "bg-transparent"}
+                  className={mode === "chat" ? "bg-[#0057FF] text-[#fff] cursor-pointer" : "bg-transparent"}
                   style={{ backgroundColor: mode === "chat" ? "#0057FF" : "transparent" }}
                 >
                   <MessageSquare className="h-4 w-4" />
@@ -208,7 +208,7 @@ export function DemoSearchBar() {
                   type="button"
                   variant={mode === "agent" ? "default" : "outline"}
                   onClick={() => setMode("agent")}
-                  className={mode === "agent" ? "bg-[#0057FF] text-[#fff]" : "bg-transparent"}
+                  className={mode === "agent" ? "bg-[#0057FF] text-[#fff] cursor-pointer" : "bg-transparent"}
                   style={{ backgroundColor: mode === "agent" ? "#0057FF" : "transparent" }}
                 >
                   <Bot className="h-4 w-4" />
@@ -230,7 +230,7 @@ export function DemoSearchBar() {
                   <button
                     key={index}
                     onClick={() => handlePopularSearchClick(search)}
-                    className="px-4 py-2 rounded-lg border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm"
+                    className="px-4 py-2 cursor-pointer rounded-lg border border-input bg-background hover:bg-[#0057ff] hover:text-white transition-colors text-sm"
                   >
                     {search}
                   </button>
