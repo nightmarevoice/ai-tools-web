@@ -11,6 +11,7 @@ import { apiClient } from '@/lib/api/client'
 import { authApi } from '@/lib/api'
 import { authEventManager } from '@/lib/auth/auth-events'
 import { toast } from 'sonner'
+import { trackAuth } from '@/lib/analytics/tracking'
 
 export function useAuth() {
   const [user, setUserState] = useState<User | null>(null)
@@ -66,13 +67,15 @@ export function useAuth() {
   }, [])
 
   // 登录：存储 token 和 user
-  const login = useCallback((token: string, userData: User) => {
+  const login = useCallback((token: string, userData: User, method?: string) => {
     setAccessToken(token)
     setUser(userData)
     setAccessTokenState(token)
     setUserState(userData)
     // 同步设置到 apiClient
     apiClient.setAccessToken(token)
+    // 追踪登录事件
+    trackAuth('login', method)
   }, [])
 
   // 登出：清除所有数据
@@ -88,6 +91,8 @@ export function useAuth() {
       setAccessTokenState(null)
       setUserState(null)
       apiClient.setAccessToken(null)
+      // 追踪登出事件
+      trackAuth('logout')
     }
   }, [])
 
