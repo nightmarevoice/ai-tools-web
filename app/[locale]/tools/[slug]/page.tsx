@@ -32,7 +32,6 @@ export const dynamic = 'force-dynamic'
 export async function generateMetadata({ params }: ToolPageProps): Promise<Metadata> {
   const { slug, locale } = await params
   const t = await getTranslations("tool.metadata")
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
   
   try {
     const appId = parseInt(slug)
@@ -43,60 +42,23 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     }
 
     const app = await appsApi.get(appId, locale)
-    const description = app.short_description || app.product_description || `Explore ${app.app_name} - AI tool details, features, and alternatives`
-    const keywords = [
-      app.app_name,
-      ...(app.categories || []),
-      "AI tool",
-      "artificial intelligence",
-      "productivity",
-    ]
-
-    const canonicalUrl = `${baseUrl}/${locale}/tools/${appId}`
-    const imageUrl = app.screenshot_url || app.icon_url || `${baseUrl}/og-image.png`
 
     return {
       title: `${app.app_name} | AI Research Assistant`,
-      description: description.length > 160 ? description.substring(0, 157) + '...' : description,
-      keywords: keywords,
-      authors: app.developer_name ? [{ name: app.developer_name }] : undefined,
+      description: app.short_description || app.product_description || `Explore ${app.app_name}`,
       openGraph: {
         title: app.app_name,
-        description: description.length > 200 ? description.substring(0, 197) + '...' : description,
+        description: app.short_description || app.product_description || '',
         type: "website",
-        url: canonicalUrl,
-        siteName: "AI Research Assistant",
-        images: [
+        images: app.screenshot_url ? [
           {
-            url: imageUrl,
+            url: app.screenshot_url,
             width: 1200,
             height: 630,
-            alt: `${app.app_name} - AI Tool`,
+            alt: app.app_name,
           },
-        ],
-        locale: locale === 'zh' ? 'zh_CN' : locale === 'ja' ? 'ja_JP' : locale === 'ko' ? 'ko_KR' : 'en_US',
+        ] : [],
       },
-      twitter: {
-        card: "summary_large_image",
-        title: app.app_name,
-        description: description.length > 200 ? description.substring(0, 197) + '...' : description,
-        images: [imageUrl],
-      },
-      alternates: {
-        canonical: canonicalUrl,
-        languages: {
-          en: `${baseUrl}/en/tools/${appId}`,
-          zh: `${baseUrl}/zh/tools/${appId}`,
-          ja: `${baseUrl}/ja/tools/${appId}`,
-          ko: `${baseUrl}/ko/tools/${appId}`,
-        },
-      },
-      ...(app.rating ? {
-        other: {
-          'rating:value': app.rating.toString(),
-          'rating:scale': '5',
-        },
-      } : {}),
     }
   } catch (error) {
     // 记录错误但不抛出，避免 500 错误
@@ -168,59 +130,8 @@ export default async function ToolPage({ params }: ToolPageProps) {
     similarApps = []
   }
 
-  // 生成结构化数据 (JSON-LD)
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
-  const structuredData: any = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": app.app_name,
-    "description": app.short_description || app.product_description || "",
-    "applicationCategory": "WebApplication",
-    "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-    },
-    "url": app.official_website || app.url || `${baseUrl}/${locale}/tools/${appId}`,
-  }
-
-  // 添加可选字段
-  if (app.rating) {
-    structuredData.aggregateRating = {
-      "@type": "AggregateRating",
-      "ratingValue": app.rating.toString(),
-      "ratingCount": app.monthly_visits ? Math.floor(app.monthly_visits / 1000).toString() : "1",
-      "bestRating": "5",
-      "worstRating": "1",
-    }
-  }
-
-  if (app.screenshot_url) {
-    structuredData.screenshot = app.screenshot_url
-  }
-
-  if (app.icon_url || app.screenshot_url) {
-    structuredData.image = app.icon_url || app.screenshot_url
-  }
-
-  if (app.developer_name) {
-    structuredData.author = {
-      "@type": "Organization",
-      "name": app.developer_name,
-    }
-  }
-
-  if (app.categories && app.categories.length > 0) {
-    structuredData.category = app.categories.join(", ")
-  }
-
   return (
     <div className="flex min-h-screen flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
       <Navbar />
       <div className="flex-1 bg-gradient-to-b from-blue-50/50 to-white">
         <div className="relative z-10 mx-auto px-6 py-6 max-w-7xl">
@@ -305,7 +216,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
                       rel="noopener noreferrer"
                       className="inline-flex"
                     >
-                      <Button variant="outline" className="gap-2 cursor-pointer text-white hover:text-white bg-blue-600 hover:bg-blue-700">
+                      <Button variant="outline" className="gap-2 text-white hover:text-white bg-blue-600 hover:bg-blue-700">
                         <Globe className="w-4 h-4" />
                         {t("visitWebsite")}
                       </Button>

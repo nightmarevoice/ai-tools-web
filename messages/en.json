@@ -288,8 +288,6 @@
     }
   },
   "dashboard": {
-    "title": "Intelligent AI Tool Workflow Solution Generator",
-    "description": "Describe your scenario, and we'll intelligently generate the perfect AI tool workflow solution for you",
     "searchFailed": "Search failed, please try again later.",
     "placeholder": "Plan a social media marketing campaign"
   },
@@ -300,8 +298,7 @@
       "dalle3": "Generate high-quality AI images from text prompts",
       "githubCopilot": "AI coding assistant that makes coding faster and smarter",
       "midjourney": "Professional-grade AI art generation tool",
-      "claudeCode": "Next-generation AI assistant with enhanced performance",
-      "googleGemini": "Google Gemini is a large language model developed by Google"
+      "claudeCode": "Next-generation AI assistant with enhanced performance"
     }
   },
   "paperResults": {

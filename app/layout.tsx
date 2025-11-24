@@ -1,28 +1,15 @@
 import type React from "react"
 import "./globals.css"
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
-
 export const metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL("https://research-ai-assistant.vercel.app"),
   title: {
-    default: "AI Research Assistant - Discover & Analyze AI Tools",
+    default: "AI Research Assistant",
     template: "%s | AI Research Assistant",
   },
   description:
-    "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps. Compare features, ratings, and find the perfect AI solution for your needs.",
-  keywords: [
-    "AI tools",
-    "artificial intelligence",
-    "AI applications",
-    "research assistant",
-    "AI productivity tools",
-    "machine learning tools",
-    "AI software",
-    "trending AI",
-    "best AI tools",
-    "AI comparison",
-  ],
+    "AI-powered research assistant that helps you discover, summarize, and analyze research papers with ease",
+  keywords: ["research", "AI", "papers", "academic", "summarize", "analysis", "chat", "upload"],
   authors: [{ name: "ResearchAI Team" }],
   creator: "ResearchAI",
   publisher: "ResearchAI",
@@ -34,27 +21,18 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: baseUrl,
-    title: "AI Research Assistant - Discover & Analyze AI Tools",
+    url: "https://research-ai-assistant.vercel.app",
+    title: "AI Research Assistant",
     description:
-      "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps.",
+      "AI-powered research assistant that helps you discover, summarize, and analyze research papers with ease",
     siteName: "AI Research Assistant",
-    images: [
-      {
-        url: `${baseUrl}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: "AI Research Assistant",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Research Assistant - Discover & Analyze AI Tools",
+    title: "AI Research Assistant",
     description:
-      "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps.",
+      "AI-powered research assistant that helps you discover, summarize, and analyze research papers with ease",
     creator: "@researchai",
-    images: [`${baseUrl}/og-image.png`],
   },
   robots: {
     index: true,
@@ -67,21 +45,7 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: baseUrl,
-    languages: {
-      en: `${baseUrl}/en`,
-      zh: `${baseUrl}/zh`,
-      ja: `${baseUrl}/ja`,
-      ko: `${baseUrl}/ko`,
-    },
-  },
-  verification: {
-    // Add your verification codes here when available
-    // google: 'your-google-verification-code',
-    // yandex: 'your-yandex-verification-code',
-    // bing: 'your-bing-verification-code',
-  },
+    generator: 'v0.app'
 }
 
 export default function RootLayout({

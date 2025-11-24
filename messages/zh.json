@@ -288,8 +288,6 @@
     }
   },
   "dashboard": {
-    "title": "智能化生成 AI 工具流程解决方案",
-    "description": "描述你的场景，我们将为你智能化生成完美的 AI 工具流程解决方案",
     "searchFailed": "搜索失败，请稍后重试。",
     "placeholder": "策划一场社交媒体营销活动"
   },
@@ -300,8 +298,7 @@
       "dalle3": "从文本提示生成高质量 AI 图像",
       "githubCopilot": "AI 编程助手，让编码更快更智能",
       "midjourney": "专业级 AI 艺术生成工具",
-      "claudeCode": "新一代 AI 助手，性能更强大",
-      "googleGemini": "Google Gemini 是 Google 开发的大规模语言模型"
+      "claudeCode": "新一代 AI 助手，性能更强大"
     }
   },
   "paperResults": {
