@@ -37,7 +37,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
     <Link
       href={`/${locale}/tools/${tool.id}`}
       prefetch={true}
-      className="group p-6 rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
+      className="group p-4 rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
     >
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all pointer-events-none"></div>
 
@@ -101,20 +101,10 @@ export function ToolCard({ tool }: { tool: Tool }) {
             )}
             
           </div>
-          <div className="ml-2 p-2 hover:bg-blue-100/60 rounded-lg transition group/icon">
-            <ExternalLink className="w-4 h-4 text-blue-500 group-hover/icon:text-blue-600 transition" />
-          </div>
+         
         </div>
 
-        {tool.category && <div className="flex items-center justify-between">
-          <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 text-xs font-medium bg-blue-100/70 text-blue-600 rounded-full border border-blue-200/60">
-              {tool.category}
-            </span>
-            
-          </div>
-        </div>
-}
+       
       </div>
     </Link>
   )

@@ -401,7 +401,7 @@
   },
   "login": {
     "title": "登錄",
-    "description": "選擇登錄方式繼續使用 AI Tool Navigation",
+    "description": "選擇登錄方式繼續使用 AppHub AI",
     "googleLogin": "使用 Google 賬號登錄",
     "errors": {
       "signinFailed": "登錄失敗,請檢查郵箱和密碼",

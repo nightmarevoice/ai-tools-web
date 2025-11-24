@@ -422,7 +422,7 @@
   
   "login": {
     "title": "ログイン",
-    "description": "ログイン方法を選択してAI Tool Navigationを続けて使用する",
+    "description": "ログイン方法を選択してAppHub AIを続けて使用する",
     "googleLogin": "Googleアカウントでログイン",
     "errors": {
       "signinFailed": "ログインに失敗しました。メールアドレスとパスワードを確認してください",

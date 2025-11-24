@@ -309,6 +309,7 @@
     "emptyExample": "\"能够生成图像的AI工具\"",
     "noResults": "没有找到相关的 AI 工具。",
     "searching": "正在搜索...",
+    "generating": "正在生成文本信息",
     "foundResults": "找到 {count} 个相关工具",
     "findTools": "查找适合的 AI 工具",
     "aiSummary": "AI 总结"
@@ -410,7 +411,7 @@
   },
   "login": {
     "title": "登录",
-    "description": "选择登录方式继续使用 AI Tool Navigation",
+    "description": "选择登录方式继续使用 AppHub AI",
     "googleLogin": "使用 Google 账号登录",
     "errors": {
       "signinFailed": "登录失败,请检查邮箱和密码",

@@ -104,7 +104,7 @@ export function CategoryExploration() {
           <Link
             href="/categories"
             prefetch={true}
-            className="text-sm font-medium text-primary hover:underline"
+            className="text-sm font-medium text-[#0057FF] hover:text-white hover:bg-[#0057FF] border border-[#0057FF] rounded-full px-4 py-2"
           >
             {t("viewAll")}
           </Link>

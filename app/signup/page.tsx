@@ -70,7 +70,7 @@ export default function SignupPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">注册</CardTitle>
           <CardDescription className="text-center">
-            创建账号开始使用 AI Tool Navigation
+            创建账号开始使用 AppHub AI
           </CardDescription>
         </CardHeader>
 

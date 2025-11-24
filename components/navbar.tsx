@@ -284,7 +284,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
               "bg-primary/20"
             }
           />
-          <span className="hidden font-bold sm:inline-block">AI Tool Navigation</span>
+          <span className="hidden font-bold sm:inline-block">AppHub AI</span>
         </Link>
         <nav className="hidden md:flex md:items-center md:justify-between">
           <div className="flex gap-6 justify-center">
@@ -294,7 +294,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
                 href={route.href}
                 aria-current={route.active ? "page" : undefined}
                 className={cn(
-                  "text-sm font-medium transition-colors",
+                  "text-sm font-medium transition-colors px-2",
                   route.active
                     ? "text-primary"
                     : "text-slate-600 hover:text-[#0057FF]",

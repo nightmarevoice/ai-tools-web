@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion"
 import Link from "next/link"
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, FileText } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import type { SearchResult, SemanticSearchResponse } from "@/types/api"
 import { Button } from "@/components/ui/button"
@@ -34,22 +34,106 @@ export function PaperResults({ results, loading, error, query }: PaperResultsPro
       )
     }
 
-    if (loading) {
+    if (!loading) {
       return (
-        <>
-          {[1].map((i) => (
-            <Card key={`skeleton-${i}`}>
-              <CardHeader className="pb-2">
-                <Skeleton className="mb-2 h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="mb-2 h-4 w-full" />
-                <Skeleton className="h-4 w-5/6" />
-              </CardContent>
-            </Card>
-          ))}
-        </>
+        <Card>
+          <CardContent className="py-12">
+            <div className="flex flex-col items-center justify-center space-y-6">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                className="relative"
+              >
+                <motion.div
+                  animate={{
+                    y: [0, -8, 0],
+                    rotate: [0, 2, -2, 0],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="relative"
+                >
+                  <FileText className="h-16 w-16 text-primary" />
+                  {/* 文字生成动画效果 */}
+                  <motion.div
+                    className="absolute -right-2 -top-2 flex space-x-0.5"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    {[0, 1, 2, 3].map((i) => (
+                      <motion.div
+                        key={i}
+                        className="h-1 w-1 rounded-full bg-primary"
+                        animate={{
+                          scale: [1, 1.5, 1],
+                          opacity: [0.5, 1, 0.5],
+                        }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          delay: i * 0.15,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    ))}
+                  </motion.div>
+                </motion.div>
+                {/* 脉冲效果 */}
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-primary/20"
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.3, 0, 0.3],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                  }}
+                />
+              </motion.div>
+              <div className="flex items-center space-x-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-base font-medium text-foreground"
+                >
+                  {t("generating")}
+                </motion.div>
+                <motion.div
+                  className="flex space-x-1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  {[0, 1, 2].map((i) => (
+                    <motion.span
+                      key={i}
+                      className="text-base font-medium text-foreground"
+                      animate={{
+                        opacity: [0.3, 1, 0.3],
+                      }}
+                      transition={{
+                        duration: 1.2,
+                        repeat: Infinity,
+                        delay: i * 0.2,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      .
+                    </motion.span>
+                  ))}
+                </motion.div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )
     }
 
