@@ -75,7 +75,7 @@
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
+  --font-sans: var(--font-inter), "PingFang SC", "Microsoft YaHei", "Heiti SC", sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -119,12 +119,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-body{
-  overflow-y:auto;
-  overflow-x:hidden;
+body {
+  overflow-y: auto;
+  overflow-x: hidden;
 }
