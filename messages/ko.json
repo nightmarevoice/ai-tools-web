@@ -320,6 +320,15 @@
     "emptyExample": "\"이미지를 생성할 수 있는 AI 도구\"",
     "noResults": "관련 AI 도구를 찾을 수 없습니다.",
     "searching": "검색 중...",
+    "generating": "텍스트 정보 생성 중",
+    "generatingMain": "열심히 응답을 준비하고 있습니다. 약 10-15초 정도 소요됩니다...",
+    "loadingTips": {
+      "searching": "관련 자료 검색 중...",
+      "analyzing": "요구 사항 분석 중...",
+      "matching": "최적의 도구 솔루션 매칭 중...",
+      "generating": "지능형 추천 생성 중...",
+      "optimizing": "결과 표시 최적화 중..."
+    },
     "foundResults": "{count}개의 관련 도구를 찾았습니다",
     "findTools": "적합한 AI 도구 찾기",
     "aiSummary": "AI 요약"

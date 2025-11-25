@@ -320,6 +320,15 @@
     "emptyExample": "\"画像を生成できる AI ツール\"",
     "noResults": "関連する AI ツールが見つかりませんでした。",
     "searching": "検索中...",
+    "generating": "テキスト情報を生成中",
+    "generatingMain": "一生懸命回答を準備しています。10〜15秒ほどお待ちください...",
+    "loadingTips": {
+      "searching": "関連資料を検索中...",
+      "analyzing": "ご要望を分析中...",
+      "matching": "最適なツールソリューションをマッチング中...",
+      "generating": "インテリジェントな推奨を生成中...",
+      "optimizing": "結果表示を最適化中..."
+    },
     "foundResults": "{count} 件の関連ツールが見つかりました",
     "findTools": "適切な AI ツールを見つける",
     "aiSummary": "AI 要約"

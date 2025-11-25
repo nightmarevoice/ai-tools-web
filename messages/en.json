@@ -310,6 +310,14 @@
     "noResults": "No related AI tools found.",
     "searching": "Searching...",
     "generating": "Generating text information",
+    "generatingMain": "Working hard to respond, estimated 10-15 seconds...",
+    "loadingTips": {
+      "searching": "Searching for relevant information...",
+      "analyzing": "Analyzing your requirements...",
+      "matching": "Matching the best tool solutions...",
+      "generating": "Generating intelligent recommendations...",
+      "optimizing": "Optimizing result display..."
+    },
     "foundResults": "Found {count} related tools",
     "findTools": "Find suitable AI tools",
     "aiSummary": "AI Summary"

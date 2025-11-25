@@ -310,6 +310,14 @@
     "noResults": "没有找到相关的 AI 工具。",
     "searching": "正在搜索...",
     "generating": "正在生成文本信息",
+    "generatingMain": "正在努力为您反馈，预计需要 10-15 秒...",
+    "loadingTips": {
+      "searching": "正在查询相关资料...",
+      "analyzing": "正在分析您的需求...",
+      "matching": "正在匹配最佳工具方案...",
+      "generating": "正在生成智能推荐...",
+      "optimizing": "正在优化结果展示..."
+    },
     "foundResults": "找到 {count} 个相关工具",
     "findTools": "查找适合的 AI 工具",
     "aiSummary": "AI 总结"
