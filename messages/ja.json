@@ -16,6 +16,7 @@
     "monthlyVisits": "月間訪問数",
     "new": "新着",
     "trending": "トレンド",
+    "hot": "人気",
     "nav": {
       "home": "ホーム",
       "categories": "カテゴリー",
@@ -49,9 +50,9 @@
   },
   "home": {
     "metadata": {
-      "title": "AI ツール検索 | 最適な AI ツールを素早く発見・マッチング",
-      "description": "AI ツール検索は、シナリオに基づいて AI ツールの使用計画を迅速に作成するのに役立ちます",
-      "ogAlt": "AI ツール検索"
+      "title": "AI アプリ検索 | 最適な AI ツールを素早く発見・マッチング",
+      "description": "AI アプリ検索は、シナリオに基づいて AI ツールの使用計画を迅速に作成するのに役立ちます",
+      "ogAlt": "AI アプリ検索"
     },
     "hero": {
       "title": "必要なすべてのシナリオに対応する AI ツールがここで見つかります",
@@ -167,7 +168,8 @@
       "tabs": {
         "trending": "🔥 人気おすすめ",
         "recent": "⭐ 新着",
-        "featured": "✨ トレンドおすすめ"
+        "featured": "✨ トレンドおすすめ",
+        "category-featured": "📂 カテゴリー精選"
       },
       "tools": {
         "chatgpt": {
@@ -256,7 +258,8 @@
     "loadingMore": "読み込み中...",
     "loadAppsFailed": "ツールリストの読み込みに失敗しました",
     "loadMoreFailed": "さらに読み込むことに失敗しました",
-    "searchFailed": "検索に失敗しました。後でもう一度お試しください"
+    "searchFailed": "検索に失敗しました。後でもう一度お試しください",
+    "noSubCategories": "サブカテゴリーなし"
   },
   "tool": {
     "breadcrumb": {

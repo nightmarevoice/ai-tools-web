@@ -18,7 +18,7 @@ export function HomeContent() {
   
   return (
     <div
-      className="flex min-h-screen flex-col"
+      className="flex min-h-screen flex-col overflow-visible"
       style={
         {
           // Scope theme to this page (values as HSL triplets for Tailwind)
@@ -36,7 +36,7 @@ export function HomeContent() {
 
       {/* Hero Section */}
       <section
-        className="relative overflow-hidden pt-24 md:pt-32 text-slate-900 z-10"
+        className="relative pt-24 md:pt-32 text-slate-900 z-10 overflow-visible"
       >
         {/* 背景层 - 固定定位，覆盖整个视口包括 Navbar */}
         <div className="pointer-events-none position h-full inset-0 z-0">
@@ -46,9 +46,9 @@ export function HomeContent() {
           <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,hsla(var(--primary)_/_0.14)_1px,transparent_1px),linear-gradient(to_bottom,hsla(var(--primary)_/_0.14)_1px,transparent_1px)] bg-[size:120px_120px]" />
           <div className="absolute inset-x-0 top-[60vh] h-[40vh] bg-gradient-to-b from-transparent via-white/85 to-white" />
         </div>
-        <div className="relative w-full py-12 md:pb-32 px-8 md:px-10" style={{ paddingBottom: '240px' }}>
-          <div className="flex flex-col justify-center items-center">
-            <div className="flex flex-col justify-center items-center space-y-10 text-center">
+        <div className="relative w-full py-12 md:pb-32 px-8 md:px-10 overflow-visible" style={{ paddingBottom: '240px' }}>
+          <div className="flex flex-col justify-center items-center overflow-visible">
+            <div className="flex flex-col justify-center items-center space-y-10 text-center overflow-visible">
               <div className="space-y-5 flex flex-col justify-center items-center">
                 <h1 className="text-3xl font-bold tracking-tight sm:text-4xl xl:text-5xl">
                   {t("hero.title")}
@@ -57,7 +57,7 @@ export function HomeContent() {
                   {t("hero.subtitle")}
                 </p>
               </div>
-              <div className="w-full max-w-3xl">
+              <div className="w-full max-w-3xl overflow-visible">
                 <DemoSearchBar />
               </div>
             </div>

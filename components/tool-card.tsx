@@ -11,9 +11,10 @@ export interface Tool {
   monthly_visits?: number
   description: string
   category: string
-  pricing: string
-  isNew: boolean
-  isTrending: boolean
+  pricing: string  
+  isHot: boolean,
+  isTrending: boolean,
+  isCategory:boolean,
   categories?: string[]
   icon?: string
   icon_url?: string
@@ -48,13 +49,15 @@ export function ToolCard({ tool }: { tool: Tool }) {
             {/*缩略图*/}
             <div className="pb-2">
               {tool.screenshot_url && (
-                  <img
-                    src={tool.screenshot_url}
-                    alt={tool.name}
-                    className="w-full rounded-lg gap-2 border border-gray-200/60 object-cover"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                  />
+                  <div className="w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
+                    <img
+                      src={tool.screenshot_url}
+                      alt={tool.name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
                 )}
             </div>
             <div className="flex items-center gap-2 py-2 px-4">
@@ -77,14 +80,14 @@ export function ToolCard({ tool }: { tool: Tool }) {
                 )}
               </div>
               <h3 className="text-lg  font-semibold text-gray-900 group-hover:text-blue-600 transition">{tool.name}</h3>
-              {tool.isNew && (
+              {tool.isTrending && (
                 <span className="px-2 py-1 text-xs font-medium bg-green-100/90 text-green-700 rounded-full border border-green-300/50">
-                  🆕 {t("new")}
+                    ✨ {t("trending")}
                 </span>
               )}
-              {tool.isTrending && (
+              {tool.isHot && (
                 <span className="px-2 py-1 text-xs font-medium bg-red-100/90 text-red-700 rounded-full border border-red-300/50">
-                  🔥 {t("trending")}
+                  🔥 {t("hot")}
                 </span>
               )}
             </div>

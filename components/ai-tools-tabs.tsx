@@ -4,16 +4,19 @@ import { useState, useEffect } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { ToolCard } from "./tool-card"
 import { statsApi } from "@/lib/api/stats"
-import type { TopApp, TrendingApp } from "@/types/api"
+import type { TopApp, TrendingApp, CategoryFeaturedApps, FeaturedAppSummary } from "@/types/api"
 
-type TabKey = "trending" | "recent" | "featured"
+type TabKey = "trending" | "recent" | "featured" | "category-featured"
 
 export function AiToolsTabs() {
   const [activeTab, setActiveTab] = useState<TabKey>("trending")
   const [trendingApps, setTrendingApps] = useState<TopApp[]>([])
   const [featuredApps, setFeaturedApps] = useState<TrendingApp[]>([])
+  const [categoryFeaturedData, setCategoryFeaturedData] = useState<CategoryFeaturedApps[]>([])
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState<number>(0)
   const [loading, setLoading] = useState(false)
   const [featuredLoading, setFeaturedLoading] = useState(false)
+  const [categoryLoading, setCategoryLoading] = useState(false)
   const t = useTranslations("home.aiToolsTabs")
   const locale = useLocale()
 
@@ -58,6 +61,28 @@ export function AiToolsTabs() {
     fetchFeaturedApps()
   }, [locale])
 
+  // 获取分类推荐数据
+  useEffect(() => {
+    const fetchCategoryFeatured = async () => {
+      setCategoryLoading(true)
+      try {
+        const response = await statsApi.getFeaturedByCategory({
+          lang: locale,
+          limit: 6
+        })
+        setCategoryFeaturedData(response.categories)
+        // 重置选中分类为第一个
+        setSelectedCategoryIndex(0)
+      } catch (error) {
+        console.error('Failed to fetch category featured apps:', error)
+      } finally {
+        setCategoryLoading(false)
+      }
+    }
+
+    fetchCategoryFeatured()
+  }, [locale])
+
   // 将 API 返回的 TopApp 转换为 Tool 格式
   const convertToTool = (app: TopApp) => ({
     id: app.id,
@@ -69,8 +94,9 @@ export function AiToolsTabs() {
     screenshot_url:app.screenshot_url,
     category: t("categories.aiAssistant"), // 可以根据实际情况从 app 数据中获取
     pricing: t("pricing.free"), // 可以根据实际情况从 app 数据中获取
-    isNew: false,
-    isTrending: true,
+    isHot: true,
+    isTrending: false,
+    isCategory:false,
   })
 
   // 将 API 返回的 TrendingApp 转换为 Tool 格式
@@ -82,14 +108,43 @@ export function AiToolsTabs() {
     description: app.short_description || "",
     icon: app.icon_url,
     screenshot_url: app.screenshot_url,
+    category: app.categories[0]?.translations[locale] || app.categories[0]?.translations['zh'] || "",
     pricing: t("pricing.free"), // 可以根据实际情况从 app 数据中获取
-    isNew: false,
+    isHot: false,
     isTrending: true,
+    isCategory:false,
   })
+
+  // 将 API 返回的 FeaturedAppSummary 转换为 Tool 格式
+  const convertFeaturedAppToTool = (app: FeaturedAppSummary) => ({
+    id: app.id,
+    name: app.app_name,
+    monthly_visits: app.monthly_visits || undefined,
+    categories: app.categories.map(cat => cat.translations[locale] || cat.translations['zh'] || cat.category_key),
+    description: app.short_description || "",
+    icon: app.icon_url || undefined,
+    icon_url: app.icon_url || undefined,
+    screenshot_url: app.screenshot_url || undefined,
+    category: app.categories[0]?.translations[locale] || app.categories[0]?.translations['zh'] || "",
+    pricing: t("pricing.free"),
+    isHot: false,
+    isTrending: false,
+    isCategory:true,
+  })
+
+  // 获取当前分类的工具列表
+  const getCurrentCategoryTools = () => {
+    if (categoryFeaturedData.length === 0 || selectedCategoryIndex >= categoryFeaturedData.length) {
+      return []
+    }
+    const currentCategory = categoryFeaturedData[selectedCategoryIndex]
+    return currentCategory.apps.map(convertFeaturedAppToTool)
+  }
 
   const tools = {
     trending: trendingApps.map(convertToTool),
     featured: featuredApps.map(convertTrendingAppToTool),
+    "category-featured": getCurrentCategoryTools(),
   }
 
   const currentTools = tools[activeTab as keyof typeof tools]
@@ -112,6 +167,7 @@ export function AiToolsTabs() {
           {[
             { id: "trending", label: t("tabs.trending") },
             { id: "featured", label: t("tabs.featured") },
+            { id: "category-featured", label: t("tabs.category-featured") },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -138,15 +194,42 @@ export function AiToolsTabs() {
           ))}
         </div>
 
+        {/* 分类推荐：分类按钮组 */}
+        {activeTab === "category-featured" && (
+          <div className="mb-8">
+            <div className="flex flex-wrap gap-2">
+              {categoryFeaturedData.map((category, index) => (
+                <button
+                  key={category.primary_category.category_key}
+                  onClick={() => setSelectedCategoryIndex(index)}
+                  className={`px-4 py-2 cursor-pointer rounded-lg font-medium transition-all ${
+                    selectedCategoryIndex === index
+                      ? "bg-[#0057FF] text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {category.primary_category.display_name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* 工具卡片网格 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(loading && activeTab === "trending") || (featuredLoading && activeTab === "featured") ? (
+          {(loading && activeTab === "trending") || 
+           (featuredLoading && activeTab === "featured") || 
+           (categoryLoading && activeTab === "category-featured") ? (
             // 加载状态
             <div className="col-span-full flex items-center justify-center py-12">
               <div className="flex flex-col items-center gap-3">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0057FF]"></div>
                 <p className="text-sm text-muted-foreground">
-                  {activeTab === "trending" ? "Loading trending tools..." : "Loading featured tools..."}
+                  {activeTab === "trending" 
+                    ? "Loading trending tools..." 
+                    : activeTab === "featured"
+                    ? "Loading featured tools..."
+                    : "Loading category tools..."}
                 </p>
               </div>
             </div>
@@ -154,7 +237,11 @@ export function AiToolsTabs() {
             // 空状态
             <div className="col-span-full flex items-center justify-center py-12">
               <p className="text-muted-foreground">
-                {activeTab === "trending" ? "No trending tools available" : "No featured tools available"}
+                {activeTab === "trending" 
+                  ? "No trending tools available" 
+                  : activeTab === "featured"
+                  ? "No featured tools available"
+                  : "No tools available in this category"}
               </p>
             </div>
           ) : (

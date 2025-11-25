@@ -16,6 +16,7 @@
     "monthlyVisits": "Monthly visits",
     "new": "New",
     "trending": "Trending",
+    "hot": "Popular",
     "nav": {
       "home": "Home",
       "categories": "Categories",
@@ -49,9 +50,9 @@
   },
   "home": {
     "metadata": {
-      "title": "AI Tool Search | Quickly Discover and Match the Most Suitable AI Tools",
-      "description": "AI Tool Search helps you quickly create AI tool usage plans based on scenarios",
-      "ogAlt": "AI Tool Search"
+      "title": "AI Application Search | Quickly Discover and Match the Most Suitable AI Tools",
+      "description": "AI Application Search helps you quickly create AI tool usage plans based on scenarios",
+      "ogAlt": "AI Application Search"
     },
     "hero": {
       "title": "All scenarios you need can find corresponding AI tools here",
@@ -158,7 +159,8 @@
       "tabs": {
         "trending": "🔥 Popular Recommendations",
         "recent": "⭐ Recently Added",
-        "featured": "✨ Trending Recommendations"
+        "featured": "✨ Trending Recommendations",
+        "category-featured": "📂 Category Featured"
       },
       "error": "Failed to load trending rankings",
       "empty": "No tool data available",
@@ -245,7 +247,8 @@
     "loadingMore": "Loading...",
     "loadAppsFailed": "Failed to load tool list",
     "loadMoreFailed": "Failed to load more",
-    "searchFailed": "Search failed, please try again later"
+    "searchFailed": "Search failed, please try again later",
+    "noSubCategories": "No subcategories"
   },
   "tool": {
     "breadcrumb": {

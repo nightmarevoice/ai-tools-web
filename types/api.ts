@@ -189,7 +189,7 @@ export interface SimilarApplicationsResponse {
 
 export interface ListAppsParams extends PaginationParams, SortParams {
   lang?: Language
-  category?: string
+  category?: string | number
   region?: string
   search?: string
 }
@@ -219,14 +219,21 @@ export interface UpdateAppRequest extends Partial<CreateAppRequest> {}
 // ==================== 类别管理 ====================
 
 export interface Category {
-  id: string
+  id: string | number
   name: string
   description?: string
   language?: string
+  parent_id?: string // 父分类ID，用于支持层级结构
+  // 一级分类特有字段
+  key?: string
+  icon?: string
+  sort_order?: number
+  category_count?: number
 }
 
 export interface CategoriesResponse {
-  categories: Category[]
+  categories?: Category[]
+  primary_categories?: Category[]
   total: number
   language: string
 }
@@ -481,6 +488,48 @@ export interface QuotaStatus {
   limit: number              // 该用户类型的总限制次数
   quota_exceeded: boolean    // 是否已超过配额
   quota_enabled: boolean     // 配额功能是否启用
+}
+
+// ==================== 分类推荐 ====================
+
+export interface CategoryInfo {
+  category_key: string
+  translations: Record<string, string>
+}
+
+export interface FeaturedAppSummary {
+  id: number
+  app_name: string
+  url: string
+  icon_url: string | null
+  screenshot_url: string | null
+  categories: CategoryInfo[]
+  region: string | null
+  short_description: string | null
+  monthly_visits: number | null
+  rating: number | null
+}
+
+export interface PrimaryCategory {
+  category_key: string
+  display_name: string
+  icon: string | null
+}
+
+export interface CategoryFeaturedApps {
+  primary_category: PrimaryCategory
+  apps: FeaturedAppSummary[]
+  total_apps_in_category: number
+}
+
+export interface FeaturedByCategoryResponse {
+  categories: CategoryFeaturedApps[]
+  total_categories: number
+}
+
+export interface FeaturedByCategoryParams {
+  lang?: Language
+  limit?: number  // 1-20, 默认 6
 }
 
 

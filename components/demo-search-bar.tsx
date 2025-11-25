@@ -2,13 +2,15 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
-import { Search, ArrowRight, Flame, MessageSquare, Bot, AlertCircle } from "lucide-react"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { createPortal } from "react-dom"
+import { Search, Flame, MessageSquare, Bot, AlertCircle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 import { searchApi } from "@/lib/api/search"
-import type { QuotaStatus } from "@/types/api"
+import { appsApi } from "@/lib/api/apps"
+import type { QuotaStatus, Application } from "@/types/api"
 import {
   Dialog,
   DialogContent,
@@ -22,15 +24,21 @@ export function DemoSearchBar() {
   const t = useTranslations("home.searchBar")
   const tQuota = useTranslations("quota")
   const tLoginPrompt = useTranslations("loginPrompt")
+  const locale = useLocale()
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [mode, setMode] = useState<"chat" | "agent">("chat")
   const [quotaStatus, setQuotaStatus] = useState<QuotaStatus | null>(null)
   const [showQuotaWarning, setShowQuotaWarning] = useState(false)
   const [isCheckingQuota, setIsCheckingQuota] = useState(false)
+  const [searchResults, setSearchResults] = useState<Application[]>([])
+  const [isSearching, setIsSearching] = useState(false)
   const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
 
   const checkQuotaStatus = async () => {
     setIsCheckingQuota(true)
@@ -56,6 +64,29 @@ export function DemoSearchBar() {
   }, [isOpen])
 
 
+  // 计算下拉菜单位置
+  useEffect(() => {
+    if (isOpen && containerRef.current && inputRef.current) {
+      const updatePosition = () => {
+        const rect = containerRef.current!.getBoundingClientRect()
+        setDropdownPosition({
+          top: rect.bottom + window.scrollY + 8, // mt-2 = 8px
+          left: rect.left + window.scrollX,
+          width: rect.width,
+        })
+      }
+      
+      updatePosition()
+      window.addEventListener("resize", updatePosition)
+      window.addEventListener("scroll", updatePosition, true)
+      
+      return () => {
+        window.removeEventListener("resize", updatePosition)
+        window.removeEventListener("scroll", updatePosition, true)
+      }
+    }
+  }, [isOpen])
+
   // 点击外部关闭下拉
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -77,6 +108,54 @@ export function DemoSearchBar() {
       }
     }
   }, [isOpen])
+
+  // 监听搜索输入，使用 debounce 调用搜索接口
+  useEffect(() => {
+    // 清除之前的定时器
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+
+    // 如果搜索框为空，清空搜索结果
+    if (!searchQuery.trim()) {
+      setSearchResults([])
+      setIsSearching(false)
+      return
+    }
+
+    // 设置 debounce，500ms 后执行搜索
+    searchTimeoutRef.current = setTimeout(async () => {
+      setIsSearching(true)
+      try {
+        const response = await appsApi.search(searchQuery.trim(), {
+          lang: locale,
+          limit: 6,
+        })
+        setSearchResults(response.items || [])
+      } catch (error) {
+        console.error("Search failed:", error)
+        setSearchResults([])
+      } finally {
+        setIsSearching(false)
+      }
+    }, 500)
+
+    // 清理函数
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current)
+      }
+    }
+  }, [searchQuery, locale])
+
+  // 点击搜索结果项
+  const handleSearchResultClick = useCallback((app: Application) => {
+    setIsOpen(false)
+    setSearchQuery("")
+    setSearchResults([])
+    // 在新窗口打开应用详情页
+    window.open(`/${locale}/tools/${app.id}`, '_blank')
+  }, [locale])
 
   const handleInputClick = () => {
     setIsOpen(true)
@@ -159,6 +238,7 @@ export function DemoSearchBar() {
     <div className="relative w-full max-w-2xl mx-auto" ref={containerRef}>
       <div className="relative">
         <input
+          ref={inputRef}
           className="w-full flex items-center justify-start pl-4 pr-12 h-15 rounded-xl border border-input bg-background px-4 py-2 text-base hover:border-[#0057FF] focus:border-[#0057FF] focus:border-[0.5px] focus:outline-none focus-visible:outline-none transition-colors cursor-pointer"
           onClick={handleInputClick}
           value={searchQuery}
@@ -181,12 +261,17 @@ export function DemoSearchBar() {
         </button>
       </div>
 
-      {/* Dropdown Panel */}
-      {isOpen && (
+      {/* Dropdown Panel - 使用 Portal 渲染到 body */}
+      {isOpen && typeof window !== "undefined" && createPortal(
         <div
           ref={dropdownRef}
-          className="absolute top-full left-0  mt-2 bg-background border border-border rounded-xl shadow-lg z-50 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2"
-          style={{ width: '672px' }}
+          className="absolute  bg-background border border-border rounded-xl shadow-lg z-[49] animate-in fade-in-0 zoom-in-95 slide-in-from-top-2"
+          style={{
+            top: `24rem`,
+            left: `${dropdownPosition.left}px`,
+            width: `${dropdownPosition.width}px`,
+            maxWidth: '672px',
+          }}
         >
           <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
             {/* Mode Selection */}
@@ -217,7 +302,61 @@ export function DemoSearchBar() {
               </div>
             </div>
 
-            
+            {/*模糊查询工具*/}
+            {searchQuery.trim() && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Search className="h-5 w-5 text-[#0057FF]" />
+                  <h3 className="font-bold text-lg">搜索结果</h3>
+                  {isSearching && (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  )}
+                </div>
+                {isSearching ? (
+                  <div className="text-sm text-muted-foreground py-4">
+                    正在搜索...
+                  </div>
+                ) : searchResults.length > 0 ? (
+                  <div className="grid gap-4 grid-cols-3">
+                    {searchResults.map((app) => (
+                      <button
+                        key={app.id}
+                        onClick={() => handleSearchResultClick(app)}
+                        className="w-full text-left px-4 py-3 rounded-lg border border-input bg-background hover:bg-[#0057ff]/90 hover:text-white transition-colors cursor-pointer flex flex-col gap-2"
+                      >
+                        {/* 图标 + 名称 */}
+                        <div className="flex items-center gap-2">
+                          {app.icon_url ? (
+                            <img
+                              src={app.icon_url}
+                              alt={app.app_name}
+                              className="w-5 h-5 rounded flex-shrink-0"
+                            />
+                          ) : (
+                            <div className="w-5 h-5 rounded bg-[#0057FF] flex items-center justify-center flex-shrink-0">
+                              <span className="text-xs font-bold text-white">
+                                {app.app_name.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                          <div className="font-medium truncate">{app.app_name}</div>
+                        </div>
+                        {/* 描述 - 单行省略 */}
+                        {app.short_description && (
+                          <div className="text-sm  line-clamp-1">
+                            {app.short_description}
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-muted-foreground py-4">
+                    未找到相关工具
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Popular Searches */}
             <div className="space-y-4">
@@ -238,7 +377,8 @@ export function DemoSearchBar() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Quota Warning Dialog */}

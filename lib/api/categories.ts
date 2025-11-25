@@ -18,6 +18,23 @@ export const categoriesApi = {
   },
 
   /**
+   * 获取所有一级分类
+   */
+  async listPrimary(lang?: string): Promise<CategoriesResponse> {
+    return apiClient.get<CategoriesResponse>('/primary-categories', lang ? { lang } : undefined)
+  },
+
+  /**
+   * 获取指定一级分类下的二级分类
+   */
+  async listSecondary(primaryKey: string, lang?: string): Promise<CategoriesResponse> {
+    return apiClient.get<CategoriesResponse>(
+      `/primary-categories/${primaryKey}/categories`,
+      lang ? { lang } : undefined
+    )
+  },
+
+  /**
    * 获取单个类别
    */
   async get(categoryId: string, lang?: string): Promise<Category> {

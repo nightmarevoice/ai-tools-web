@@ -32,6 +32,11 @@ export const metadata = {
   authors: [{ name: "ResearchAI Team" }],
   creator: "ResearchAI",
   publisher: "ResearchAI",
+  icons: {
+    icon: "/ai.ico",
+    shortcut: "/ai.ico",
+    apple: "/ai.ico",
+  },
   formatDetection: {
     email: false,
     address: false,

@@ -14,6 +14,8 @@ import type {
   TrendsParams,
   TopAppsParams,
   TrendingAppsParams,
+  FeaturedByCategoryResponse,
+  FeaturedByCategoryParams,
 } from '@/types/api'
 
 export const statsApi = {
@@ -57,6 +59,13 @@ export const statsApi = {
    */
   async getTrendingApps(params?: TrendingAppsParams): Promise<TrendingAppsResponse> {
     return apiClient.get<TrendingAppsResponse>('/stats/trending-apps', params)
+  },
+
+  /**
+   * 按分类获取精选应用
+   */
+  async getFeaturedByCategory(params?: FeaturedByCategoryParams): Promise<FeaturedByCategoryResponse> {
+    return apiClient.get<FeaturedByCategoryResponse>('/stats/featured-by-category', params)
   },
 }
 

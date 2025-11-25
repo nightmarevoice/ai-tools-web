@@ -73,6 +73,22 @@ export const appsApi = {
       params
     )
   },
+
+  /**
+   * 搜索应用
+   */
+  async search(
+    keyword: string,
+    params?: { lang?: string; limit?: number }
+  ): Promise<ListResponse<Application>> {
+    return apiClient.get<ListResponse<Application>>(
+      '/apps/search',
+      {
+        keyword,
+        ...params,
+      }
+    )
+  },
 }
 
 

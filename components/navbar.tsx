@@ -273,7 +273,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
           href={`/${locale}`}
           className={cn(
             "mr-6 flex items-center space-x-2 transition-colors",
-            "text-[#0057FF] hover:text-primary",
+            "text-[#0057FF] ",
           )}
         >
           <Logo

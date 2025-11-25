@@ -29,6 +29,12 @@ import {
   LayoutDashboard,
   Wand2,
   Folder,
+  Edit,
+  Music,
+  Share2,
+  TrendingUp,
+  Heart,
+  Sparkles,
 } from "lucide-react"
 import { categoriesApi } from "@/lib/api/categories"
 import { appsApi } from "@/lib/api/apps"
@@ -36,10 +42,22 @@ import type { Application, Category, Language, SemanticSearchResponse } from "@/
 import { useTranslations, useLocale } from "next-intl"
 
 const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
+  // 一级分类图标映射（基于 key）
+  "writing-content": Edit,
+  "image-design": ImageIcon,
+  "video": Video,
+  "audio-music": Music,
+  "social-media": Share2,
+  "marketing-sales": TrendingUp,
+  "productivity-office": Briefcase,
+  "development-tech": Code2,
+  "education-research": BookOpen,
+  "business-services": Building2,
+  "lifestyle-health": Heart,
+  "ai-tools-fun": Sparkles,
+  // 保留旧的映射以兼容
   "chat-agents": MessageSquare,
   productivity: Briefcase,
-  "image-design": ImageIcon,
-  video: Video,
   audio: Headphones,
   coding: Code2,
   "app-builder": LayoutDashboard,
@@ -55,6 +73,7 @@ const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
   social: Megaphone,
   lifestyle: Folder,
 }
+
 
 const DEFAULT_APP_LIMIT = 50
 
@@ -82,13 +101,17 @@ function CategoriesPageContent() {
   const locale = useLocale()
   const t = useTranslations("categories")
   const tCommon = useTranslations("common")
-  const [categories, setCategories] = useState<Category[]>([])
-  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null)
+  const [primaryCategories, setPrimaryCategories] = useState<Category[]>([])
+  const [secondaryCategories, setSecondaryCategories] = useState<Record<string, Category[]>>({})
+  const [loadingSecondaryCategories, setLoadingSecondaryCategories] = useState<Record<string, boolean>>({})
+  const [activeCategoryKey, setActiveCategoryKey] = useState<string | null>(null)
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | number | null>(null) // 实际选中的分类 id（用于 API 调用）
   const [query, setQuery] = useState<string>("")
   const [inputValue, setInputValue] = useState<string>("")
   const [loadingCategories, setLoadingCategories] = useState<boolean>(false)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
   const [searchType ,setSearchType] = useState<string>("category")
+  const [hoveredPrimaryCategoryId, setHoveredPrimaryCategoryId] = useState<string | number | null>(null)
   const searchParams = useSearchParams()
   const typeParam = searchParams?.get("type") ?? undefined
   const navRef = useRef<HTMLDivElement | null>(null)
@@ -127,7 +150,7 @@ function CategoriesPageContent() {
   const [searchTotal, setSearchTotal] = useState<number>(0)
   const [searchLoadingMore, setSearchLoadingMore] = useState<boolean>(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
-  // 远程拉取分类数据（优化：并行加载初始数据）
+  // 远程拉取一级分类数据（优化：并行加载初始数据）
   useEffect(() => {
     let aborted = false
     const fetchData = async () => {
@@ -140,28 +163,32 @@ function CategoriesPageContent() {
         const qParam = (searchParams?.get("q") ?? "").trim()
         
         if (qParam) {
-          // 如果有搜索参数，只加载分类列表，不加载应用列表
-          const categoriesResponse = await categoriesApi.list(resolvedLang)
+          // 如果有搜索参数，只加载一级分类列表，不加载应用列表
+          const categoriesResponse = await categoriesApi.listPrimary(resolvedLang)
           
           if (aborted) return
           
-          const cats = categoriesResponse.categories ?? []
-          setCategories(cats)
+          const cats = categoriesResponse.primary_categories ?? []
+          setPrimaryCategories(cats)
           
           // 如果有 URL 参数指定的分类，使用它；否则使用第一个分类
-          const targetCategoryId = typeParam && cats.some(c => c.id === typeParam)
-            ? typeParam
-            : cats[0]?.id
+          const targetCategory = typeParam && cats.find(c => c.id === typeParam)
+            ? cats.find(c => c.id === typeParam)
+            : cats[0]
           
-          if (targetCategoryId) {
-            setActiveCategoryId(targetCategoryId)
+          if (targetCategory?.key) {
+            setActiveCategoryKey(targetCategory.key)
+            // 如果没有 URL 参数，不设置 selectedCategoryId，等待二级分类加载后自动选中第一个
+            if (typeParam) {
+              setSelectedCategoryId(targetCategory.id) // 有 URL 参数时，使用一级分类 id
+            }
           }
         } else {
-          // 如果没有搜索参数，并行获取分类列表和初始应用数据
+          // 如果没有搜索参数，并行获取一级分类列表和初始应用数据
           setAppsLoading(true)
           
           const [categoriesResponse, appsResponse] = await Promise.all([
-            categoriesApi.list(resolvedLang),
+            categoriesApi.listPrimary(resolvedLang),
             appsApi.list({
               lang: (resolvedLang as Language | undefined) ?? undefined,
               page: 1,
@@ -171,16 +198,20 @@ function CategoriesPageContent() {
 
           if (aborted) return
 
-          const cats = categoriesResponse.categories ?? []
-          setCategories(cats)
+          const cats = categoriesResponse.primary_categories ?? []
+          setPrimaryCategories(cats)
 
           // 如果有 URL 参数指定的分类，使用它；否则使用第一个分类
-          const targetCategoryId = typeParam && cats.some(c => c.id === typeParam)
-            ? typeParam
-            : cats[0]?.id
+          const targetCategory = typeParam && cats.find(c => c.id === typeParam)
+            ? cats.find(c => c.id === typeParam)
+            : cats[0]
 
-          if (targetCategoryId) {
-            setActiveCategoryId(targetCategoryId)
+          if (targetCategory?.key) {
+            setActiveCategoryKey(targetCategory.key)
+            // 如果没有 URL 参数，不设置 selectedCategoryId，等待二级分类加载后自动选中第一个
+            if (typeParam) {
+              setSelectedCategoryId(targetCategory.id) // 有 URL 参数时，使用一级分类 id
+            }
 
             // 如果初始应用数据匹配目标分类，直接使用；否则重新获取
             setApps(appsResponse.items ?? [])
@@ -206,36 +237,181 @@ function CategoriesPageContent() {
     }
   }, [resolvedLang, t, typeParam, searchParams])
 
-  
+  // 当鼠标悬停一级分类时，加载对应的二级分类
+  useEffect(() => {
+    if (!hoveredPrimaryCategoryId) return
+    if (secondaryCategories[hoveredPrimaryCategoryId]) return // 已经加载过
+    if (loadingSecondaryCategories[hoveredPrimaryCategoryId]) return // 正在加载中
+
+    // 找到对应的一级分类，hoveredPrimaryCategoryId 保存的是 key
+    const primaryCategory = primaryCategories.find(cat => cat.key === hoveredPrimaryCategoryId)
+    if (!primaryCategory || !primaryCategory.key) return
+
+    let aborted = false
+    const fetchSecondaryCategories = async () => {
+      try {
+        setLoadingSecondaryCategories(prev => ({ ...prev, [hoveredPrimaryCategoryId]: true }))
+        const response = await categoriesApi.listSecondary(primaryCategory.key!, resolvedLang)
+        
+        if (aborted) return
+        
+        setSecondaryCategories(prev => ({
+          ...prev,
+          [hoveredPrimaryCategoryId]: response.categories ?? []
+        }))
+      } catch (e: any) {
+        if (aborted) return
+        console.error(`Failed to load secondary categories for ${hoveredPrimaryCategoryId}:`, e)
+        // 如果加载失败，设置为空数组，避免重复加载
+        setSecondaryCategories(prev => ({
+          ...prev,
+          [hoveredPrimaryCategoryId]: []
+        }))
+      } finally {
+        if (!aborted) {
+          setLoadingSecondaryCategories(prev => {
+            const next = { ...prev }
+            delete next[hoveredPrimaryCategoryId]
+            return next
+          })
+        }
+      }
+    }
+
+    fetchSecondaryCategories()
+    return () => {
+      aborted = true
+    }
+  }, [hoveredPrimaryCategoryId, resolvedLang, secondaryCategories, loadingSecondaryCategories, primaryCategories])
 
   
 
-  const handleNavClick = useCallback((e: React.MouseEvent, key: string) => {
+  
+
+  // 加载二级分类的辅助函数
+  const loadSecondaryCategories = useCallback(async (categoryKey: string) => {
+    // 找到对应的一级分类
+    const primaryCategory = primaryCategories.find(cat => cat.key === categoryKey)
+    if (!primaryCategory || !primaryCategory.key) return
+    
+    // 使用 key 作为 secondaryCategories 的 key，与 hoveredPrimaryCategoryId 保持一致
+    // 如果已经加载过或正在加载，直接返回
+    if (secondaryCategories[categoryKey]) {
+      return
+    }
+    try {
+      setLoadingSecondaryCategories(prev => ({ ...prev, [categoryKey]: true }))
+      const response = await categoriesApi.listSecondary(primaryCategory.key!, resolvedLang)
+      
+      setSecondaryCategories(prev => ({
+        ...prev,
+        [categoryKey]: response.categories ?? []
+      }))
+    } catch (e: any) {
+      console.error(`Failed to load secondary categories for ${categoryKey}:`, e)
+      // 如果加载失败，设置为空数组，避免重复加载
+      setSecondaryCategories(prev => ({
+        ...prev,
+        [categoryKey]: []
+      }))
+    } finally {
+      setLoadingSecondaryCategories(prev => {
+        const next = { ...prev }
+        delete next[categoryKey]
+        return next
+      })
+    }
+  }, [primaryCategories, resolvedLang, secondaryCategories, loadingSecondaryCategories])
+
+  // 当 activeCategoryKey 变化时，自动加载对应的二级分类
+  useEffect(() => {
+    if (activeCategoryKey && primaryCategories.length > 0) {
+      loadSecondaryCategories(activeCategoryKey)
+    }
+  }, [activeCategoryKey, primaryCategories, loadSecondaryCategories])
+
+  // 当二级分类加载完成且没有选中任何分类时，自动选中第一个二级分类
+  useEffect(() => {
+    if (!activeCategoryKey) return
+    if (!selectedCategoryId && secondaryCategories[activeCategoryKey]?.length > 0) {
+      const firstSecondaryCategory = secondaryCategories[activeCategoryKey][0]
+      if (firstSecondaryCategory) {
+        setSelectedCategoryId(firstSecondaryCategory.id)
+      }
+    }
+  }, [activeCategoryKey, secondaryCategories, selectedCategoryId])
+
+  const handleNavClick = useCallback(async (e: React.MouseEvent, key: string | number) => {
     e.preventDefault()
-    setActiveCategoryId(key)
-    const element = document.getElementById(`category-card-${key}`)
+    
+    // 检查是否是一级分类（用 key 比较）
+    const primaryCategory = primaryCategories.find(cat => cat.key === key)
+    const isPrimaryCategory = !!primaryCategory
+    
+    if (isPrimaryCategory && primaryCategory) {
+      // 如果当前一级菜单已经是选中状态，不需要做任何操作
+      if (activeCategoryKey === primaryCategory.key) {
+        return
+      }
+      // 如果是一级分类，先清空选中的分类，等待二级分类加载完成后自动选中第一个
+      setSelectedCategoryId(null)
+      // 显示二级菜单（使用 key）
+      setHoveredPrimaryCategoryId(primaryCategory.key!)
+      setActiveCategoryKey(primaryCategory.key!)
+      // 加载二级分类（加载完成后，useEffect 会自动选中第一个）
+      await loadSecondaryCategories(key as string)
+      return
+    }
+    // 二级分类，传入的 key 实际上是 id，找到所属的一级分类并设置 activeCategoryKey
+    const categoryId = key
+    setSelectedCategoryId(categoryId) // 保存实际选中的分类 id（用于 API 调用）
+    // 找到该二级分类所属的一级分类
+    let parentCategoryKey: string | null = null
+    for (const [primaryKey, secondaryCats] of Object.entries(secondaryCategories)) {
+      if (secondaryCats.some(cat => cat.id === categoryId)) {
+        parentCategoryKey = primaryKey
+        break
+      }
+    }
+    // 如果找到一级分类，设置其 key；否则尝试从 primaryCategories 中查找
+    if (parentCategoryKey) {
+      setActiveCategoryKey(parentCategoryKey)
+    } else {
+      // 如果没找到，可能是数据还没加载，尝试从 primaryCategories 中查找
+      const primaryCategory = primaryCategories.find(cat => cat.id === categoryId)
+      if (primaryCategory?.key) {
+        setActiveCategoryKey(primaryCategory.key)
+        setSelectedCategoryId(categoryId) // 如果是一级分类，也保存其 id
+      }
+    }
+    const element = document.getElementById(`category-card-${categoryId}`)
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" })
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" })
     }
-  }, [])
+  }, [primaryCategories, loadSecondaryCategories, activeCategoryKey, secondaryCategories])
 
-  // 移除此 useEffect，因为 activeCategoryId 现在在初始加载时设置
+  // 移除此 useEffect，因为 activeCategoryKey 现在在初始加载时设置
   // useEffect(() => {
   //   if (categories.length === 0) return
   //   if (typeParam && categories.some((category) => category.id === typeParam)) {
-  //     setActiveCategoryId(typeParam)
+  //     setActiveCategoryKey(typeParam)
   //     return
   //   }
-  //   if (!activeCategoryId) {
-  //     setActiveCategoryId(categories[0].id)
+  //   if (!activeCategoryKey) {
+  //     setActiveCategoryKey(categories[0].key)
   //   }
-  // }, [categories, typeParam, activeCategoryId])
+  // }, [categories, typeParam, activeCategoryKey])
 
   useEffect(() => {
     if (!typeParam) return
-    if (!categories.some((category) => category.id === typeParam)) return
+    // 检查是否在一级分类或二级分类中
+    const isInPrimary = primaryCategories.some((category) => category.id === typeParam)
+    const isInSecondary = Object.values(secondaryCategories).some(cats => 
+      cats.some(cat => cat.id === typeParam)
+    )
+    if (!isInPrimary && !isInSecondary) return
     const navEl = navRef.current
     if (!navEl) return
     const activeItem = navEl.querySelector<HTMLElement>(`[data-category-id="${typeParam}"]`)
@@ -245,25 +421,35 @@ function CategoriesPageContent() {
       top: Math.max(targetScroll, 0),
       behavior: "smooth",
     })
-  }, [typeParam, categories])
+  }, [typeParam, primaryCategories, secondaryCategories])
 
-  const activeCategory = useMemo(
-    () => categories.find((category) => category.id === activeCategoryId) ?? null,
-    [categories, activeCategoryId]
-  )
+  // 获取所有分类（一级+二级）用于查找activeCategory
+  const allCategories = useMemo(() => {
+    const all: Category[] = [...primaryCategories]
+    Object.values(secondaryCategories).forEach(cats => {
+      all.push(...cats)
+    })
+    return all
+  }, [primaryCategories, secondaryCategories])
+
+  const activeCategory = useMemo(() => {
+    // 根据 activeCategoryKey 找到一级分类
+    if (!activeCategoryKey) return null
+    return primaryCategories.find((category) => category.key === activeCategoryKey) ?? null
+  }, [primaryCategories, activeCategoryKey])
 
   // 拉取分类下的应用列表（仅在切换分类时执行，初始加载已在上面并行完成）
   const [initialLoadDone, setInitialLoadDone] = useState(false)
 
   useEffect(() => {
     // 标记初始加载完成
-    if (categories.length > 0 && activeCategoryId && !initialLoadDone) {
+    if (primaryCategories.length > 0 && activeCategoryKey && !initialLoadDone) {
       setInitialLoadDone(true)
       return
     }
 
     // 仅在初始加载完成后，切换分类时才执行
-    if (!activeCategoryId || !initialLoadDone) return
+    if (!selectedCategoryId || !initialLoadDone) return
 
     let aborted = false
 
@@ -279,7 +465,7 @@ function CategoriesPageContent() {
         setAppsTotal(0)
 
         const response = await appsApi.list({
-          category: activeCategoryId ?? undefined,
+          category: selectedCategoryId ?? undefined,
           lang: (resolvedLang as Language | undefined) ?? undefined,
           page: 1,
           limit: DEFAULT_APP_LIMIT,
@@ -303,10 +489,10 @@ function CategoriesPageContent() {
     return () => {
       aborted = true
     }
-  }, [activeCategoryId, resolvedLang, t, initialLoadDone, categories.length])
+  }, [selectedCategoryId, resolvedLang, t, initialLoadDone, primaryCategories.length, activeCategoryKey])
 
   const loadMoreApps = useCallback(async () => {
-    if (!activeCategoryId) return
+    if (!selectedCategoryId) return
     if (appsLoadingMore) return
     if (appsPage >= appsPages) return
     let aborted = false
@@ -315,7 +501,7 @@ function CategoriesPageContent() {
     try {
       const nextPage = appsPage + 1
       const response = await appsApi.list({
-        category: activeCategoryId ?? undefined,
+        category: selectedCategoryId ?? undefined,
         lang: (resolvedLang as Language | undefined) ?? undefined,
         page: nextPage,
         limit: DEFAULT_APP_LIMIT,
@@ -339,7 +525,7 @@ function CategoriesPageContent() {
     return () => {
       aborted = true
     }
-  }, [activeCategoryId, appsLoadingMore, appsPage, appsPages, apps, resolvedLang, appsTotal, t])
+  }, [selectedCategoryId, appsLoadingMore, appsPage, appsPages, apps, resolvedLang, appsTotal, t])
   const performSearch = useCallback(async (term: string, page: number = 1, append: boolean = false) => {
     const trimmed = term.trim()
     setQuery(trimmed)
@@ -547,60 +733,73 @@ function CategoriesPageContent() {
         <section className="relative py-8 md:py-12 text-slate-900 ">
          
           <div className="relative z-10 mx-auto px-3 max-w-7xl">
-            <div className=" grid gap-8 md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr]">
+            <div className=" grid gap-8 md:grid-cols-[180px_1fr] lg:grid-cols-[180px_1fr]">
               <aside className="sticky top-20 h-max">
-                <nav
-                  ref={navRef}
-                  id="category-nav"
-                  className="relative space-y-2 overflow-y-auto max-h-[calc(100vh-5rem)] pr-1"
-                  aria-busy={loadingCategories}
-                  aria-live="polite"
-                >
-                  {loadingCategories && appsLoading ? (
-                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-sm">
-                      <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                    </div>
-                  ) : null}
-                  {loadingCategories ? (
-                    <div className="space-y-2">
-                      {Array.from({ length: 10 }).map((_, i) => (
-                        <div key={i} className="flex items-center gap-3 rounded-lg border px-3 py-3">
-                          <div className="h-4 w-4 rounded bg-muted animate-pulse" />
-                          <div className="h-4 w-24 rounded bg-muted animate-pulse" />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    categories.map((category) => {
-                      const isActive = activeCategoryId ? activeCategoryId === category.id : false
-                      const Icon = CATEGORY_ICON_MAP[category.id] ?? Bot
-                      return (
-                        <a
-                          key={category.id}
-                          href="javascript:void(0)"
-                          data-category-id={category.id}
-                          onClick={(e) => handleNavClick(e, category.id)}
-                          className={`flex items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors ${
-                            isActive ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-accent"
-                          }`}
-                        >
-                          <Icon className="h-4 w-4" />
-                          <span className="truncate">{category.name}</span>
-                          
-                        </a>
-                      )
-                    })
-                  )}
-                </nav>
-                <style jsx>{`
-                  #category-nav {
-                    -ms-overflow-style: none; /* IE and Edge */
-                    scrollbar-width: none; /* Firefox */
-                  }
-                  #category-nav::-webkit-scrollbar {
-                    display: none; /* Chrome, Safari, Opera */
-                  }
-                `}</style>
+                <div className="relative">
+                  <nav
+                    ref={navRef}
+                    id="category-nav"
+                    className="relative space-y-2 overflow-y-auto max-h-[calc(100vh-5rem)] pr-1"
+                    aria-busy={loadingCategories}
+                    aria-live="polite"
+                  >
+                    {loadingCategories && appsLoading ? (
+                      <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-sm">
+                        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                      </div>
+                    ) : null}
+                    {loadingCategories ? (
+                      <div className="space-y-2">
+                        {Array.from({ length: 10 }).map((_, i) => (
+                          <div key={i} className="flex items-center gap-3 rounded-lg border px-3 py-3">
+                            <div className="h-4 w-4 rounded bg-muted animate-pulse" />
+                            <div className="h-4 w-24 rounded bg-muted animate-pulse" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      primaryCategories.map((category) => {
+                        const isActive = activeCategoryKey ? activeCategoryKey === category.key : false
+                        const Icon: LucideIcon = (category.key && CATEGORY_ICON_MAP[category.key]) || Bot
+                        
+                        return (
+                          <div
+                            key={category.id}
+                            className="relative group"
+                            onMouseEnter={() =>  setHoveredPrimaryCategoryId(category.key ?? null)}
+                            onMouseLeave={() => setHoveredPrimaryCategoryId(null)}
+                          >
+                            <a
+                              href="javascript:void(0)"
+                              data-category-id={category.id}
+                              onClick={(e) => {
+                                // 如果有一级分类，点击一级分类不切换，等待选择二级分类
+                                // 传入 key 用于判断和加载二级分类
+                                handleNavClick(e, category.key ?? category.id)
+                              }}
+                              className={`flex items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors ${
+                                isActive ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-accent"
+                              }`}
+                            >
+                              <Icon className="h-4 w-4" />
+                              <span className="truncate flex-1">{category.name}</span>
+                             
+                            </a>
+                          </div>
+                        )
+                      })
+                    )}
+                  </nav>
+                  <style jsx>{`
+                    #category-nav {
+                      -ms-overflow-style: none; /* IE and Edge */
+                      scrollbar-width: none; /* Firefox */
+                    }
+                    #category-nav::-webkit-scrollbar {
+                      display: none; /* Chrome, Safari, Opera */
+                    }
+                  `}</style>
+                </div>
               </aside>
               <div className="space-y-8">
                  {/* 查询 */}
@@ -658,6 +857,39 @@ function CategoriesPageContent() {
                  )}
 
                  <div className="rounded-xl border bg-card p-5">
+                   {/* 二级分类菜单 */}
+                   {activeCategoryKey && (
+                     <div className="mb-4 pb-4 border-b">
+                       {loadingSecondaryCategories[activeCategoryKey] ? (
+                         <div className="flex items-center justify-center py-4">
+                           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                         </div>
+                       ) : (secondaryCategories[activeCategoryKey] ?? []).length > 0 ? (
+                         <div className="flex flex-wrap gap-2">
+                           {(secondaryCategories[activeCategoryKey] ?? []).map((childCategory) => {
+                             const isChildActive = selectedCategoryId === childCategory.id
+                             return (
+                               <a
+                                 key={childCategory.id}
+                                 href="javascript:void(0)"
+                                 onClick={(e) => {
+                                   handleNavClick(e, childCategory.id)
+                                 }}
+                                 className={`inline-flex items-center  rounded-md px-3 py-1.5 text-sm transition-colors ${
+                                   isChildActive
+                                     ? "bg-primary text-primary-foreground"
+                                     : "bg-muted hover:text-white hover:bg-[#0057FF] hover:border-[#0057FF]"
+                                 }`}
+                               >
+                                 {childCategory.name}
+                               </a>
+                             )
+                           })}
+                         </div>
+                       ) : null}
+                     </div>
+                   )}
+                   
                    <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
                      <div>
                        <h3 className="text-lg font-semibold">
@@ -678,17 +910,19 @@ function CategoriesPageContent() {
                      
                    </div>
                  {(appsLoading || searching || (searchType === "search" && searchLoadingMore && searchResults.length > 0)) && (
-                   <div className="grid gap-4 sm:grid-cols-2">
+                   <div className="grid gap-4 sm:grid-cols-3">
                      {Array.from({ length: 6 }).map((_, i) => (
-                       <div key={i} className="rounded-lg border p-4">
+                       <div key={i} className="rounded-lg border p-2">
+                         {/* 缩略图占位符 */}
+                         <div className="mb-3 w-full aspect-video rounded-lg bg-muted animate-pulse" />
                          <div className="flex items-start gap-3">
-                           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted animate-pulse" />
+                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted animate-pulse" />
                            <div className="flex-1 space-y-2">
                              <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
                              <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
                            </div>
                          </div>
-                         <div className="mt-4 flex items-center justify-between text-xs">
+                         <div className="mt-4 flex items-center p-2 justify-between text-xs">
                            <div className="h-3 w-24 bg-muted rounded animate-pulse" />
                            <div className="h-3 w-16 bg-muted rounded animate-pulse" />
                          </div>
@@ -698,14 +932,26 @@ function CategoriesPageContent() {
                   ) }
                   {
                     searchType === "category" && apps.length > 0 && (
-                      <div className="grid gap-4 sm:grid-cols-2">
-                       {apps.map((app: Application) => (
+                      <div className="grid gap-4 sm:grid-cols-3">
+                        {apps.map((app: Application) => (
                           <div
                             key={app.id}
-                            className="rounded-lg border p-4 transition hover:border-primary"
+                            className="group rounded-lg border p-2 transition hover:border-primary"
                           >
+                            {/* 缩略图 */}
+                            {app.screenshot_url && (
+                              <div className="mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
+                                <img
+                                  src={app.screenshot_url}
+                                  alt={app.app_name}
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                  loading="lazy"
+                                  referrerPolicy="no-referrer"
+                                />
+                              </div>
+                            )}
                             <div className="flex items-start gap-3">
-                              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
                                   <img
                                     src={app.icon_url}
                                     alt={app.app_name}
@@ -737,7 +983,7 @@ function CategoriesPageContent() {
                                 </div>
                               </div>
                             </div>
-                            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+                            <div className="mt-4 flex items-center p-2 justify-between text-xs text-muted-foreground">
                               <span>{tCommon("monthlyVisits")}：{formatNumber(app.monthly_visits)}</span>
                               <a
                                 href={app.official_website ?? app.url}
@@ -785,10 +1031,22 @@ function CategoriesPageContent() {
                        {searchResults?.map((app: Application) => (
                           <div
                             key={app.id}
-                            className="rounded-lg border p-4 transition hover:border-primary"
+                            className="group rounded-lg border p-2 transition hover:border-primary"
                           >
+                            {/* 缩略图 */}
+                            {app.screenshot_url && (
+                              <div className="mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
+                                <img
+                                  src={app.screenshot_url}
+                                  alt={app.app_name}
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                  loading="lazy"
+                                  referrerPolicy="no-referrer"
+                                />
+                              </div>
+                            )}
                             <div className="flex items-start gap-3">
-                              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
                                   <img
                                     src={app.icon_url}
                                     alt={app.app_name}
@@ -820,7 +1078,7 @@ function CategoriesPageContent() {
                                 </div>
                               </div>
                             </div>
-                            <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+                            <div className="mt-4 flex items-center p-2 justify-between text-xs text-muted-foreground">
                               <span>{tCommon("monthlyVisits")}：{formatNumber(app.monthly_visits)}</span>
                               <a
                                 href={app.official_website ?? app.url}
