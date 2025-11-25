@@ -160,7 +160,7 @@
         "trending": "🔥 Popular Recommendations",
         "recent": "⭐ Recently Added",
         "featured": "✨ Trending Recommendations",
-        "category-featured": "📂 Category Featured"
+        "category-featured": "🗂️ Category Featured"
       },
       "error": "Failed to load trending rankings",
       "empty": "No tool data available",
