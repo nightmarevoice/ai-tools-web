@@ -15,7 +15,7 @@ export default async function Home({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "AI Research Assistant",
+    "name": "AI application search assistant",
     "description": "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps.",
     "url": `${baseUrl}/${locale}`,
     "potentialAction": {
@@ -70,7 +70,7 @@ export async function generateMetadata({
       description,
       type: "website",
       url: `${baseUrl}/${locale}`,
-      siteName: "AI Research Assistant",
+      siteName: "AI application search assistant",
       images: [
         {
           url: `${baseUrl}/og-image.png`,

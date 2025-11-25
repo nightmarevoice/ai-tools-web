@@ -41,7 +41,7 @@ export async function generateMetadata({
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
   
   // 使用默认值，因为翻译文件中可能没有 metadata
-  const title = "AI Tool Categories | AI Research Assistant"
+  const title = "AI Tool Categories | AI application search assistant"
   const description = "Browse AI tools by category. Discover the best AI applications organized by category including AI assistants, productivity tools, research tools, and more."
 
   return {
@@ -59,7 +59,7 @@ export async function generateMetadata({
       description,
       type: "website",
       url: `${baseUrl}/${locale}/categories`,
-      siteName: "AI Research Assistant",
+      siteName: "AI application search assistant",
       images: [
         {
           url: `${baseUrl}/og-image.png`,

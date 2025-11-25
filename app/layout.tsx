@@ -12,8 +12,8 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assista
 export const metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "AI Research Assistant - Discover & Analyze AI Tools",
-    template: "%s | AI Research Assistant",
+    default: "AI application search assistant - Discover & Analyze AI Tools",
+    template: "%s | AI application search assistant",
   },
   description:
     "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps. Compare features, ratings, and find the perfect AI solution for your needs.",
@@ -46,22 +46,22 @@ export const metadata = {
     type: "website",
     locale: "en_US",
     url: baseUrl,
-    title: "AI Research Assistant - Discover & Analyze AI Tools",
+    title: "AI application search assistant - Discover & Analyze AI Tools",
     description:
       "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps.",
-    siteName: "AI Research Assistant",
+    siteName: "AI application search assistant",
     images: [
       {
         url: `${baseUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "AI Research Assistant",
+        alt: "AI application search assistant",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Research Assistant - Discover & Analyze AI Tools",
+    title: "AI application search assistant - Discover & Analyze AI Tools",
     description:
       "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps.",
     creator: "@researchai",

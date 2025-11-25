@@ -30,7 +30,7 @@ export const dynamicParams = false
 export async function generateMetadata({ params }: PaperChatPageProps): Promise<Metadata> {
   const { locale } = await params
   return {
-    title: "Chat with Paper | AI Research Assistant",
+    title: "Chat with Paper | AI application search assistant",
     description: "Ask questions and get AI-powered insights about this research paper",
   }
 }

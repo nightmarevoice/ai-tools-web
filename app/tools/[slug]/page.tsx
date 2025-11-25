@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     const app = await appsApi.get(appId, 'en')
 
     return {
-      title: `${app.app_name} | AI Research Assistant`,
+      title: `${app.app_name} | AI application search assistant`,
       description: app.short_description || app.product_description || `Explore ${app.app_name}`,
       openGraph: {
         title: app.app_name,

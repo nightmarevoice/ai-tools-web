@@ -8,7 +8,7 @@ export default function DashboardPage() {
 
 // 如果需要为本地化 dashboard 提供独立的 SEO，可在这里补充元数据
 export const metadata: Metadata = {
-  title: "Dashboard - AI Research Assistant",
+  title: "Dashboard - AI application search assistant",
 }
 
 

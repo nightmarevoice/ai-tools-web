@@ -7,7 +7,7 @@ import { AdminHeader } from "@/components/admin-header"
 import { AdminTabs } from "@/components/admin-tabs"
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard | AI Research Assistant",
+  title: "Admin Dashboard | AI application search assistant",
   description: "Monitor system usage, manage users, and track subscriptions",
 }
 

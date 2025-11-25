@@ -7,10 +7,10 @@ import { ProfileHeader } from "@/components/profile-header"
 import { ProfileTabs } from "@/components/profile-tabs"
 
 export const metadata: Metadata = {
-  title: "User Profile | AI Research Assistant",
+  title: "User Profile | AI application search assistant",
   description: "Manage your account, saved papers, and subscription settings",
   openGraph: {
-    title: "User Profile | AI Research Assistant",
+    title: "User Profile | AI application search assistant",
     description: "Manage your account, saved papers, and subscription settings",
     type: "website",
     images: [
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AI Research Assistant - User Profile",
+        alt: "AI application search assistant - User Profile",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "User Profile | AI Research Assistant",
+    title: "User Profile | AI application search assistant",
     description: "Manage your account, saved papers, and subscription settings",
     images: ["/og-image.png"],
   },
