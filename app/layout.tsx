@@ -33,9 +33,9 @@ export const metadata = {
   creator: "ResearchAI",
   publisher: "ResearchAI",
   icons: {
-    icon: "/apphub.ico",
-    shortcut: "/apphub.ico",
-    apple: "/apphub.ico",
+    icon: "/apphub-fav.ico",
+    shortcut: "/apphub-fav.ico",
+    apple: "/apphub-fav.ico",
   },
   formatDetection: {
     email: false,
