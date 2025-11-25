@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 import { ExternalLink, FileText } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import type { SearchResult, SemanticSearchResponse } from "@/types/api"
@@ -15,6 +16,65 @@ interface PaperResultsProps {
   loading: boolean
   error: string | null
   query: string
+}
+
+// 加载提示组件
+function LoadingTips() {
+  const t = useTranslations("paperResults")
+  const [currentTipIndex, setCurrentTipIndex] = useState(0)
+
+  // 获取所有提示文本
+  const tips = [
+    t("loadingTips.searching"),
+    t("loadingTips.analyzing"),
+    t("loadingTips.matching"),
+    t("loadingTips.generating"),
+    t("loadingTips.optimizing"),
+  ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTipIndex((prev) => (prev + 1) % tips.length)
+    }, 2500) // 每2.5秒切换一次提示
+
+    return () => clearInterval(interval)
+  }, [tips.length])
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-center space-x-2">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-base font-medium text-foreground"
+        >
+          {t("generatingMain")}
+        </motion.div>
+      </div>
+      <div className="h-6 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentTipIndex}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="text-sm text-muted-foreground flex items-center space-x-2"
+          >
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="inline-block"
+            >
+              ⚡
+            </motion.span>
+            <span>{tips[currentTipIndex]}</span>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
+  )
 }
 
 export function PaperResults({ results, loading, error, query }: PaperResultsProps) {
@@ -97,40 +157,8 @@ export function PaperResults({ results, loading, error, query }: PaperResultsPro
                   }}
                 />
               </motion.div>
-              <div className="flex items-center space-x-2">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-base font-medium text-foreground"
-                >
-                  {t("generating")}
-                </motion.div>
-                <motion.div
-                  className="flex space-x-1"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  {[0, 1, 2].map((i) => (
-                    <motion.span
-                      key={i}
-                      className="text-base font-medium text-foreground"
-                      animate={{
-                        opacity: [0.3, 1, 0.3],
-                      }}
-                      transition={{
-                        duration: 1.2,
-                        repeat: Infinity,
-                        delay: i * 0.2,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      .
-                    </motion.span>
-                  ))}
-                </motion.div>
-              </div>
+              {/* 新的滚动提示组件 */}
+              <LoadingTips />
             </div>
           </CardContent>
         </Card>

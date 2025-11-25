@@ -323,6 +323,15 @@
     "emptyExample": "\"能夠生成圖像的AI工具\"",
     "noResults": "沒有找到相關的 AI 工具。",
     "searching": "正在搜索...",
+    "generating": "正在生成文本信息",
+    "generatingMain": "正在努力為您反饋，預計需要 10-15 秒...",
+    "loadingTips": {
+      "searching": "正在查詢相關資料...",
+      "analyzing": "正在分析您的需求...",
+      "matching": "正在匹配最佳工具方案...",
+      "generating": "正在生成智能推薦...",
+      "optimizing": "正在優化結果展示..."
+    },
     "foundResults": "找到 {count} 個相關工具",
     "findTools": "查找適合的 AI 工具",
     "aiSummary": "AI 總結"
