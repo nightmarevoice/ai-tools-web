@@ -70,6 +70,8 @@ export function RecommendedTools() {
                 <div className="flex items-start justify-between gap-2">
                   <Link
                     href={`/${locale}/tools/${tool.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex-1 min-w-0"
                   >
                     <div className="flex items-center gap-2">

@@ -256,6 +256,7 @@ export interface OverviewStats {
 
 export interface CategoryStatsResponse extends Array<{
   category: string
+  parent_category:string
   category_name: string
   app_count: number
   total_visits: number

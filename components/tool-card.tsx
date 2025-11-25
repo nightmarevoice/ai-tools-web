@@ -38,6 +38,8 @@ export function ToolCard({ tool }: { tool: Tool }) {
   return (
     <Link
       href={`/${locale}/tools/${tool.id}`}
+      target="_blank"
+      rel="noopener noreferrer"
       prefetch={true}
       className="group  rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
     >
