@@ -4,7 +4,7 @@ import dynamic from "next/dynamic"
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Menu, User as UserIcon, LogOut } from "lucide-react"
+import { Menu, User as UserIcon, LogOut, Home, LayoutGrid, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
@@ -227,16 +227,19 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
     {
       href: `/${locale}`,
       label: tCommon("nav.home"),
+      icon: Home,
       active: pathname === `/${locale}` || pathname === `/${locale}/` || pathname === "/" || pathname === "",
     },
     {
       href: `/${locale}/categories`,
       label: tCommon("nav.categories"),
+      icon: LayoutGrid,
       active: pathname.startsWith(`/${locale}/categories`) || pathname.startsWith("/categories"),
     },
     {
       href: `/${locale}/dashboard`,
       label: tCommon("nav.intelligentTools"),
+      icon: Sparkles,
       active: pathname === `/${locale}/dashboard` || pathname === "/dashboard",
     },
     // {
@@ -290,6 +293,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
           <div className="flex gap-6 justify-center">
             {routes.map((route) => {
               const isActive = route.active || (pathname.startsWith(route.href) && route.href !== `/${locale}` && route.href !== `/${locale}/`)
+              const Icon = route.icon
               console.log(isActive, route.href, pathname)
               return  (
                 <Link
@@ -297,12 +301,13 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
                   href={route.href}
                   aria-current={route.active ? "page" : undefined}
                   className={cn(
-                    "text-sm font-medium transition-colors px-2",
+                    "text-sm font-medium transition-colors px-2 flex items-center gap-1.5",
                     isActive
                       ? "text-[#0057FF]"
                       : "text-slate-600 hover:text-[#0057FF]",
                   )}
                 >
+                  {Icon && <Icon className="h-4 w-4" />}
                   {route.label}
                 </Link>
               )
@@ -393,19 +398,19 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                {/* <DropdownMenuItem asChild>
                   <Link href={`/${locale}/profile`} className="flex items-center cursor-pointer">
                     <UserIcon className="mr-2 h-4 w-4" />
                     <span>{tCommon("nav.profile")}</span>
                   </Link>
-                </DropdownMenuItem>
-                {user.role === 'admin' && (
+                </DropdownMenuItem> */}
+                {/* {user.role === 'admin' && (
                   <DropdownMenuItem asChild>
                     <Link href={`/${locale}/dashboard`} className="flex items-center cursor-pointer">
                       <span>{tCommon("nav.dashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
-                )}
+                )} */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={logout}
