@@ -411,7 +411,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
                     </Link>
                   </DropdownMenuItem>
                 )} */}
-                <DropdownMenuSeparator />
+                {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem
                   onClick={logout}
                   className="text-red-600 focus:text-red-600 cursor-pointer"
