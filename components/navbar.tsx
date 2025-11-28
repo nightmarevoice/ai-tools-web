@@ -246,11 +246,11 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
       openInNewTab: false,
     },
     {
-      href: `/${locale}/blog`,
+      href: `/${locale}/apphub-blog`,
       label: tCommon("nav.blog"),
       icon: BookOpen,
-      active: pathname.startsWith(`/${locale}/blog`) || pathname.startsWith("/blog"),
-      openInNewTab: true,
+      active: pathname.startsWith(`/${locale}/apphub-blog`) || pathname.startsWith("/apphub-blog"),
+      openInNewTab: false,
     },
     // {
     //   href: `/${locale}/dataanalysis`,
