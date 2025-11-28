@@ -21,6 +21,7 @@
       "home": "ホーム",
       "categories": "カテゴリー",
       "intelligentTools": "インテリジェントツール",
+      "blog": "AI AppHub Blog",
       "dataanalysis": "ウェブサイト統計",
       "profile": "プロフィール",
       "dashboard": "ダッシュボード",
@@ -434,7 +435,7 @@
   
   "login": {
     "title": "ログイン",
-    "description": "ログイン方法を選択してAppHub AIを続けて使用する",
+    "description": "ログイン方法を選択してAI AppHubを続けて使用する",
     "googleLogin": "Googleアカウントでログイン",
     "errors": {
       "signinFailed": "ログインに失敗しました。メールアドレスとパスワードを確認してください",

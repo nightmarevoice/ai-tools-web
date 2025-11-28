@@ -4,7 +4,7 @@ import dynamic from "next/dynamic"
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Menu, User as UserIcon, LogOut, Home, LayoutGrid, Sparkles } from "lucide-react"
+import { Menu, User as UserIcon, LogOut, Home, LayoutGrid, Sparkles, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
@@ -229,18 +229,28 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
       label: tCommon("nav.home"),
       icon: Home,
       active: pathname === `/${locale}` || pathname === `/${locale}/` || pathname === "/" || pathname === "",
+      openInNewTab: false,
     },
     {
       href: `/${locale}/categories`,
       label: tCommon("nav.categories"),
       icon: LayoutGrid,
       active: pathname.startsWith(`/${locale}/categories`) || pathname.startsWith("/categories"),
+      openInNewTab: false,
     },
     {
       href: `/${locale}/dashboard`,
       label: tCommon("nav.intelligentTools"),
       icon: Sparkles,
       active: pathname === `/${locale}/dashboard` || pathname === "/dashboard",
+      openInNewTab: false,
+    },
+    {
+      href: `/${locale}/blog`,
+      label: tCommon("nav.blog"),
+      icon: BookOpen,
+      active: pathname.startsWith(`/${locale}/blog`) || pathname.startsWith("/blog"),
+      openInNewTab: true,
     },
     // {
     //   href: `/${locale}/dataanalysis`,
@@ -287,7 +297,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
               "bg-primary/20"
             }
           />
-          <span className="hidden font-bold sm:inline-block">AppHub AI</span>
+          <span className="hidden font-bold sm:inline-block">AI AppHub</span>
         </Link>
         <nav className="hidden md:flex md:items-center md:justify-between">
           <div className="flex gap-6 justify-center">
@@ -295,6 +305,28 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
               const isActive = route.active || (pathname.startsWith(route.href) && route.href !== `/${locale}` && route.href !== `/${locale}/`)
               const Icon = route.icon
               console.log(isActive, route.href, pathname)
+              
+              // 如果需要在新的标签页打开，使用 <a> 标签
+              if (route.openInNewTab) {
+                return (
+                  <a
+                    key={route.href}
+                    href={route.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "text-sm font-medium transition-colors px-2 flex items-center gap-1.5",
+                      isActive
+                        ? "text-[#0057FF]"
+                        : "text-slate-600 hover:text-[#0057FF]",
+                    )}
+                  >
+                    {Icon && <Icon className="h-4 w-4" />}
+                    {route.label}
+                  </a>
+                )
+              }
+              
               return  (
                 <Link
                   key={route.href}

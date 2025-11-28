@@ -134,7 +134,7 @@ https://your-domain.com/auth/callback (生产环境)
 2. 点击 **Create Credentials > OAuth client ID**
 3. 选择 **Application type**: Web application
 4. 配置:
-   - **Name**: AppHub AI (或自定义名称)
+   - **Name**: AI AppHub (或自定义名称)
    - **Authorized JavaScript origins**:
      ```
      http://localhost:3000
@@ -157,7 +157,7 @@ https://your-domain.com/auth/callback (生产环境)
 1. 进入 **APIs & Services > OAuth consent screen**
 2. 选择 **External** (除非你有 Google Workspace)
 3. 填写应用信息:
-   - **App name**: AppHub AI
+   - **App name**: AI AppHub
    - **User support email**: 你的邮箱
    - **Developer contact information**: 你的邮箱
 4. 保存并继续

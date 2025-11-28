@@ -11,6 +11,7 @@ interface MobileMenuContentProps {
     label: string
     active: boolean
     icon?: LucideIcon
+    openInNewTab?: boolean
   }[]
   onClose: () => void
 }
@@ -20,6 +21,27 @@ export default function MobileMenuContent({ routes, onClose }: MobileMenuContent
     <div className="flex flex-col gap-4">
       {routes.map((route) => {
         const Icon = route.icon
+        
+        // 如果需要在新的标签页打开，使用 <a> 标签
+        if (route.openInNewTab) {
+          return (
+            <a
+              key={route.href}
+              href={route.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-primary flex items-center gap-2",
+                route.active ? "text-primary" : "text-muted-foreground",
+              )}
+              onClick={onClose}
+            >
+              {Icon && <Icon className="h-4 w-4" />}
+              {route.label}
+            </a>
+          )
+        }
+        
         return (
           <Link
             key={route.href}

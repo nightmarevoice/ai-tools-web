@@ -21,6 +21,7 @@
       "home": "首页",
       "categories": "分类",
       "intelligentTools": "智能工具",
+      "blog": "AI AppHub Blog",
       "dataanalysis": "网站统计",
       "profile": "个人资料",
       "dashboard": "仪表盘",
@@ -422,7 +423,7 @@
   },
   "login": {
     "title": "登录",
-    "description": "选择登录方式继续使用 AppHub AI",
+    "description": "选择登录方式继续使用 AI AppHub",
     "googleLogin": "使用 Google 账号登录",
     "errors": {
       "signinFailed": "登录失败,请检查邮箱和密码",
