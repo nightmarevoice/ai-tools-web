@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import {Search,ArrowRight} from "lucide-react"
+import { Search, ArrowRight } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { searchApi } from "@/lib/api/search"
@@ -110,7 +110,7 @@ function CategoriesPageContent() {
   const [inputValue, setInputValue] = useState<string>("")
   const [loadingCategories, setLoadingCategories] = useState<boolean>(false)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
-  const [searchType ,setSearchType] = useState<string>("category")
+  const [searchType, setSearchType] = useState<string>("category")
   const [hoveredPrimaryCategoryId, setHoveredPrimaryCategoryId] = useState<string | number | null>(null)
   const searchParams = useSearchParams()
   const typeParam = searchParams?.get("type") ?? undefined
@@ -163,12 +163,12 @@ function CategoriesPageContent() {
         // 只加载一级分类列表，不加载应用列表
         // 应用列表将在二级分类选中后由另一个 useEffect 加载
         const categoriesResponse = await categoriesApi.listPrimary(resolvedLang)
-        
+
         if (aborted) return
-        
+
         const cats = categoriesResponse.primary_categories ?? []
         setPrimaryCategories(cats)
-        
+
         // 如果有 parent_category 参数，找到对应的一级分类
         if (parentCategoryParam) {
           const parentCategory = cats.find(c => c.id === parentCategoryParam || c.key === parentCategoryParam)
@@ -187,7 +187,7 @@ function CategoriesPageContent() {
           const targetCategory = typeParam && cats.find(c => c.id === typeParam)
             ? cats.find(c => c.id === typeParam)
             : cats[0]
-          
+
           if (targetCategory?.key) {
             setActiveCategoryKey(targetCategory.key)
             // 如果有 type 参数且是一级分类，设置 selectedCategoryId
@@ -233,13 +233,13 @@ function CategoriesPageContent() {
 
       try {
         const response = await categoriesApi.listSecondary(primaryCategory.key!, resolvedLang)
-        
+
         if (aborted) return
-        
+
         // 标记为已加载
         loadedCategoriesRef.current.add(hoveredPrimaryCategoryId)
         loadingCategoriesRef.current.delete(hoveredPrimaryCategoryId)
-        
+
         setSecondaryCategories(prev => ({
           ...prev,
           [hoveredPrimaryCategoryId]: response.categories ?? []
@@ -271,36 +271,36 @@ function CategoriesPageContent() {
     }
   }, [hoveredPrimaryCategoryId, resolvedLang, primaryCategories])
 
-  
 
-  
+
+
 
   // 加载二级分类的辅助函数
   // 使用 ref 来跟踪已加载的分类，避免重复加载
   const loadedCategoriesRef = useRef<Set<string | number>>(new Set())
   const loadingCategoriesRef = useRef<Set<string | number>>(new Set())
-  
+
   const loadSecondaryCategories = useCallback(async (categoryKey: string) => {
     // 如果已经加载过或正在加载，直接返回
     if (loadedCategoriesRef.current.has(categoryKey) || loadingCategoriesRef.current.has(categoryKey)) {
       return
     }
-    
+
     // 找到对应的一级分类
     const primaryCategory = primaryCategories.find(cat => cat.key === categoryKey)
     if (!primaryCategory || !primaryCategory.key) return
-    
+
     // 标记为正在加载
     loadingCategoriesRef.current.add(categoryKey)
     setLoadingSecondaryCategories(prev => ({ ...prev, [categoryKey]: true }))
-    
+
     try {
       const response = await categoriesApi.listSecondary(primaryCategory.key!, resolvedLang)
-      
+
       // 标记为已加载
       loadedCategoriesRef.current.add(categoryKey)
       loadingCategoriesRef.current.delete(categoryKey)
-      
+
       setSecondaryCategories(prev => ({
         ...prev,
         [categoryKey]: response.categories ?? []
@@ -336,9 +336,9 @@ function CategoriesPageContent() {
   // 当二级分类加载完成且没有选中任何分类时，自动选中第一个二级分类
   useEffect(() => {
     if (!activeCategoryKey) return
-    
+
     const secondaryCats = secondaryCategories[activeCategoryKey] ?? []
-    
+
     // 如果有 parent_category 和 type 参数，说明是通过二级分类链接跳转过来的
     if (parentCategoryParam && typeParam) {
       // 在二级分类中查找对应的分类
@@ -359,7 +359,7 @@ function CategoriesPageContent() {
       }
       return
     }
-    
+
     // 如果有 typeParam 但没有 parent_category，说明可能是一级分类
     if (typeParam && !parentCategoryParam) {
       // 检查是否是一级分类
@@ -384,7 +384,7 @@ function CategoriesPageContent() {
         return
       }
     }
-    
+
     // 如果没有选中分类，且有二级分类，自动选中第一个
     if (!selectedCategoryId && secondaryCats.length > 0) {
       const firstSecondaryCategory = secondaryCats[0]
@@ -396,11 +396,11 @@ function CategoriesPageContent() {
 
   const handleNavClick = useCallback(async (e: React.MouseEvent, key: string | number) => {
     e.preventDefault()
-    
+
     // 检查是否是一级分类（用 key 比较）
     const primaryCategory = primaryCategories.find(cat => cat.key === key)
     const isPrimaryCategory = !!primaryCategory
-    
+
     if (isPrimaryCategory && primaryCategory) {
       // 如果当前一级菜单已经是选中状态，不需要做任何操作
       if (activeCategoryKey === primaryCategory.key) {
@@ -466,7 +466,7 @@ function CategoriesPageContent() {
     if (!typeParam) return
     // 检查是否在一级分类或二级分类中
     const isInPrimary = primaryCategories.some((category) => category.id === typeParam)
-    const isInSecondary = Object.values(secondaryCategories).some(cats => 
+    const isInSecondary = Object.values(secondaryCategories).some(cats =>
       cats.some(cat => cat.id === typeParam)
     )
     if (!isInPrimary && !isInSecondary) return
@@ -503,7 +503,7 @@ function CategoriesPageContent() {
   useEffect(() => {
     // 如果没有选中分类，不执行
     if (!selectedCategoryId) return
-    
+
     // 如果已经加载过这个分类的应用，不重复加载
     if (hasLoadedAppsRef.current === selectedCategoryId) return
 
@@ -658,7 +658,7 @@ function CategoriesPageContent() {
         is_deleted: app.is_deleted,
         language: app.language,
       }))
-      
+
       // 处理结果：如果是追加模式，只添加新结果
       if (append) {
         // 使用函数式更新，避免依赖 searchResults
@@ -669,7 +669,7 @@ function CategoriesPageContent() {
           // 找出新结果（不在现有结果中的）
           const existingIds = new Set(prev.map(app => app.id))
           const newApps = appsFromApi.filter(app => !existingIds.has(app.id))
-          
+
           if (newApps.length > 0) {
             return [...prev, ...newApps]
           }
@@ -679,7 +679,7 @@ function CategoriesPageContent() {
       } else {
         setSearchResults(appsFromApi)
       }
-      
+
       // 更新总数和页数
       const total = (response as SemanticSearchResponse)?.total ?? appsFromApi.length
       setSearchTotal(total)
@@ -700,17 +700,17 @@ function CategoriesPageContent() {
       }
     }
   }, [resolvedLang, t])
-  
+
   const loadMoreSearchResults = useCallback(async () => {
     if (!query.trim()) return
     if (searchLoadingMore) return
     // 如果当前结果数已经达到或超过总数，不再加载
     if (searchTotal > 0 && searchResults.length >= searchTotal) return
-    
+
     const nextPage = searchPage + 1
     await performSearch(query, nextPage, true)
   }, [query, searchLoadingMore, searchPage, searchResults.length, searchTotal, performSearch])
-  const handleSubmit = async(e: React.FormEvent) => {  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSearchPage(1)
     setSearchResults([])
@@ -726,7 +726,7 @@ function CategoriesPageContent() {
     const trimmed = inputValue.trim()
     setQuery(trimmed)
   }, [inputValue])
-  
+
   // 支持通过 URL 参数 q 触发搜索并回填输入框
   useEffect(() => {
     const qParam = (searchParams?.get("q") ?? "").trim()
@@ -739,21 +739,21 @@ function CategoriesPageContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
-  
+
   // 滚动到底部自动加载更多
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return
-      
+
       const container = containerRef.current
       const scrollTop = window.scrollY || document.documentElement.scrollTop
       const windowHeight = window.innerHeight
       const documentHeight = document.documentElement.scrollHeight
-      
+
       // 当滚动到距离底部 200px 时触发加载
       const threshold = 200
       const isNearBottom = scrollTop + windowHeight >= documentHeight - threshold
-      
+
       if (isNearBottom) {
         if (searchType === "search") {
           // 搜索模式：加载更多搜索结果
@@ -771,25 +771,25 @@ function CategoriesPageContent() {
         }
       }
     }
-    
+
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => {
       window.removeEventListener("scroll", handleScroll)
     }
   }, [searchType, searchLoadingMore, searchResults.length, searchTotal, appsLoadingMore, appsPage, appsPages, apps.length, loadMoreSearchResults, loadMoreApps])
-  
+
   return (
     <div
       ref={containerRef}
       className="flex min-h-screen flex-col"
-      
+
     >
       <Navbar />
       <main className="flex-1">
-        
+
 
         <section className="relative py-8 md:py-12 text-slate-900 ">
-         
+
           <div className="relative z-10 mx-auto px-3 max-w-7xl">
             <div className=" grid gap-8 md:grid-cols-[180px_1fr] lg:grid-cols-[180px_1fr]">
               <aside className="sticky top-20 h-max">
@@ -819,12 +819,12 @@ function CategoriesPageContent() {
                       primaryCategories.map((category) => {
                         const isActive = activeCategoryKey ? activeCategoryKey === category.key : false
                         const Icon: LucideIcon = (category.key && CATEGORY_ICON_MAP[category.key]) || Bot
-                        
+
                         return (
                           <div
                             key={category.id}
                             className="relative group"
-                            onMouseEnter={() =>  setHoveredPrimaryCategoryId(category.key ?? null)}
+                            onMouseEnter={() => setHoveredPrimaryCategoryId(category.key ?? null)}
                             onMouseLeave={() => setHoveredPrimaryCategoryId(null)}
                           >
                             <a
@@ -835,13 +835,12 @@ function CategoriesPageContent() {
                                 // 传入 key 用于判断和加载二级分类
                                 handleNavClick(e, category.key ?? category.id)
                               }}
-                              className={`flex items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors ${
-                                isActive ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-accent"
-                              }`}
+                              className={`flex items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors ${isActive ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-accent"
+                                }`}
                             >
                               <Icon className="h-4 w-4" />
                               <span className="truncate flex-1">{category.name}</span>
-                             
+
                             </a>
                           </div>
                         )
@@ -860,134 +859,133 @@ function CategoriesPageContent() {
                 </div>
               </aside>
               <div className="space-y-8">
-                 {/* 查询 */}
-                 <div className="rounded-lg max-w-2xl mx-auto bg-card p-3">
-                   <div className="mb-2 text-center p-6">
-                     <div className="text-lg font-medium">{t("searchBox.title")}</div>
-                     <div className="text-xs text-muted-foreground">{t("searchBox.subtitle")}</div>
-                   </div>
-                   <div className="flex justify-center items-center gap-2">
-                     <div className="relative " style={{width:500}}>
-                     <form onSubmit={handleSubmit} className="relative group">
-                      <div className="relative transition-all duration-300 transform group-hover:-translate-y-0.5 group-hover:shadow-lg rounded-xl shadow-md bg-white">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          <Search className="h-5 w-5 text-primary/60" />
+                {/* 查询 */}
+                <div className="rounded-lg max-w-2xl mx-auto bg-card p-3">
+                  <div className="mb-2 text-center p-6">
+                    <div className="text-lg font-medium">{t("searchBox.title")}</div>
+                    <div className="text-xs text-muted-foreground">{t("searchBox.subtitle")}</div>
+                  </div>
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="relative " style={{ width: 500 }}>
+                      <form onSubmit={handleSubmit} className="relative group">
+                        <div className="relative transition-all duration-300 transform group-hover:-translate-y-0.5 group-hover:shadow-lg rounded-xl shadow-md bg-white">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                            <Search className="h-5 w-5 text-primary/60" />
+                          </div>
+                          <input
+                            type="text"
+                            className="w-full h-14 pl-12 border hover:border-[#0057FF] focus:border-[#0057FF] pr-12 rounded-xl border-0.5 bg-transparent text-base placeholder:text-muted-foreground  focus:outline-none"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            disabled={searching}
+                            placeholder={t("searchBox.placeholder")}
+                          />
+                          <button
+                            type="submit"
+                            aria-label="Search"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 cursor-pointer rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors disabled:opacity-50"
+                            disabled={inputValue.trim() === "" || searching}
+
+                          >
+                            {searching ? (
+                              <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                            ) : (
+                              <ArrowRight className="h-5 w-5" />
+                            )}
+                          </button>
                         </div>
-                        <input
-                          type="text"
-                          className="w-full h-14 pl-12 border hover:border-[#0057FF] focus:border-[#0057FF] pr-12 rounded-xl border-0.5 bg-transparent text-base placeholder:text-muted-foreground  focus:outline-none"
-                          value={inputValue}
-                          onChange={(e) => setInputValue(e.target.value)}
-                          disabled={searching}
-                          placeholder={t("searchBox.placeholder")}
-                        />
-                        <button
-                          type="submit"
-                          aria-label="Search"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 cursor-pointer rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors disabled:opacity-50"
-                          disabled={inputValue.trim() === "" || searching}
-                          
-                        >
-                          {searching ? (
-                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                          ) : (
-                            <ArrowRight className="h-5 w-5" />
-                          )}
-                        </button>
-                      </div>
-                    </form>
+                      </form>
 
-                      
-                     </div>
-                     
-                   </div>
-                   {loadingCategories ? (
-                     <div className="mt-3 text-xs text-muted-foreground text-center">{t("loadingCategories")}</div>
-                   ) : categoriesError ? (
-                     <div className="mt-3 text-xs text-red-500 text-center">{categoriesError}</div>
-                   ) : null}
-                 </div>
 
-                 {activeCategory ? (null) : (
+                    </div>
+
+                  </div>
+                  {loadingCategories ? (
+                    <div className="mt-3 text-xs text-muted-foreground text-center">{t("loadingCategories")}</div>
+                  ) : categoriesError ? (
+                    <div className="mt-3 text-xs text-red-500 text-center">{categoriesError}</div>
+                  ) : null}
+                </div>
+
+                {activeCategory ? (null) : (
                   <div className="rounded-xl border bg-card p-8 text-center">
                     <p className="text-muted-foreground">{t("chooseOnLeft")}</p>
                   </div>
-                 )}
+                )}
 
-                 <div className="rounded-xl border bg-card p-5">
-                   {/* 二级分类菜单 */}
-                   {activeCategoryKey && (
-                     <div className="mb-4 pb-4 border-b">
-                       {loadingSecondaryCategories[activeCategoryKey] ? (
-                         <div className="flex items-center justify-center py-4">
-                           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                         </div>
-                       ) : (secondaryCategories[activeCategoryKey] ?? []).length > 0 ? (
-                         <div className="flex flex-wrap gap-2">
-                           {(secondaryCategories[activeCategoryKey] ?? []).map((childCategory) => {
-                             const isChildActive = selectedCategoryId === childCategory.id
-                             return (
-                               <a
-                                 key={childCategory.id}
-                                 href="javascript:void(0)"
-                                 onClick={(e) => {
-                                   handleNavClick(e, childCategory.id)
-                                 }}
-                                 className={`inline-flex items-center  rounded-md px-3 py-1.5 text-sm transition-colors ${
-                                   isChildActive
-                                     ? "bg-primary text-primary-foreground"
-                                     : "bg-muted hover:text-white hover:bg-[#0057FF] hover:border-[#0057FF]"
-                                 }`}
-                               >
-                                 {childCategory.name}
-                               </a>
-                             )
-                           })}
-                         </div>
-                       ) : null}
-                     </div>
-                   )}
-                   
-                   <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
-                     <div>
-                       <h3 className="text-lg font-semibold">
-                         {searchType === "search"
-                           ? tCommon("searchResults")
-                           : activeCategory
-                           ? t("hotToolsOfCategory", { name: activeCategory.name })
-                           : t("hotTools")}
-                       </h3>
-                       <p className="text-sm text-muted-foreground">
-                         {searchType === "search"
-                           ? (query
-                               ? t("search.tipWithQuery", { query, limit: DEFAULT_APP_LIMIT })
-                               : t("search.tip", { limit: DEFAULT_APP_LIMIT }))
-                           : t("defaultLoadedCount", { loaded: apps.length, total: appsTotal })}
-                       </p>
-                     </div>
-                     
-                   </div>
-                 {(appsLoading || searching || (searchType === "search" && searchLoadingMore && searchResults.length > 0)) && (
-                   <div className="grid gap-4 sm:grid-cols-3">
-                     {Array.from({ length: 6 }).map((_, i) => (
-                       <div key={i} className="rounded-lg border p-2">
-                         {/* 缩略图占位符 */}
-                         <div className="mb-3 w-full aspect-video rounded-lg bg-muted animate-pulse" />
-                         <div className="flex items-start gap-3">
-                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted animate-pulse" />
-                           <div className="flex-1 space-y-2">
-                             <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
-                             <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
-                           </div>
-                         </div>
-                         <div className="mt-4 flex items-center p-2 justify-between text-xs">
-                           <div className="h-3 w-24 bg-muted rounded animate-pulse" />
-                           <div className="h-3 w-16 bg-muted rounded animate-pulse" />
-                         </div>
-                       </div>
-                     ))}
-                   </div>
-                  ) }
+                <div className="rounded-xl border bg-card p-5">
+                  {/* 二级分类菜单 */}
+                  {activeCategoryKey && (
+                    <div className="mb-4 pb-4 border-b">
+                      {loadingSecondaryCategories[activeCategoryKey] ? (
+                        <div className="flex items-center justify-center py-4">
+                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        </div>
+                      ) : (secondaryCategories[activeCategoryKey] ?? []).length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {(secondaryCategories[activeCategoryKey] ?? []).map((childCategory) => {
+                            const isChildActive = selectedCategoryId === childCategory.id
+                            return (
+                              <a
+                                key={childCategory.id}
+                                href="javascript:void(0)"
+                                onClick={(e) => {
+                                  handleNavClick(e, childCategory.id)
+                                }}
+                                className={`inline-flex items-center  rounded-md px-3 py-1.5 text-sm transition-colors ${isChildActive
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-muted hover:text-white hover:bg-[#0057FF] hover:border-[#0057FF]"
+                                  }`}
+                              >
+                                {childCategory.name}
+                              </a>
+                            )
+                          })}
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+
+                  <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
+                    <div>
+                      <h3 className="text-lg font-semibold">
+                        {searchType === "search"
+                          ? tCommon("searchResults")
+                          : activeCategory
+                            ? t("hotToolsOfCategory", { name: activeCategory.name })
+                            : t("hotTools")}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {searchType === "search"
+                          ? (query
+                            ? t("search.tipWithQuery", { query, limit: DEFAULT_APP_LIMIT })
+                            : t("search.tip", { limit: DEFAULT_APP_LIMIT }))
+                          : t("defaultLoadedCount", { loaded: apps.length, total: appsTotal })}
+                      </p>
+                    </div>
+
+                  </div>
+                  {(appsLoading || searching || (searchType === "search" && searchLoadingMore && searchResults.length > 0)) && (
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="rounded-lg border p-2">
+                          {/* 缩略图占位符 */}
+                          <div className="mb-3 w-full aspect-video rounded-lg bg-muted animate-pulse" />
+                          <div className="flex items-start gap-3">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
+                              <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
+                            </div>
+                          </div>
+                          <div className="mt-4 flex items-center p-2 justify-between text-xs">
+                            <div className="h-3 w-24 bg-muted rounded animate-pulse" />
+                            <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {
                     searchType === "category" && apps.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-3">
@@ -1003,7 +1001,7 @@ function CategoriesPageContent() {
                             {app.screenshot_url && (
                               <div className="mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
                                 <img
-                                  src={app.screenshot_url}
+                                  src={app.screenshot_url.replace(/^http:\/\//, "https://")}
                                   alt={app.app_name}
                                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                   loading="lazy"
@@ -1015,7 +1013,7 @@ function CategoriesPageContent() {
                               <div className="flex items-center gap-2">
                                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
                                   <img
-                                    src={app.icon_url}
+                                    src={app.icon_url?.replace(/^http:\/\//, "https://")}
                                     alt={app.app_name}
                                     className="h-full w-full rounded-lg object-cover"
                                     loading="lazy"
@@ -1031,7 +1029,7 @@ function CategoriesPageContent() {
                                 </p>
                               ) : null}
                               <div className="flex gap-2 text-xs text-muted-foreground">
-                               {app.categories?.slice(0, 2).map((cat: string) => (
+                                {app.categories?.slice(0, 2).map((cat: string) => (
                                   <span
                                     key={cat}
                                     className="rounded-full border px-2 py-0.5 whitespace-nowrap"
@@ -1080,7 +1078,7 @@ function CategoriesPageContent() {
                   {
                     searchType === "search" && searchResults?.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-2">
-                       {searchResults?.map((app: Application) => (
+                        {searchResults?.map((app: Application) => (
                           <Link
                             key={app.id}
                             href={`/${locale}/tools/${app.id}`}
@@ -1092,7 +1090,7 @@ function CategoriesPageContent() {
                             {app.screenshot_url && (
                               <div className="mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
                                 <img
-                                  src={app.screenshot_url}
+                                  src={app.screenshot_url.replace(/^http:\/\//, "https://")}
                                   alt={app.app_name}
                                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                   loading="lazy"
@@ -1104,7 +1102,7 @@ function CategoriesPageContent() {
                               <div className="flex items-center gap-2">
                                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
                                   <img
-                                    src={app.icon_url}
+                                    src={app.icon_url?.replace(/^http:\/\//, "https://")}
                                     alt={app.app_name}
                                     className="h-full w-full rounded-lg object-cover"
                                     loading="lazy"
@@ -1120,7 +1118,7 @@ function CategoriesPageContent() {
                                 </p>
                               ) : null}
                               <div className="flex gap-2 text-xs text-muted-foreground">
-                               {app.categories?.slice(0, 2).map((cat: string) => (
+                                {app.categories?.slice(0, 2).map((cat: string) => (
                                   <span
                                     key={cat}
                                     className="rounded-full border px-2 py-0.5 whitespace-nowrap"
@@ -1138,9 +1136,9 @@ function CategoriesPageContent() {
                           </Link>
                         ))}
                       </div>
-                    ) 
+                    )
                   }
-                 </div>
+                </div>
               </div>
             </div>
           </div>
