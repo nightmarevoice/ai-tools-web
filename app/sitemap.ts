@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const categoriesResponse = await categoriesApi.list()
     const categories = categoriesResponse.categories || []
-    
+
     for (const category of categories) {
       for (const locale of locales) {
         sitemapEntries.push({
@@ -62,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })
 
         const apps = response.items || []
-        
+
         for (const app of apps) {
           for (const locale of locales) {
             sitemapEntries.push({
@@ -92,10 +92,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 添加其他重要页面
   const otherPages = [
-    { path: 'dashboard', priority: 0.6 },
     { path: 'pricing', priority: 0.7 },
     { path: 'privacy', priority: 0.5 },
     { path: 'service', priority: 0.6 },
+    { path: 'apphub-blog', priority: 0.6 },
+    { path: 'dataanalysis', priority: 0.6 },
   ]
 
   for (const page of otherPages) {
