@@ -40,15 +40,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // 为每个二级分类添加 sitemap 条目
         for (const secondaryCategory of secondaryCategories) {
           for (const locale of locales) {
+            // URL中的&符号需要转义为&amp;以符合XML规范
+            const categoryUrl = `${baseUrl}/${locale}/categories?parent_category=${primaryCategory.id}&amp;type=${secondaryCategory.id}`
+            const alternateUrls = Object.fromEntries(
+              locales.map(loc => [loc, `${baseUrl}/${loc}/categories?parent_category=${primaryCategory.id}&amp;type=${secondaryCategory.id}`])
+            )
+
             sitemapEntries.push({
-              url: `${baseUrl}/${locale}/categories?parent_category=${primaryCategory.id}&type=${secondaryCategory.id}`,
+              url: categoryUrl,
               lastModified: new Date(),
               changeFrequency: 'weekly',
               priority: 0.7,
               alternates: {
-                languages: Object.fromEntries(
-                  locales.map(loc => [loc, `${baseUrl}/${loc}/categories?parent_category=${primaryCategory.id}&type=${secondaryCategory.id}`])
-                ),
+                languages: alternateUrls,
               },
             })
           }
