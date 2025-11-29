@@ -31,13 +31,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const category of categories) {
       for (const locale of locales) {
         sitemapEntries.push({
-          url: `${baseUrl}/${locale}/categories?category=${category.id}`,
+          url: `${baseUrl}/${locale}/categories?type=${category.id}`,
           lastModified: new Date(),
           changeFrequency: 'weekly',
           priority: 0.8,
           alternates: {
             languages: Object.fromEntries(
-              locales.map(loc => [loc, `${baseUrl}/${loc}/categories?category=${category.id}`])
+              locales.map(loc => [loc, `${baseUrl}/${loc}/categories?type=${category.id}`])
             ),
           },
         })
