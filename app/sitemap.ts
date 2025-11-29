@@ -23,12 +23,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
-  // 添加分类页面（所有语言版本）
+  // 添加分类页面（只添加一级分类，所有语言版本）
   try {
-    const categoriesResponse = await categoriesApi.list()
-    const categories = categoriesResponse.categories || []
+    const categoriesResponse = await categoriesApi.listPrimary()
+    const primaryCategories = categoriesResponse.primary_categories || []
 
-    for (const category of categories) {
+    for (const category of primaryCategories) {
       for (const locale of locales) {
         sitemapEntries.push({
           url: `${baseUrl}/${locale}/categories?type=${category.id}`,
@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
   } catch (error) {
-    console.error('Failed to fetch categories for sitemap:', error)
+    console.error('Failed to fetch primary categories for sitemap:', error)
   }
 
   // 添加工具详情页（所有语言版本）
