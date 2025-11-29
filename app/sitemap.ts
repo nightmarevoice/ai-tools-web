@@ -23,28 +23,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
-  // 添加分类页面（只添加一级分类，所有语言版本）
+  // 添加分类页面（所有语言版本）
+  // 策略：只添加有实际应用的二级分类到 sitemap
   try {
     const categoriesResponse = await categoriesApi.listPrimary()
     const primaryCategories = categoriesResponse.primary_categories || []
 
-    for (const category of primaryCategories) {
-      for (const locale of locales) {
-        sitemapEntries.push({
-          url: `${baseUrl}/${locale}/categories?type=${category.id}`,
-          lastModified: new Date(),
-          changeFrequency: 'weekly',
-          priority: 0.8,
-          alternates: {
-            languages: Object.fromEntries(
-              locales.map(loc => [loc, `${baseUrl}/${loc}/categories?type=${category.id}`])
-            ),
-          },
-        })
+    // 遍历每个一级分类，获取其二级分类
+    for (const primaryCategory of primaryCategories) {
+      if (!primaryCategory.key) continue
+
+      try {
+        const secondaryResponse = await categoriesApi.listSecondary(primaryCategory.key)
+        const secondaryCategories = secondaryResponse.categories || []
+
+        // 为每个二级分类添加 sitemap 条目
+        for (const secondaryCategory of secondaryCategories) {
+          for (const locale of locales) {
+            sitemapEntries.push({
+              url: `${baseUrl}/${locale}/categories?parent_category=${primaryCategory.id}&type=${secondaryCategory.id}`,
+              lastModified: new Date(),
+              changeFrequency: 'weekly',
+              priority: 0.7,
+              alternates: {
+                languages: Object.fromEntries(
+                  locales.map(loc => [loc, `${baseUrl}/${loc}/categories?parent_category=${primaryCategory.id}&type=${secondaryCategory.id}`])
+                ),
+              },
+            })
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to fetch secondary categories for ${primaryCategory.key}:`, error)
       }
     }
   } catch (error) {
-    console.error('Failed to fetch primary categories for sitemap:', error)
+    console.error('Failed to fetch categories for sitemap:', error)
   }
 
   // 添加工具详情页（所有语言版本）
