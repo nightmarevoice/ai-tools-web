@@ -24,23 +24,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // 添加分类页面（所有语言版本）
+  // 策略：只添加有实际应用的二级分类到 sitemap
   try {
-    const categoriesResponse = await categoriesApi.list()
-    const categories = categoriesResponse.categories || []
-    
-    for (const category of categories) {
-      for (const locale of locales) {
-        sitemapEntries.push({
-          url: `${baseUrl}/${locale}/categories?category=${category.id}`,
-          lastModified: new Date(),
-          changeFrequency: 'weekly',
-          priority: 0.8,
-          alternates: {
-            languages: Object.fromEntries(
-              locales.map(loc => [loc, `${baseUrl}/${loc}/categories?category=${category.id}`])
-            ),
-          },
-        })
+    const categoriesResponse = await categoriesApi.listPrimary()
+    const primaryCategories = categoriesResponse.primary_categories || []
+
+    // 遍历每个一级分类，获取其二级分类
+    for (const primaryCategory of primaryCategories) {
+      if (!primaryCategory.key) continue
+
+      try {
+        const secondaryResponse = await categoriesApi.listSecondary(primaryCategory.key)
+        const secondaryCategories = secondaryResponse.categories || []
+
+        // 为每个二级分类添加 sitemap 条目
+        for (const secondaryCategory of secondaryCategories) {
+          for (const locale of locales) {
+            // URL中的&符号需要转义为&amp;以符合XML规范
+            const categoryUrl = `${baseUrl}/${locale}/categories?parent_category=${primaryCategory.id}&amp;type=${secondaryCategory.id}`
+            const alternateUrls = Object.fromEntries(
+              locales.map(loc => [loc, `${baseUrl}/${loc}/categories?parent_category=${primaryCategory.id}&amp;type=${secondaryCategory.id}`])
+            )
+
+            sitemapEntries.push({
+              url: categoryUrl,
+              lastModified: new Date(),
+              changeFrequency: 'weekly',
+              priority: 0.7,
+              alternates: {
+                languages: alternateUrls,
+              },
+            })
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to fetch secondary categories for ${primaryCategory.key}:`, error)
       }
     }
   } catch (error) {
@@ -62,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })
 
         const apps = response.items || []
-        
+
         for (const app of apps) {
           for (const locale of locales) {
             sitemapEntries.push({
@@ -92,10 +110,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 添加其他重要页面
   const otherPages = [
-    { path: 'dashboard', priority: 0.6 },
     { path: 'pricing', priority: 0.7 },
     { path: 'privacy', priority: 0.5 },
     { path: 'service', priority: 0.6 },
+    { path: 'apphub-blog', priority: 0.6 },
+    { path: 'dataanalysis', priority: 0.6 },
   ]
 
   for (const page of otherPages) {
