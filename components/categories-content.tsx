@@ -410,6 +410,12 @@ function CategoriesPageContent() {
   const handleNavClick = useCallback(async (e: React.MouseEvent, key: string | number) => {
     e.preventDefault()
 
+    // 点击分类时，清空搜索状态，切换到分类浏览模式
+    setQuery("")
+    setSearchResults([])
+    setSearchType("category")
+    setInputValue("")
+
     // 检查是否是一级分类（用 key 比较）
     const primaryCategory = primaryCategories.find(cat => cat.key === key)
     const isPrimaryCategory = !!primaryCategory
