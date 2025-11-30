@@ -169,6 +169,13 @@ function CategoriesPageContent() {
         const cats = categoriesResponse.primary_categories ?? []
         setPrimaryCategories(cats)
 
+        // 检查是否有搜索参数 q，如果有则不设置默认分类
+        const qParam = searchParams?.get("q") ?? ""
+        if (qParam.trim()) {
+          // 有搜索参数时，不设置默认分类
+          return
+        }
+
         // 如果有 parent_category 参数，找到对应的一级分类
         if (parentCategoryParam) {
           const parentCategory = cats.find(c => c.id === parentCategoryParam || c.key === parentCategoryParam)
@@ -337,6 +344,12 @@ function CategoriesPageContent() {
   useEffect(() => {
     if (!activeCategoryKey) return
 
+    // 检查是否有搜索参数 q，如果有则不自动选中分类
+    const qParam = searchParams?.get("q") ?? ""
+    if (qParam.trim()) {
+      return
+    }
+
     const secondaryCats = secondaryCategories[activeCategoryKey] ?? []
 
     // 如果有 parent_category 和 type 参数，说明是通过二级分类链接跳转过来的
@@ -392,7 +405,7 @@ function CategoriesPageContent() {
         setSelectedCategoryId(firstSecondaryCategory.id)
       }
     }
-  }, [activeCategoryKey, secondaryCategories, selectedCategoryId, typeParam, parentCategoryParam, primaryCategories])
+  }, [activeCategoryKey, secondaryCategories, selectedCategoryId, typeParam, parentCategoryParam, primaryCategories, searchParams])
 
   const handleNavClick = useCallback(async (e: React.MouseEvent, key: string | number) => {
     e.preventDefault()
@@ -595,6 +608,11 @@ function CategoriesPageContent() {
       setSearchTotal(0)
       return
     }
+    // 搜索时清空分类选择
+    if (page === 1) {
+      setActiveCategoryKey(null)
+      setSelectedCategoryId(null)
+    }
     let aborted = false
     if (page === 1) {
     setSearching(true)
@@ -714,6 +732,9 @@ function CategoriesPageContent() {
     e.preventDefault()
     setSearchPage(1)
     setSearchResults([])
+    // 清空分类选择
+    setActiveCategoryKey(null)
+    setSelectedCategoryId(null)
     await performSearch(inputValue, 1, false)
   }
   const formatNumber = (value?: number) => {
@@ -734,6 +755,9 @@ function CategoriesPageContent() {
       setInputValue(qParam)
       setSearchPage(1)
       setSearchResults([])
+      // 清空分类选择
+      setActiveCategoryKey(null)
+      setSelectedCategoryId(null)
       // 异步执行以确保状态更新后再搜索
       Promise.resolve().then(() => performSearch(qParam, 1, false))
     }
@@ -817,7 +841,9 @@ function CategoriesPageContent() {
                     </div>
                   ) : (
                       primaryCategories.map((category) => {
-                        const isActive = activeCategoryKey ? activeCategoryKey === category.key : false
+                        // 搜索时不显示选中状态
+                        const isSearching = searchType === "search" && query.trim() !== ""
+                        const isActive = !isSearching && activeCategoryKey ? activeCategoryKey === category.key : false
                         const Icon: LucideIcon = (category.key && CATEGORY_ICON_MAP[category.key]) || Bot
 
                       return (
@@ -907,15 +933,10 @@ function CategoriesPageContent() {
                    ) : null}
                  </div>
 
-                 {activeCategory ? (null) : (
-                  <div className="rounded-xl border bg-card p-8 text-center">
-                    <p className="text-muted-foreground">{t("chooseOnLeft")}</p>
-                  </div>
-                 )}
-
+                
                  <div className="rounded-xl border bg-card p-5">
                   {/* 二级分类菜单 */}
-                  {activeCategoryKey && (
+                  {activeCategoryKey && searchType !== "search" && (
                     <div className="mb-4 pb-4 border-b">
                       {loadingSecondaryCategories[activeCategoryKey] ? (
                         <div className="flex items-center justify-center py-4">
