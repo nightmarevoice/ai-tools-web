@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -113,6 +113,8 @@ function CategoriesPageContent() {
   const [searchType, setSearchType] = useState<string>("category")
   const [hoveredPrimaryCategoryId, setHoveredPrimaryCategoryId] = useState<string | number | null>(null)
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const typeParam = searchParams?.get("type") ?? undefined
   const parentCategoryParam = searchParams?.get("parent_category") ?? undefined
   const navRef = useRef<HTMLDivElement | null>(null)
@@ -410,6 +412,11 @@ function CategoriesPageContent() {
   const handleNavClick = useCallback(async (e: React.MouseEvent, key: string | number) => {
     e.preventDefault()
 
+    // 清空浏览器 URL 参数
+    if (pathname) {
+      router.push(pathname)
+    }
+
     // 点击分类时，清空搜索状态，切换到分类浏览模式
     setQuery("")
     setSearchResults([])
@@ -467,7 +474,7 @@ function CategoriesPageContent() {
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" })
     }
-  }, [primaryCategories, loadSecondaryCategories, activeCategoryKey, secondaryCategories])
+  }, [primaryCategories, loadSecondaryCategories, activeCategoryKey, secondaryCategories, router, pathname])
 
   // 移除此 useEffect，因为 activeCategoryKey 现在在初始加载时设置
   // useEffect(() => {
