@@ -2,17 +2,18 @@ import createMiddleware from 'next-intl/middleware'
 import {locales, defaultLocale} from './i18n'
 import {NextRequest, NextResponse} from 'next/server'
 
+
 // 创建 next-intl 中间件
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
   // 所有页面都使用带前缀的形式 /zh/... /en/...
   localePrefix: 'always',
-  // 禁用语言检测（不再从 cookie 和 Accept-Language 头检测）
+  // 禁用语言检测（不使用 Accept-Language 头检测）
   localeDetection: false,
 })
 
-// 包装中间件以处理语言路由
+// 包装中间件以添加自定义浏览器语言检测
 export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   

@@ -81,7 +81,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
     }
   }, [])
 
-  // 同步 localStorage 和 cookie 中的语言设置（不再检测浏览器语言）
+  // 同步 localStorage 和 cookie 中的语言设置
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       // 检查 localStorage 中是否已有 preferredLanguage

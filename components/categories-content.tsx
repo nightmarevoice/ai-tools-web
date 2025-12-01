@@ -221,64 +221,7 @@ function CategoriesPageContent() {
     }
   }, [resolvedLang, t, typeParam, searchParams])
 
-  // 当鼠标悬停一级分类时，加载对应的二级分类
-  useEffect(() => {
-    if (!hoveredPrimaryCategoryId) return
-
-    // 如果已经加载过或正在加载，直接返回
-    if (loadedCategoriesRef.current.has(hoveredPrimaryCategoryId) || loadingCategoriesRef.current.has(hoveredPrimaryCategoryId)) {
-      return
-    }
-
-    // 找到对应的一级分类，hoveredPrimaryCategoryId 保存的是 key
-    const primaryCategory = primaryCategories.find(cat => cat.key === hoveredPrimaryCategoryId)
-    if (!primaryCategory || !primaryCategory.key) return
-
-    let aborted = false
-    const fetchSecondaryCategories = async () => {
-      // 标记为正在加载
-      loadingCategoriesRef.current.add(hoveredPrimaryCategoryId)
-      setLoadingSecondaryCategories(prev => ({ ...prev, [hoveredPrimaryCategoryId]: true }))
-
-      try {
-        const response = await categoriesApi.listSecondary(primaryCategory.key!, resolvedLang)
-
-        if (aborted) return
-
-        // 标记为已加载
-        loadedCategoriesRef.current.add(hoveredPrimaryCategoryId)
-        loadingCategoriesRef.current.delete(hoveredPrimaryCategoryId)
-
-        setSecondaryCategories(prev => ({
-          ...prev,
-          [hoveredPrimaryCategoryId]: response.categories ?? []
-        }))
-      } catch (e: any) {
-        if (aborted) return
-        console.error(`Failed to load secondary categories for ${hoveredPrimaryCategoryId}:`, e)
-        // 如果加载失败，也标记为已加载（避免重复尝试），设置为空数组
-        loadedCategoriesRef.current.add(hoveredPrimaryCategoryId)
-        loadingCategoriesRef.current.delete(hoveredPrimaryCategoryId)
-        setSecondaryCategories(prev => ({
-          ...prev,
-          [hoveredPrimaryCategoryId]: []
-        }))
-      } finally {
-        if (!aborted) {
-          setLoadingSecondaryCategories(prev => {
-            const next = { ...prev }
-            delete next[hoveredPrimaryCategoryId]
-            return next
-          })
-        }
-      }
-    }
-
-    fetchSecondaryCategories()
-    return () => {
-      aborted = true
-    }
-  }, [hoveredPrimaryCategoryId, resolvedLang, primaryCategories])
+  // 移除了鼠标悬停时自动加载二级分类的逻辑，现在只在点击时加载
 
 
 
@@ -332,15 +275,26 @@ function CategoriesPageContent() {
     }
   }, [primaryCategories, resolvedLang])
 
-  // 当 activeCategoryKey 变化时，自动加载对应的二级分类
+  // 初始化时（没有参数的情况下），自动加载第一个一级分类的二级分类
   useEffect(() => {
-    if (!activeCategoryKey || primaryCategories.length === 0) return
-    // 使用 ref 检查，避免重复加载
-    if (loadedCategoriesRef.current.has(activeCategoryKey) || loadingCategoriesRef.current.has(activeCategoryKey)) {
+    // 检查是否有搜索参数 q，如果有则不自动加载
+    const qParam = searchParams?.get("q") ?? ""
+    if (qParam.trim()) {
       return
     }
-    loadSecondaryCategories(activeCategoryKey)
-  }, [activeCategoryKey, primaryCategories.length, loadSecondaryCategories])
+
+    // 如果没有 URL 参数（typeParam 和 parentCategoryParam 都没有），且 activeCategoryKey 已设置
+    if (!typeParam && !parentCategoryParam && activeCategoryKey) {
+      // 检查是否已经加载过该分类的二级分类
+      const secondaryCats = secondaryCategories[activeCategoryKey] ?? []
+      const isLoading = loadingSecondaryCategories[activeCategoryKey] ?? false
+      
+      // 如果还没有加载过且不在加载中，则加载二级分类
+      if (secondaryCats.length === 0 && !isLoading) {
+        loadSecondaryCategories(activeCategoryKey)
+      }
+    }
+  }, [activeCategoryKey, typeParam, parentCategoryParam, secondaryCategories, loadingSecondaryCategories, loadSecondaryCategories, searchParams])
 
   // 当二级分类加载完成且没有选中任何分类时，自动选中第一个二级分类
   useEffect(() => {
