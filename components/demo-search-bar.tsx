@@ -267,7 +267,7 @@ export function DemoSearchBar() {
           ref={dropdownRef}
           className="absolute  bg-background border border-border rounded-xl shadow-lg z-[49] animate-in fade-in-0 zoom-in-95 slide-in-from-top-2"
           style={{
-            top: `24rem`,
+            top: `25rem`,
             left: `${dropdownPosition.left}px`,
             width: `${dropdownPosition.width}px`,
             maxWidth: '672px',

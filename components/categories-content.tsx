@@ -275,7 +275,7 @@ function CategoriesPageContent() {
     }
   }, [primaryCategories, resolvedLang])
 
-  // 初始化时（没有参数的情况下），自动加载第一个一级分类的二级分类
+  // 初始化时（没有参数的情况下，或者有 typeParam 且是一级分类时），自动加载第一个一级分类的二级分类
   useEffect(() => {
     // 检查是否有搜索参数 q，如果有则不自动加载
     const qParam = searchParams?.get("q") ?? ""
@@ -283,8 +283,11 @@ function CategoriesPageContent() {
       return
     }
 
-    // 如果没有 URL 参数（typeParam 和 parentCategoryParam 都没有），且 activeCategoryKey 已设置
-    if (!typeParam && !parentCategoryParam && activeCategoryKey) {
+    // 如果没有 parentCategoryParam，且 activeCategoryKey 已设置
+    // 这包括两种情况：
+    // 1. 没有参数时，自动加载第一个一级分类的二级分类
+    // 2. 有 typeParam 且是一级分类时，自动加载该一级分类的二级分类
+    if (!parentCategoryParam && activeCategoryKey) {
       // 检查是否已经加载过该分类的二级分类
       const secondaryCats = secondaryCategories[activeCategoryKey] ?? []
       const isLoading = loadingSecondaryCategories[activeCategoryKey] ?? false
@@ -294,7 +297,7 @@ function CategoriesPageContent() {
         loadSecondaryCategories(activeCategoryKey)
       }
     }
-  }, [activeCategoryKey, typeParam, parentCategoryParam, secondaryCategories, loadingSecondaryCategories, loadSecondaryCategories, searchParams])
+  }, [activeCategoryKey, parentCategoryParam, secondaryCategories, loadingSecondaryCategories, loadSecondaryCategories, searchParams])
 
   // 当二级分类加载完成且没有选中任何分类时，自动选中第一个二级分类
   useEffect(() => {
