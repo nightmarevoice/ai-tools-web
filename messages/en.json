@@ -625,6 +625,37 @@
       "dataSource": "Data Source: Moge.ai · Updated: {time}",
       "filterEnabled": "🔍 Filter Enabled: Min visits {minVisits} · Analyzing {filtered}/{total} products"
     }
+  },
+  "questionPage": {
+    "question": "Question",
+    "answer": "Answer",
+    "backToDashboard": "← Back to Intelligent Tools",
+    "noAnswer": "No answer available",
+    "error": {
+      "title": "Failed to Load",
+      "fetchFailed": "Failed to fetch answer, please try again later"
+    },
+    "video": {
+      "question": "What are some good AI video generation tools?",
+      "metadata": {
+        "title": "AI Video Generation Tools Recommendations - AI AppHub",
+        "description": "Discover the best AI video generation tools for you, including video editing, special effects, automatic editing and more"
+      }
+    },
+    "writing": {
+      "question": "What are some good AI writing tools?",
+      "metadata": {
+        "title": "AI Writing Tools Recommendations - AI AppHub",
+        "description": "Discover the best AI writing tools for you, including article generation, content creation, text editing and more"
+      }
+    },
+    "message": {
+      "question": "What are some good AI messaging/chat tools?",
+      "metadata": {
+        "title": "AI Messaging Chat Tools Recommendations - AI AppHub",
+        "description": "Discover the best AI messaging and chat tools for you, including intelligent conversations, customer service assistants, chatbots and more"
+      }
+    }
   }
 }
 

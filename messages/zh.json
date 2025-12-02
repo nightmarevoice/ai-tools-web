@@ -624,6 +624,37 @@
       "dataSource": "数据来源: Moge.ai · 更新时间: {time}",
       "filterEnabled": "🔍 已启用数据过滤: 最小访问量 {minVisits} · 分析 {filtered}/{total} 个产品"
     }
+  },
+  "questionPage": {
+    "question": "问题",
+    "answer": "答案",
+    "backToDashboard": "← 返回智能工具",
+    "noAnswer": "暂无答案",
+    "error": {
+      "title": "加载失败",
+      "fetchFailed": "获取答案失败，请稍后重试"
+    },
+    "video": {
+      "question": "有哪些好用的AI视频生成工具？",
+      "metadata": {
+        "title": "AI视频生成工具推荐 - AI AppHub",
+        "description": "发现最适合您的AI视频生成工具，包括视频编辑、特效制作、自动剪辑等功能"
+      }
+    },
+    "writing": {
+      "question": "有哪些好用的AI写作工具？",
+      "metadata": {
+        "title": "AI写作工具推荐 - AI AppHub",
+        "description": "发现最适合您的AI写作工具，包括文章生成、内容创作、文本编辑等功能"
+      }
+    },
+    "message": {
+      "question": "有哪些好用的AI消息/聊天工具？",
+      "metadata": {
+        "title": "AI消息聊天工具推荐 - AI AppHub",
+        "description": "发现最适合您的AI消息和聊天工具，包括智能对话、客服助手、聊天机器人等功能"
+      }
+    }
   }
 }
 

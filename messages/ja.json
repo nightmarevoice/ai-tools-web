@@ -502,7 +502,6 @@
     "categoryDetails": {
       "title": "カテゴリー詳細",
       "productCount": "製品数",
-      "avgGrowthRate": "平均成長率",
       "avgDuration": "平均時間",
       "goBack": "戻る",
       "close": "閉じる",
@@ -638,6 +637,37 @@
       "title": "法務",
       "privacy": "プライバシーポリシー",
       "service": "利用規約"
+    }
+  },
+  "questionPage": {
+    "question": "質問",
+    "answer": "回答",
+    "backToDashboard": "← インテリジェントツールに戻る",
+    "noAnswer": "回答がありません",
+    "error": {
+      "title": "読み込みに失敗しました",
+      "fetchFailed": "回答の取得に失敗しました。後でもう一度お試しください"
+    },
+    "video": {
+      "question": "良いAI動画生成ツールはありますか？",
+      "metadata": {
+        "title": "AI動画生成ツールおすすめ - AI AppHub",
+        "description": "あなたに最適なAI動画生成ツールを発見しましょう。動画編集、特殊効果、自動編集などの機能が含まれます"
+      }
+    },
+    "writing": {
+      "question": "良いAIライティングツールはありますか？",
+      "metadata": {
+        "title": "AIライティングツールおすすめ - AI AppHub",
+        "description": "あなたに最適なAIライティングツールを発見しましょう。記事生成、コンテンツ作成、テキスト編集などの機能が含まれます"
+      }
+    },
+    "message": {
+      "question": "良いAIメッセージ/チャットツールはありますか？",
+      "metadata": {
+        "title": "AIメッセージチャットツールおすすめ - AI AppHub",
+        "description": "あなたに最適なAIメッセージとチャットツールを発見しましょう。インテリジェントな会話、カスタマーサービスアシスタント、チャットボットなどの機能が含まれます"
+      }
     }
   }
 }

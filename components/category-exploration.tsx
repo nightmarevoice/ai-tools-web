@@ -126,7 +126,7 @@ export function CategoryExploration() {
               return (
                 <Link
                   key={category.category}
-                  href={`/categories?parent_category=${encodeURIComponent(category.parent_category)}&type=${encodeURIComponent(category.category)}`}
+                  href={`/categories/${encodeURIComponent(category.parent_category)}/${encodeURIComponent(category.category)}`}
                   prefetch={true}
                   className="group relative flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-150 hover:-translate-y-1 hover:border-[#0057FF]/50 hover:shadow-lg hover:shadow-blue-100/50 overflow-hidden"
                 >

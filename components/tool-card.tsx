@@ -5,6 +5,17 @@ import { ExternalLink, Star, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useTranslations, useLocale } from "next-intl"
 
+import type { AppCategory } from "@/types/api"
+
+// 将分类名称转换为 URL 友好的格式
+function slugifyCategory(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^a-z0-9\-]/g, "")
+}
+
 export interface Tool {
   id: number
   name: string
@@ -15,7 +26,7 @@ export interface Tool {
   isHot: boolean,
   isTrending: boolean,
   isCategory:boolean,
-  categories?: string[]
+  categories?: AppCategory[]
   icon?: string
   icon_url?: string
   screenshot_url?:string
@@ -36,13 +47,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
   }
 
   return (
-    <Link
-      href={`/${locale}/tools/${tool.id}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      prefetch={true}
-      className="group  rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1 block"
-    >
+    <div className="group rounded-xl border border-blue-200/40 bg-white/60 backdrop-blur-sm hover:border-blue-400/70 shadow-md hover:shadow-xl hover:shadow-blue-300/40 hover:bg-white transition-all duration-150 hover:-translate-y-1">
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all pointer-events-none"></div>
 
       <div className="relative z-10">
@@ -51,7 +56,10 @@ export function ToolCard({ tool }: { tool: Tool }) {
             {/*缩略图*/}
             <div className="pb-2">
               {tool.screenshot_url && (
-                  <div className="w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
+                  <Link
+                    href={`/${locale}/tools/${tool.id}`}
+                    className="block w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60"
+                  >
                     <img
                       src={tool.screenshot_url}
                       alt={tool.name}
@@ -59,7 +67,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                       loading="lazy"
                       referrerPolicy="no-referrer"
                     />
-                  </div>
+                  </Link>
                 )}
             </div>
             <div className="flex items-center gap-2 py-2 px-4">
@@ -81,7 +89,12 @@ export function ToolCard({ tool }: { tool: Tool }) {
                   </div>
                 )}
               </div>
-              <h3 className="text-lg  font-semibold text-gray-900 group-hover:text-blue-600 transition">{tool.name}</h3>
+              <Link
+                href={`/${locale}/tools/${tool.id}`}
+                className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition"
+              >
+                {tool.name}
+              </Link>
               {tool.isTrending && (
                 <span className="px-2 py-1 text-xs font-medium bg-green-100/90 text-green-700 rounded-full border border-green-300/50">
                     ✨ {t("trending")}
@@ -97,14 +110,19 @@ export function ToolCard({ tool }: { tool: Tool }) {
             
             {tool.categories && tool.categories.length > 0 && (
               <div className="flex  px-4 mb-4 flex-wrap items-center gap-1.5">
-                {tool.categories.slice(0, 2).map((category, index) => (
-                  <span
-                    key={index}
-                    className="px-2 py-0.5 text-xs font-medium bg-[#0057FF]/10 text-[#0057FF] rounded-lg border border-[#0057FF]/30"
-                  >
-                    {category}
-                  </span>
-                ))}
+                {tool.categories.slice(0, 2).map((category, index) => {
+                  const categoryUrl = `/${locale}/categories/${slugifyCategory(category.parent_category)}/${slugifyCategory(category.category)}`
+                  return (
+                    <Link
+                      key={index}
+                      href={categoryUrl}
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-2 py-0.5 text-xs font-medium bg-[#0057FF]/10 text-[#0057FF] rounded-lg border border-[#0057FF]/30 hover:bg-[#0057FF]/20 transition-colors"
+                    >
+                      {category.name}
+                    </Link>
+                  )
+                })}
                 {tool.categories.length > 2 && (
                   <span className=" text-xs font-medium text-gray-500">
                     ...
@@ -118,6 +136,6 @@ export function ToolCard({ tool }: { tool: Tool }) {
 
        
       </div>
-    </Link>
+    </div>
   )
 }

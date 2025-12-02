@@ -1,10 +1,34 @@
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
-import { locales } from '@/i18n'
+import { locales, defaultLocale } from '@/i18n'
 import { Toaster } from '@/components/ui/sonner'
 import { LoginPromptProvider } from '@/components/login-prompt-provider'
 import { LocaleSync } from '@/components/locale-sync'
+import type { Metadata } from 'next'
+import { generateMultilangAlternates } from '@/lib/seo/multilang'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  
+  // 为根路径生成多语言 alternates
+  const alternates = generateMultilangAlternates(locale, '')
+  
+  return {
+    alternates,
+    openGraph: {
+      locale: locale === 'zh' ? 'zh_CN' : locale === 'ja' ? 'ja_JP' : locale === 'ko' ? 'ko_KR' : 'en_US',
+      alternateLocale: locales
+        .filter(l => l !== locale)
+        .map(l => l === 'zh' ? 'zh_CN' : l === 'ja' ? 'ja_JP' : l === 'ko' ? 'ko_KR' : 'en_US'),
+    },
+  }
+}
 
 export default async function LocaleLayout({
   children,

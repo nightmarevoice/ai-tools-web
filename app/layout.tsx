@@ -77,6 +77,7 @@ export const metadata = {
   alternates: {
     canonical: baseUrl,
     languages: {
+      'x-default': `${baseUrl}/en`,
       en: `${baseUrl}/en`,
       zh: `${baseUrl}/zh`,
       ja: `${baseUrl}/ja`,

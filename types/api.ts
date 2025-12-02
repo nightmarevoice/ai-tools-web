@@ -129,6 +129,12 @@ export interface ListApiKeysParams {
 
 // ==================== 应用管理 ====================
 
+export interface AppCategory {
+  name: string
+  parent_category: string
+  category: string
+}
+
 export interface Application {
   // 基础信息
   id: number
@@ -138,7 +144,7 @@ export interface Application {
   region: string
   short_description?:string;
   // 描述信息
-  categories: string[]
+  categories: AppCategory[]
   product_description?: string
   main_features?: string
 
@@ -177,7 +183,7 @@ export interface SimilarApplication {
   app_name: string
   product_description: string
   icon_url?: string
-  categories: string[]
+  categories: AppCategory[]
   monthly_visits: number
   similarity_score: number
 }
@@ -190,6 +196,7 @@ export interface SimilarApplicationsResponse {
 export interface ListAppsParams extends PaginationParams, SortParams {
   lang?: Language
   category?: string | number
+  primary_category?: string | number
   region?: string
   search?: string
 }

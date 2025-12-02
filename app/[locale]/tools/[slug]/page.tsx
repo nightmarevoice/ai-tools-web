@@ -2,12 +2,12 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, ExternalLink, Star, TrendingUp, Clock, Globe, BarChart3, Users, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { appsApi } from "@/lib/api/apps"
 import { notFound } from "next/navigation"
 import { getTranslations } from "next-intl/server"
+import { AnchorNavigation } from "@/components/anchor-navigation"
 
 interface ToolPageProps {
   params: Promise<{
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     const description = app.short_description || app.product_description || `Explore ${app.app_name} - AI tool details, features, and alternatives`
     const keywords = [
       app.app_name,
-      ...(app.categories || []),
+      ...(app.categories || []).map(c => c.name),
       "AI tool",
       "artificial intelligence",
       "productivity",
@@ -85,6 +85,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
       alternates: {
         canonical: canonicalUrl,
         languages: {
+          'x-default': `${baseUrl}/en/tools/${appId}`,
           en: `${baseUrl}/en/tools/${appId}`,
           zh: `${baseUrl}/zh/tools/${appId}`,
           ja: `${baseUrl}/ja/tools/${appId}`,
@@ -212,7 +213,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   }
 
   if (app.categories && app.categories.length > 0) {
-    structuredData.category = app.categories.join(", ")
+    structuredData.category = app.categories.map(c => c.name).join(", ")
   }
 
   return (
@@ -284,12 +285,12 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 {/* Categories */}
                 {app.categories && app.categories.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {app.categories.map((category) => (
+                    {app.categories.map((category, index) => (
                       <span
-                        key={category}
+                        key={`${category.category}-${index}`}
                         className="px-3 py-1 text-sm font-medium bg-blue-100 text-blue-700 rounded-full border border-blue-200"
                       >
-                        {category}
+                        {category.name}
                       </span>
                     ))}
                   </div>
@@ -347,77 +348,76 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
          
 
-          {/* Tabs Section */}
-          <Tabs defaultValue="overview" className="mt-8">
-            <TabsList className="bg-white border border-blue-100 p-1 rounded-lg">
-              <TabsTrigger value="overview" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 cursor-pointer">
-                {t("tabs.overview")}
-              </TabsTrigger>
-              <TabsTrigger value="alternatives" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 cursor-pointer">
-                {t("tabs.alternatives")}
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Overview Tab */}
-            <TabsContent value="overview" className="mt-6">
-               {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Users className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">{t("stats.monthlyVisits")}</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {formatNumber(app.monthly_visits)}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Clock className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">{t("stats.avgDuration")}</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {formatDuration(app.avg_duration_seconds)}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <TrendingUp className="w-5 h-5 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">{t("stats.categoryRank")}</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {app.category_rank ? `#${app.category_rank}` : "N/A"}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-orange-100 rounded-lg">
-                  <BarChart3 className="w-5 h-5 text-orange-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">{t("stats.bounceRate")}</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {app.bounce_rate ? `${(app.bounce_rate * 100).toFixed(1)}%` : "N/A"}
-                  </p>
-                </div>
-              </div>
-            </div>
+          {/* Anchor Navigation */}
+          <div className="mt-8">
+            <AnchorNavigation
+              items={[
+                { id: 'overview-section', label: t("tabs.overview") },
+                { id: 'alternatives-section', label: t("tabs.alternatives") },
+              ]}
+            />
           </div>
+
+          {/* Overview Section */}
+          <div id="overview-section" className="mt-6 scroll-mt-24">
+            {/* Stats Section */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Users className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">{t("stats.monthlyVisits")}</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {formatNumber(app.monthly_visits)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <Clock className="w-5 h-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">{t("stats.avgDuration")}</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {formatDuration(app.avg_duration_seconds)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <TrendingUp className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">{t("stats.categoryRank")}</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {app.category_rank ? `#${app.category_rank}` : "N/A"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl border border-blue-100 p-6 shadow-sm">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-orange-100 rounded-lg">
+                      <BarChart3 className="w-5 h-5 text-orange-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">{t("stats.bounceRate")}</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {app.bounce_rate ? `${(app.bounce_rate * 100).toFixed(1)}%` : "N/A"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="grid gap-8">
                
                 {app.product_description && (
@@ -479,11 +479,11 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
                
               </div>
-            </TabsContent>
+          </div>
 
-            {/* Alternatives Tab */}
-            <TabsContent value="alternatives" className="mt-6">
-              <div className="bg-white rounded-xl border border-blue-100 p-8 shadow-sm">
+          {/* Alternatives Section */}
+          <div id="alternatives-section" className="mt-12 scroll-mt-24">
+            <div className="bg-white rounded-xl border border-blue-100 p-8 shadow-sm">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
                   {t("alternativesTo", { app: app.app_name })}
                 </h2>
@@ -530,12 +530,12 @@ export default async function ToolPage({ params }: ToolPageProps) {
                           <div className="flex flex-col gap-2">
                             {similar.categories && similar.categories.length > 0 && (
                               <div className="flex flex-wrap gap-1">
-                                {similar.categories.slice(0, 2).map((category) => (
+                                {similar.categories.slice(0, 2).map((category, index) => (
                                   <span
-                                    key={category}
+                                    key={`${category.category}-${index}`}
                                     className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full border border-blue-200"
                                   >
-                                    {category}
+                                    {category.name}
                                   </span>
                                 ))}
                               </div>
@@ -568,8 +568,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
                   </div>
                 )}
               </div>
-            </TabsContent>
-          </Tabs>
+          </div>
         </div>
       </div>
       <Footer />

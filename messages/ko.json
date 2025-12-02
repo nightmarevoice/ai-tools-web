@@ -501,7 +501,6 @@
     "categoryDetails": {
       "title": "카테고리 세부 정보",
       "productCount": "제품 수",
-      "avgGrowthRate": "평균 성장률",
       "avgDuration": "평균 시간",
       "goBack": "뒤로 가기",
       "close": "닫기",
@@ -637,6 +636,37 @@
       "title": "법률",
       "privacy": "개인정보 보호정책",
       "service": "서비스 약관"
+    }
+  },
+  "questionPage": {
+    "question": "질문",
+    "answer": "답변",
+    "backToDashboard": "← 지능형 도구로 돌아가기",
+    "noAnswer": "답변이 없습니다",
+    "error": {
+      "title": "로드 실패",
+      "fetchFailed": "답변을 가져오는 데 실패했습니다. 나중에 다시 시도해 주세요"
+    },
+    "video": {
+      "question": "좋은 AI 비디오 생성 도구가 있나요?",
+      "metadata": {
+        "title": "AI 비디오 생성 도구 추천 - AI AppHub",
+        "description": "당신에게 가장 적합한 AI 비디오 생성 도구를 발견하세요. 비디오 편집, 특수 효과, 자동 편집 등의 기능이 포함됩니다"
+      }
+    },
+    "writing": {
+      "question": "좋은 AI 글쓰기 도구가 있나요?",
+      "metadata": {
+        "title": "AI 글쓰기 도구 추천 - AI AppHub",
+        "description": "당신에게 가장 적합한 AI 글쓰기 도구를 발견하세요. 기사 생성, 콘텐츠 제작, 텍스트 편집 등의 기능이 포함됩니다"
+      }
+    },
+    "message": {
+      "question": "좋은 AI 메시지/채팅 도구가 있나요?",
+      "metadata": {
+        "title": "AI 메시지 채팅 도구 추천 - AI AppHub",
+        "description": "당신에게 가장 적합한 AI 메시지 및 채팅 도구를 발견하세요. 지능형 대화, 고객 서비스 어시스턴트, 챗봇 등의 기능이 포함됩니다"
+      }
     }
   }
 }
