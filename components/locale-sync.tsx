@@ -9,40 +9,35 @@ interface LocaleSyncProps {
 }
 
 /**
- * 客户端组件：同步 localStorage 中的 preferredLanguage 到 URL
- * 如果 localStorage 中的语言与当前 URL 的语言不匹配，重定向到正确的语言
+ * 客户端组件：同步 URL 中的语言到 localStorage 和 cookie
+ * 优先使用 URL 中的语言，而不是 localStorage 中的语言
+ * 这样可以确保直接链接访问时不会跳转到其他语言
  */
 export function LocaleSync({ currentLocale }: LocaleSyncProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const hasRedirected = useRef(false)
+  const hasSynced = useRef(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    if (hasRedirected.current) return // 防止重复重定向
+    if (hasSynced.current) return // 防止重复同步
 
-    // 从 localStorage 读取 preferredLanguage
-    const preferredLanguage = window.localStorage.getItem('preferredLanguage')
+    // 优先使用 URL 中的语言（currentLocale），更新 localStorage 和 cookie
+    // 这样可以确保直接链接访问时（如 /en/tools/6066）不会跳转到其他语言
+    if (currentLocale && locales.includes(currentLocale as any)) {
+      hasSynced.current = true
 
-    // 如果 localStorage 中有有效的语言设置，且与当前 URL 的语言不匹配
-    if (
-      preferredLanguage &&
-      locales.includes(preferredLanguage as any) &&
-      preferredLanguage !== currentLocale
-    ) {
-      hasRedirected.current = true
+      // 从 localStorage 读取 preferredLanguage
+      const preferredLanguage = window.localStorage.getItem('preferredLanguage')
 
-      // 同步到 cookie，以便中间件下次能正确识别
-      document.cookie = `NEXT_LOCALE=${preferredLanguage}; path=/; max-age=31536000; SameSite=Lax`
-
-      // 构建新的路径：将当前路径中的语言前缀替换为 preferredLanguage
-      // 例如：/zh/dashboard -> /en/dashboard
-      const pathWithoutLocale = pathname.replace(/^\/[^/]+/, '') || '/'
-      const newPath = `/${preferredLanguage}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`
-
-      // 如果新路径与当前路径不同，则重定向
-      if (newPath !== pathname) {
-        router.replace(newPath)
+      // 如果 URL 中的语言与 localStorage 中的语言不匹配，更新 localStorage 和 cookie
+      // 这样可以确保下次访问时使用正确的语言
+      if (preferredLanguage !== currentLocale) {
+        window.localStorage.setItem('preferredLanguage', currentLocale)
+        document.cookie = `NEXT_LOCALE=${currentLocale}; path=/; max-age=31536000; SameSite=Lax`
+      } else {
+        // 即使语言匹配，也确保 cookie 是最新的
+        document.cookie = `NEXT_LOCALE=${currentLocale}; path=/; max-age=31536000; SameSite=Lax`
       }
     }
   }, [currentLocale, pathname, router])
