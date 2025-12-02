@@ -38,7 +38,7 @@ import {
 } from "lucide-react"
 import { categoriesApi } from "@/lib/api/categories"
 import { appsApi } from "@/lib/api/apps"
-import type { Application, Category, Language, SemanticSearchResponse } from "@/types/api"
+import type { Application, Category, Language, SemanticSearchResponse, ListResponse } from "@/types/api"
 import { useTranslations, useLocale } from "next-intl"
 import { useCategoryContext } from "@/components/category-context"
 
@@ -76,7 +76,7 @@ const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
 }
 
 
-const DEFAULT_APP_LIMIT = 30
+const DEFAULT_APP_LIMIT = 20
 
 // 将 slug 转换为分类 key（slug 和 key 格式相同，都是 kebab-case）
 function slugToKey(slug: string): string {
@@ -132,6 +132,30 @@ function CategoriesPageContent() {
   const [resolvedParentCategory, setResolvedParentCategory] = useState<Category | null>(null)
   const [resolvedCategory, setResolvedCategory] = useState<Category | null>(null)
   
+  // 从 URL 直接解析的分类信息（不依赖 API 数据）
+  const urlBasedCategory = useMemo(() => {
+    if (!parentCategorySlug) return null
+    
+    const parentKey = slugToKey(parentCategorySlug)
+    
+    if (categorySlug) {
+      const categoryKey = slugToKey(categorySlug)
+      return {
+        parentKey,
+        categoryKey,
+        parentSlug: parentCategorySlug,
+        categorySlug: categorySlug
+      }
+    }
+    
+    return {
+      parentKey,
+      categoryKey: null,
+      parentSlug: parentCategorySlug,
+      categorySlug: null
+    }
+  }, [parentCategorySlug, categorySlug])
+  
   // 优先从 Context 读取，如果没有则从 URL 查询参数读取
   // 如果 Context 中有 categoryId，使用它；如果只有 parentCategoryId，也使用它作为 typeParam
   const typeParam = categoryContext?.categoryId?.toString() ?? 
@@ -179,7 +203,15 @@ function CategoriesPageContent() {
   
   // 解析 slug 并找到对应的分类
   useEffect(() => {
+    console.log('🔄 [解析分类] useEffect 触发:', {
+      parentCategorySlug,
+      categorySlug,
+      primaryCategoriesCount: primaryCategories.length,
+      secondaryCategoriesKeys: Object.keys(secondaryCategories)
+    })
+    
     if (!parentCategorySlug || primaryCategories.length === 0) {
+      console.log('⏭️ 跳过：缺少 parentCategorySlug 或 primaryCategories')
       setResolvedParentCategory(null)
       setResolvedCategory(null)
       return
@@ -190,24 +222,27 @@ function CategoriesPageContent() {
     const parentCategory = primaryCategories.find(cat => cat.key === parentKey)
     
     if (!parentCategory) {
-      console.warn(`Parent category not found for slug: ${parentCategorySlug}`)
+      console.warn(`❌ 一级分类未找到: ${parentCategorySlug}`)
       setResolvedParentCategory(null)
       setResolvedCategory(null)
       return
     }
 
+    console.log('✅ 找到一级分类:', parentCategory.name, parentCategory.key)
     setResolvedParentCategory(parentCategory)
 
     // 如果有二级分类 slug，查找二级分类
     if (categorySlug) {
       const secondaryCats = secondaryCategories[parentCategory.key!] || []
+      console.log('🔍 查找二级分类:', categorySlug, '可用的二级分类:', secondaryCats.length, secondaryCats.map(c => c.key))
       const categoryKey = slugToKey(categorySlug)
       const category = secondaryCats.find(cat => cat.key === categoryKey)
       
       if (!category) {
-        console.warn(`Category not found for slug: ${categorySlug}`)
+        console.warn(`❌ 二级分类未找到: ${categorySlug}, 可用的二级分类:`, secondaryCats.map(c => c.key))
         setResolvedCategory(null)
       } else {
+        console.log('✅ 找到二级分类:', category.name, 'ID:', category.id, 'Key:', category.key)
         setResolvedCategory(category)
       }
     } else {
@@ -220,29 +255,47 @@ function CategoriesPageContent() {
   const resolvedParentCategoryRef = useRef(resolvedParentCategory)
   const resolvedCategoryRef = useRef(resolvedCategory)
   
+  // 基于 URL 的分类信息 ref（不依赖 API 数据）
+  const urlBasedCategoryRef = useRef(urlBasedCategory)
+  
   useEffect(() => {
     resolvedParentCategoryRef.current = resolvedParentCategory
     resolvedCategoryRef.current = resolvedCategory
-  }, [resolvedParentCategory, resolvedCategory])
+    urlBasedCategoryRef.current = urlBasedCategory
+  }, [resolvedParentCategory, resolvedCategory, urlBasedCategory])
   
   useEffect(() => {
-    if (!resolvedParentCategory) return
+    console.log('🔄 [设置分类状态] useEffect 触发:', {
+      resolvedParentCategory: resolvedParentCategory?.name,
+      resolvedCategory: resolvedCategory?.name,
+      categorySlug,
+      parentCategorySlug
+    })
+    
+    if (!resolvedParentCategory) {
+      console.log('⏭️ 跳过：没有 resolvedParentCategory')
+      return
+    }
 
     // 设置激活的一级分类
     if (resolvedParentCategory.key && activeCategoryKey !== resolvedParentCategory.key) {
+      console.log('🎯 设置激活的一级分类:', resolvedParentCategory.key)
       setActiveCategoryKey(resolvedParentCategory.key)
     }
 
     // 设置选中的分类用于查询
-    if (resolvedCategory) {
-      // 有二级分类，使用二级分类 ID 查询
-      if (selectedCategoryId !== resolvedCategory.id) {
-        setSelectedCategoryId(resolvedCategory.id)
+    if (categorySlug) {
+      // 有二级分类，直接使用 categorySlug 作为 key
+      const categoryKey = slugToKey(categorySlug)
+      if (selectedCategoryId !== categoryKey) {
+        console.log('🎯 设置选中的二级分类 key (从 URL):', categoryKey)
+        setSelectedCategoryId(categoryKey)
         setSelectedPrimaryCategoryKey(null) // 清除一级分类 key
       }
     } else if (parentCategorySlug && !categorySlug) {
       // 只有一级分类，使用一级分类 key 查询
       if (selectedPrimaryCategoryKey !== resolvedParentCategory.key) {
+        console.log('🎯 设置选中的一级分类 key:', resolvedParentCategory.key)
         setSelectedPrimaryCategoryKey(resolvedParentCategory.key!)
         setSelectedCategoryId(null) // 清除二级分类 ID
       }
@@ -385,15 +438,33 @@ function CategoriesPageContent() {
 
   // 当有 categorySlug 时，加载对应的二级分类
   useEffect(() => {
-    if (!categorySlug || !resolvedParentCategoryRef.current?.key) return
+    console.log('🔄 [加载二级分类] useEffect 触发:', {
+      categorySlug,
+      parentKey: resolvedParentCategoryRef.current?.key,
+      hasParentCategory: !!resolvedParentCategoryRef.current
+    })
+    
+    if (!categorySlug || !resolvedParentCategoryRef.current?.key) {
+      console.log('⏭️ 跳过：缺少 categorySlug 或 parentKey')
+      return
+    }
     
     const parentKey = resolvedParentCategoryRef.current.key
     const secondaryCats = secondaryCategories[parentKey] ?? []
     const isLoading = loadingSecondaryCategories[parentKey] ?? false
     
+    console.log('📊 二级分类状态:', {
+      parentKey,
+      secondaryCatsCount: secondaryCats.length,
+      isLoading
+    })
+    
     // 如果还没有加载过且不在加载中，则加载二级分类
     if (secondaryCats.length === 0 && !isLoading) {
+      console.log('🚀 开始加载二级分类:', parentKey)
       loadSecondaryCategories(parentKey)
+    } else {
+      console.log('✅ 二级分类已加载或正在加载中')
     }
   }, [categorySlug, secondaryCategories, loadingSecondaryCategories, loadSecondaryCategories])
 
@@ -473,11 +544,6 @@ function CategoriesPageContent() {
   const handleNavClick = useCallback(async (e: React.MouseEvent, key: string | number) => {
     e.preventDefault()
 
-    // 清空浏览器 URL 参数
-    if (pathname) {
-      router.push(pathname)
-    }
-
     // 点击分类时，清空搜索状态，切换到分类浏览模式
     setQuery("")
     setSearchResults([])
@@ -493,6 +559,9 @@ function CategoriesPageContent() {
       if (activeCategoryKey === primaryCategory.key) {
         return
       }
+      // 更新 URL 为一级分类路径
+      router.push(`/categories/${primaryCategory.key}`)
+      
       // 如果是一级分类，使用 primary_category 参数查询
       setSelectedCategoryId(null) // 清空二级分类
       setSelectedPrimaryCategoryKey(primaryCategory.key!) // 设置一级分类 key
@@ -506,6 +575,7 @@ function CategoriesPageContent() {
     }
     // 二级分类，传入的 key 实际上是 id，找到所属的一级分类并设置 activeCategoryKey
     const categoryId = key
+    
     // 如果切换了分类，重置已加载标记
     const loadKey = `category:${categoryId}`
     if (hasLoadedAppsRef.current !== loadKey) {
@@ -513,32 +583,33 @@ function CategoriesPageContent() {
     }
     setSelectedCategoryId(categoryId) // 保存实际选中的分类 id（用于 API 调用）
     setSelectedPrimaryCategoryKey(null) // 清空一级分类 key
-    // 找到该二级分类所属的一级分类
+    
+    // 找到该二级分类所属的一级分类和二级分类的 key
     let parentCategoryKey: string | null = null
+    let secondaryCategoryKey: string | null = null
     for (const [primaryKey, secondaryCats] of Object.entries(secondaryCategories)) {
-      if (secondaryCats.some(cat => cat.id === categoryId)) {
+      const foundCategory = secondaryCats.find(cat => cat.id === categoryId)
+      if (foundCategory) {
         parentCategoryKey = primaryKey
+        secondaryCategoryKey = foundCategory.key ?? null
         break
       }
     }
-    // 如果找到一级分类，设置其 key；否则尝试从 primaryCategories 中查找
-    if (parentCategoryKey) {
+    
+    // 设置一级分类 key 并更新 URL（假设二级分类一定存在）
+    if (parentCategoryKey ) {
       setActiveCategoryKey(parentCategoryKey)
-    } else {
-      // 如果没找到，可能是数据还没加载，尝试从 primaryCategories 中查找
-      const primaryCategory = primaryCategories.find(cat => cat.id === categoryId)
-      if (primaryCategory?.key) {
-        setActiveCategoryKey(primaryCategory.key)
-        setSelectedCategoryId(categoryId) // 如果是一级分类，也保存其 id
-      }
+      const newUrl = `/categories/${parentCategoryKey}/${key}`
+      router.push(newUrl)
     }
+    
     const element = document.getElementById(`category-card-${categoryId}`)
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" })
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" })
     }
-  }, [primaryCategories, loadSecondaryCategories, activeCategoryKey, secondaryCategories, router, pathname])
+  }, [primaryCategories, loadSecondaryCategories, activeCategoryKey, secondaryCategories, router])
 
   // 移除此 useEffect，因为 activeCategoryKey 现在在初始加载时设置
   // useEffect(() => {
@@ -591,13 +662,21 @@ function CategoriesPageContent() {
   const hasLoadedAppsRef = useRef<string | null>(null)
 
   useEffect(() => {
-    // 如果既没有选中二级分类，也没有选中一级分类，不执行
-    if (!selectedCategoryId && !selectedPrimaryCategoryKey) return
+    // 检查是否有搜索参数 q
+    const qParam = searchParams?.get("q") ?? ""
+    const hasSearchQuery = qParam.trim().length > 0
+    
+    // 如果有搜索参数，不在这里加载（由搜索逻辑处理）
+    if (hasSearchQuery) {
+      return
+    }
 
     // 生成唯一的加载标识
     const loadKey = selectedCategoryId 
       ? `category:${selectedCategoryId}` 
-      : `primary:${selectedPrimaryCategoryKey}`
+      : selectedPrimaryCategoryKey 
+        ? `primary:${selectedPrimaryCategoryKey}`
+        : 'all' // 没有任何分类时，加载所有应用
 
     // 如果已经加载过，不重复加载
     if (hasLoadedAppsRef.current === loadKey) return
@@ -615,23 +694,37 @@ function CategoriesPageContent() {
         setAppsPages(1)
         setAppsTotal(0)
 
-        // 根据不同的查询模式使用不同的参数
-        const params: any = {
+        let response: ListResponse<Application>
+
+        if (selectedCategoryId) {
+          // 有二级分类，使用 getByCategory 接口
+          console.log('📦 使用 getByCategory 接口加载应用:', selectedCategoryId)
+          response = await appsApi.getByCategory(selectedCategoryId.toString(), {
           lang: (resolvedLang as Language | undefined) ?? undefined,
           page: 1,
           limit: DEFAULT_APP_LIMIT,
-        }
-
-        if (selectedCategoryId) {
-          // 有二级分类，使用 category 参数
-          params.category = selectedCategoryId
+        })
         } else if (selectedPrimaryCategoryKey) {
-          // 只有一级分类，使用 primary_category 参数
-          params.primary_category = selectedPrimaryCategoryKey
+          // 只有一级分类，使用 list 接口的 primary_category 参数
+          console.log('📦 使用 list 接口加载应用 (primary_category):', selectedPrimaryCategoryKey)
+          response = await appsApi.list({
+            lang: (resolvedLang as Language | undefined) ?? undefined,
+            page: 1,
+            limit: DEFAULT_APP_LIMIT,
+            primary_category: selectedPrimaryCategoryKey,
+          })
+        } else {
+          // 没有任何分类，加载所有应用
+          console.log('📦 使用 list 接口加载所有应用')
+          response = await appsApi.list({
+            lang: (resolvedLang as Language | undefined) ?? undefined,
+            page: 1,
+            limit: DEFAULT_APP_LIMIT,
+          })
         }
 
-        const response = await appsApi.list(params)
         if (aborted) return
+        console.log('✅ 应用加载成功:', response.items?.length, '个应用')
         setApps(response.items ?? [])
         setAppsPage(response.page ?? 1)
         setAppsPages(response.pages ?? 1)
@@ -641,6 +734,7 @@ function CategoriesPageContent() {
         hasLoadedAppsRef.current = loadKey
       } catch (e: any) {
         if (aborted) return
+        console.error('❌ 应用加载失败:', e)
         setApps([])
         setAppsError(e?.message ?? t("loadAppsFailed"))
       } finally {
@@ -652,10 +746,9 @@ function CategoriesPageContent() {
     return () => {
       aborted = true
     }
-  }, [selectedCategoryId, selectedPrimaryCategoryKey, resolvedLang, t])
+  }, [selectedCategoryId, selectedPrimaryCategoryKey, resolvedLang, t, searchParams])
 
   const loadMoreApps = useCallback(async () => {
-    if (!selectedCategoryId && !selectedPrimaryCategoryKey) return
     if (appsLoadingMore) return
     if (appsPage >= appsPages) return
     let aborted = false
@@ -664,22 +757,32 @@ function CategoriesPageContent() {
     try {
       const nextPage = appsPage + 1
       
-      // 根据不同的查询模式使用不同的参数
-      const params: any = {
+      let response: ListResponse<Application>
+
+      if (selectedCategoryId) {
+        // 有二级分类，使用 getByCategory 接口
+        response = await appsApi.getByCategory(selectedCategoryId.toString(), {
         lang: (resolvedLang as Language | undefined) ?? undefined,
         page: nextPage,
         limit: DEFAULT_APP_LIMIT,
-      }
-
-      if (selectedCategoryId) {
-        // 有二级分类，使用 category 参数
-        params.category = selectedCategoryId
+      })
       } else if (selectedPrimaryCategoryKey) {
-        // 只有一级分类，使用 primary_category 参数
-        params.primary_category = selectedPrimaryCategoryKey
+        // 只有一级分类，使用 list 接口的 primary_category 参数
+        response = await appsApi.list({
+          lang: (resolvedLang as Language | undefined) ?? undefined,
+          page: nextPage,
+          limit: DEFAULT_APP_LIMIT,
+          primary_category: selectedPrimaryCategoryKey,
+        })
+      } else {
+        // 没有任何分类，加载所有应用
+        response = await appsApi.list({
+          lang: (resolvedLang as Language | undefined) ?? undefined,
+          page: nextPage,
+          limit: DEFAULT_APP_LIMIT,
+        })
       }
 
-      const response = await appsApi.list(params)
       if (aborted) return
       const nextItems = response.items ?? []
       // 按 id 去重合并
@@ -1025,7 +1128,7 @@ function CategoriesPageContent() {
                         </div>
                       </form> 
                       
-
+                      
                      </div>
                      
                    </div>
@@ -1052,7 +1155,7 @@ function CategoriesPageContent() {
                             return (
                               <a
                                 key={childCategory.id}
-                                href={activeCategoryKey && childCategory.key ? `/categories/${activeCategoryKey}/${childCategory.key}` : "javascript:void(0)"}
+                                href={activeCategoryKey && childCategory.id ? `/categories/${activeCategoryKey}/${childCategory.id}` : "javascript:void(0)"}
                                 onClick={(e) => {
                                   handleNavClick(e, childCategory.id)
                                 }}
@@ -1067,8 +1170,8 @@ function CategoriesPageContent() {
                           })}
                         </div>
                       ) : null}
-                    </div>
-                  )}
+                  </div>
+                 )}
 
                    <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
                      <div>

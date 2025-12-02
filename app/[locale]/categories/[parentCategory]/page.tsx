@@ -18,7 +18,7 @@ export default async function ParentCategoryPage({
 }) {
   const { locale, parentCategory } = await params
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
-  
+  debugger;
   // 生成分类页结构化数据
   const structuredData = {
     "@context": "https://schema.org",

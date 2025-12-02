@@ -17,6 +17,7 @@ export default async function CategoryDetailPage({
   params: Promise<{ locale: string; parentCategory: string; category: string }>
 }) {
   const { locale, parentCategory, category } = await params
+  debugger;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
   
   // 生成分类页结构化数据
