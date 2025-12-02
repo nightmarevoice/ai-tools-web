@@ -32,7 +32,7 @@ export const dynamic = 'force-dynamic'
 export async function generateMetadata({ params }: ToolPageProps): Promise<Metadata> {
   const { slug, locale } = await params
   const t = await getTranslations("tool.metadata")
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
   
   try {
     const appId = parseInt(slug)
@@ -169,7 +169,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   }
 
   // 生成结构化数据 (JSON-LD)
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
   const structuredData: any = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",

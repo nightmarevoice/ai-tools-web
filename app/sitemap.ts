@@ -3,7 +3,7 @@ import { locales } from '@/i18n'
 import { appsApi } from '@/lib/api/apps'
 import { categoriesApi } from '@/lib/api/categories'
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://research-ai-assistant.vercel.app'
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-apphub.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapEntries: MetadataRoute.Sitemap = []

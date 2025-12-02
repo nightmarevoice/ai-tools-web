@@ -7,27 +7,23 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
 
 export const metadata = {
   metadataBase: new URL(baseUrl),
   title: {
     default: "AI application search assistant - Discover & Analyze AI Tools",
-    template: "%s | AI application search assistant",
+    template: "",
   },
   description:
     "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps. Compare features, ratings, and find the perfect AI solution for your needs.",
   keywords: [
     "AI tools",
-    "artificial intelligence",
     "AI applications",
-    "research assistant",
     "AI productivity tools",
-    "machine learning tools",
     "AI software",
     "trending AI",
     "best AI tools",
-    "AI comparison",
   ],
   authors: [{ name: "ResearchAI Team" }],
   creator: "ResearchAI",

@@ -9,7 +9,7 @@ export default async function Home({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
   
   // 生成首页结构化数据
   const structuredData = {
@@ -47,7 +47,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "home.metadata" })
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://research-ai-assistant.vercel.app"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
 
   const title = t("title")
   const description = t("description")
@@ -57,12 +57,9 @@ export async function generateMetadata({
     description,
     keywords: [
       "AI tools",
-      "artificial intelligence",
       "AI applications",
       "trending AI tools",
-      "best AI software",
       "AI productivity tools",
-      "machine learning tools",
       "AI research",
     ],
     openGraph: {

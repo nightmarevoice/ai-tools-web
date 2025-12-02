@@ -87,7 +87,7 @@
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 
-如果不设置，将使用默认值：`https://research-ai-assistant.vercel.app`
+如果不设置，将使用默认值：`https://ai-apphub.com`
 
 ### Sitemap 访问
 - 自动生成：`https://your-domain.com/sitemap.xml`

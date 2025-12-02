@@ -51,9 +51,9 @@
   },
   "home": {
     "metadata": {
-      "title": "AI 應用搜尋 | 快速發現、匹配最合適的AI工具",
-      "description": "AI 應用搜尋 根據場景幫助您快速制定AI工具使用方案",
-      "ogAlt": "AI 應用搜尋"
+      "title": "AI 應用檢索助手",
+      "description": "AI 應用檢索助手，快速發現、匹配最合適的AI工具，根據場景幫助您快速制定AI工具使用方案",
+      "ogAlt": "AI 應用檢索助手"
     },
     "hero": {
       "title": "所有你需要的場景,在這裡都能找到對應的AI工具",
@@ -161,7 +161,9 @@
       "error": "分類統計加載失敗",
       "empty": "暫無分類統計數據",
       "toolCount": "{count} 款工具",
-      "visits": "{count} 次訪問"
+      "visits": "{count} 次訪問",
+      "tools": "個工具",
+      "timesVisited": "次訪問"
     },
     "aiToolsTabs": {
       "title": "精選 AI 工具",
