@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Script from "next/script"
 import { ArrowLeft, ExternalLink, Star, TrendingUp, Clock, Globe, BarChart3, Users, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"
@@ -44,13 +45,28 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
 
     const app = await appsApi.get(appId, locale)
     const description = app.short_description || app.product_description || `Explore ${app.app_name} - AI tool details, features, and alternatives`
-    const keywords = [
+    
+    // 构建 keywords，确保不超过 100 个字符
+    const keywordsList = [
       app.app_name,
-      ...(app.categories || []).map(c => c.name),
-      "AI tool",
-      "artificial intelligence",
-      "productivity",
+      ...(app.categories || []).map(c => c.name)
     ]
+    let keywords = keywordsList.join(', ')
+    if (keywords.length > 100) {
+      // 如果超过 100 字符，逐个添加直到接近限制
+      const parts = []
+      let currentLength = 0
+      for (const keyword of keywordsList) {
+        const addition = parts.length === 0 ? keyword : `, ${keyword}`
+        if (currentLength + addition.length <= 100) {
+          parts.push(keyword)
+          currentLength += addition.length
+        } else {
+          break
+        }
+      }
+      keywords = parts.join(', ')
+    }
 
     const canonicalUrl = `${baseUrl}/${locale}/tools/${appId}`
     const imageUrl = app.screenshot_url || app.icon_url || `${baseUrl}/og-image.png`
@@ -218,7 +234,8 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <script
+      <Script
+        id="structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
@@ -285,14 +302,17 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 {/* Categories */}
                 {app.categories && app.categories.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {app.categories.map((category, index) => (
-                      <span
-                        key={`${category.category}-${index}`}
-                        className="px-3 py-1 text-sm font-medium bg-blue-100 text-blue-700 rounded-full border border-blue-200"
-                      >
-                        {category.name}
-                      </span>
-                    ))}
+                    {app.categories.map((category, index) =>{
+                      return  (
+                        <Link
+                          key={`${category.category}-${index}`}
+                          href={`/${locale}/categories/${category.parent_category}/${category.category}`}
+                          className="px-3 py-1 text-sm font-medium bg-blue-100 text-blue-700 rounded-full border border-blue-200 hover:bg-blue-200 transition-colors"
+                        >
+                          {category.name}
+                        </Link>
+                      )
+                    } )}
                   </div>
                 )}
 
@@ -531,12 +551,13 @@ export default async function ToolPage({ params }: ToolPageProps) {
                             {similar.categories && similar.categories.length > 0 && (
                               <div className="flex flex-wrap gap-1">
                                 {similar.categories.slice(0, 2).map((category, index) => (
-                                  <span
+                                  <Link
                                     key={`${category.category}-${index}`}
-                                    className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full border border-blue-200"
+                                    href={`/${locale}/categories/${category.category}`}
+                                    className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full border border-blue-200 hover:bg-blue-100 transition-colors"
                                   >
                                     {category.name}
-                                  </span>
+                                  </Link>
                                 ))}
                               </div>
                             )}

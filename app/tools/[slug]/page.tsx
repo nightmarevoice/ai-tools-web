@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     }
 
     const app = await appsApi.get(appId, 'en')
-
+    console.log(app,'app');
     return {
       title: `${app.app_name} | AI application search assistant`,
       description: app.short_description || app.product_description || `Explore ${app.app_name}`,
@@ -72,6 +72,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   let app
   try {
     app = await appsApi.get(appId, 'en')
+    console.log(app,"app")
   } catch (error) {
     console.error(`Failed to fetch app ${appId}:`, error)
     notFound()
@@ -96,6 +97,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   try {
     const similarResponse = await appsApi.getSimilar(appId, { lang: 'en', limit: 6 })
     similarApps = similarResponse.items || []
+    console.log(similarApps,"similarApps")
   } catch (error) {
     console.error(`Failed to fetch similar apps for ${appId}:`, error)
   }
@@ -421,7 +423,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
                                  key={category}
                                  className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full border border-blue-200"
                                >
-                                 {category}
+                                 {category.name}
                                </span>
                              ))}
                             </div>

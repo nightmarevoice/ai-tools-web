@@ -17,7 +17,6 @@ export default async function CategoryDetailPage({
   params: Promise<{ locale: string; parentCategory: string; category: string }>
 }) {
   const { locale, parentCategory, category } = await params
-  debugger;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
   
   // 生成分类页结构化数据
@@ -55,7 +54,7 @@ export async function generateMetadata({
   
   const parentCategoryName = deslugify(parentCategory)
   const categoryName = deslugify(category)
-  const title = `AI Tools - ${parentCategoryName} - ${categoryName} | AI application search assistant`
+  const title = `${parentCategoryName} - ${categoryName}`
   const description = `Browse AI tools in ${categoryName} category under ${parentCategoryName}. Discover the best AI applications for your needs.`
 
   return {

@@ -1,138 +1,204 @@
 import { MetadataRoute } from 'next'
-import { locales } from '@/i18n'
-import { appsApi } from '@/lib/api/apps'
 import { categoriesApi } from '@/lib/api/categories'
+import { appsApi } from '@/lib/api/apps'
+import type { Language } from '@/types/api'
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-apphub.com'
+const languages: Language[] = ['zh', 'en', 'ja', 'ko']
+const baseUrl = 'https://ai-apphub.com'
+const blogUrl = 'https://blog.ai-apphub.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sitemapEntries: MetadataRoute.Sitemap = []
+  const today = new Date()
 
-  // 添加首页（所有语言版本）
-  for (const locale of locales) {
-    sitemapEntries.push({
-      url: `${baseUrl}/${locale}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
-      alternates: {
-        languages: Object.fromEntries(
-          locales.map(loc => [loc, `${baseUrl}/${loc}`])
-        ),
-      },
-    })
+  // 1. 生成首页 URL（不带语言前缀）
+  const homeRoute: MetadataRoute.Sitemap[0] = {
+    url: `${baseUrl}/`,
+    lastModified: today,
+    changeFrequency: 'daily',
+    priority: 1.0,
   }
 
-  // 添加分类页面（所有语言版本）
-  // 策略：只添加有实际应用的二级分类到 sitemap
+  // 2. 获取所有分类数据并生成 URL
+  const categoryRoutes: MetadataRoute.Sitemap = []
+
   try {
-    const categoriesResponse = await categoriesApi.listPrimary()
-    const primaryCategories = categoriesResponse.primary_categories || []
-
-    // 遍历每个一级分类，获取其二级分类
-    for (const primaryCategory of primaryCategories) {
-      if (!primaryCategory.key) continue
-
+    // 遍历所有语言
+    for (const lang of languages) {
       try {
-        const secondaryResponse = await categoriesApi.listSecondary(primaryCategory.key)
-        const secondaryCategories = secondaryResponse.categories || []
-
-        // 为每个二级分类添加 sitemap 条目
-        for (const secondaryCategory of secondaryCategories) {
-          for (const locale of locales) {
-            // URL中的&符号需要转义为&amp;以符合XML规范
-            const categoryUrl = `${baseUrl}/${locale}/categories?parent_category=${primaryCategory.id}&amp;type=${secondaryCategory.id}`
-            const alternateUrls = Object.fromEntries(
-              locales.map(loc => [loc, `${baseUrl}/${loc}/categories?parent_category=${primaryCategory.id}&amp;type=${secondaryCategory.id}`])
-            )
-
-            sitemapEntries.push({
-              url: categoryUrl,
-              lastModified: new Date(),
-              changeFrequency: 'weekly',
-              priority: 0.7,
-              alternates: {
-                languages: alternateUrls,
-              },
-            })
-          }
-        }
-      } catch (error) {
-        console.error(`Failed to fetch secondary categories for ${primaryCategory.key}:`, error)
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch categories for sitemap:', error)
-  }
-
-  // 添加工具详情页（所有语言版本）
-  try {
-    // 获取所有工具，使用分页获取
-    let page = 1
-    const limit = 100
-    let hasMore = true
-
-    while (hasMore) {
-      try {
-        const response = await appsApi.list({
-          page,
-          limit,
+        // 2.1 添加分类列表页：/{lang}/categories
+        categoryRoutes.push({
+          url: `${baseUrl}/${lang}/categories`,
+          lastModified: today,
+          changeFrequency: 'daily' as const,
+          priority: 0.9,
         })
 
-        const apps = response.items || []
+        // 2.2 获取一级分类
+        const primaryResponse = await categoriesApi.listPrimary(lang)
+        const primaryCategories = primaryResponse.primary_categories || []
 
-        for (const app of apps) {
-          for (const locale of locales) {
-            sitemapEntries.push({
-              url: `${baseUrl}/${locale}/tools/${app.id}`,
-              lastModified: app.updated_at ? new Date(app.updated_at) : new Date(),
-              changeFrequency: 'weekly',
-              priority: 0.7,
-              alternates: {
-                languages: Object.fromEntries(
-                  locales.map(loc => [loc, `${baseUrl}/${loc}/tools/${app.id}`])
-                ),
-              },
-            })
+        console.log(`[Sitemap] Found ${primaryCategories.length} primary categories for ${lang}`)
+
+        // 对每个一级分类
+        for (const primaryCategory of primaryCategories) {
+          if (!primaryCategory.key) {
+            console.warn(`[Sitemap] Primary category missing key:`, primaryCategory)
+            continue
+          }
+
+          // 2.3 添加一级分类页：/{lang}/categories/{primaryCategory.key}
+          categoryRoutes.push({
+            url: `${baseUrl}/${lang}/categories/${primaryCategory.key}`,
+            lastModified: today,
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+          })
+
+          try {
+            // 获取该一级分类下的二级分类
+            const secondaryResponse = await categoriesApi.listSecondary(primaryCategory.key, lang)
+            const secondaryCategories = secondaryResponse.categories || []
+
+            console.log(`[Sitemap] Found ${secondaryCategories.length} secondary categories for ${primaryCategory.key} in ${lang}`)
+            
+            if (secondaryCategories.length === 0) {
+              console.warn(`[Sitemap] No secondary categories found for ${primaryCategory.key} in ${lang}`)
+            }
+
+            // 2.4 为每个二级分类生成 URL：/{lang}/categories/{primaryCategory.key}/{secondaryCategory.key}
+            for (const secondaryCategory of secondaryCategories) {
+              if (!secondaryCategory.key) {
+                console.warn(`[Sitemap] Secondary category missing key:`, secondaryCategory)
+                continue
+              }
+
+              const secondaryUrl = `${baseUrl}/${lang}/categories/${primaryCategory.key}/${secondaryCategory.key}`
+              categoryRoutes.push({
+                url: secondaryUrl,
+                lastModified: today,
+                changeFrequency: 'weekly' as const,
+                priority: 0.7,
+              })
+              
+              console.log(`[Sitemap] Added secondary category URL: ${secondaryUrl}`)
+            }
+          } catch (error) {
+            // 如果获取二级分类失败，记录详细错误但继续处理其他分类
+            console.error(`[Sitemap] Failed to fetch secondary categories for ${primaryCategory.key} in ${lang}:`, error)
+            if (error instanceof Error) {
+              console.error(`[Sitemap] Error details: ${error.message}`, error.stack)
+            }
           }
         }
-
-        hasMore = page < response.pages
-        page++
       } catch (error) {
-        console.error(`Failed to fetch apps page ${page} for sitemap:`, error)
-        hasMore = false
+        // 如果获取一级分类失败，记录错误但继续处理其他语言
+        console.error(`[Sitemap] Failed to fetch primary categories for ${lang}:`, error)
       }
     }
   } catch (error) {
-    console.error('Failed to fetch apps for sitemap:', error)
+    // 如果获取分类数据失败，至少返回首页
+    console.error('[Sitemap] Failed to fetch categories for sitemap:', error)
   }
 
-  // 添加其他重要页面
-  const otherPages = [
-    { path: 'pricing', priority: 0.7 },
-    { path: 'privacy', priority: 0.5 },
-    { path: 'service', priority: 0.6 },
-    { path: 'apphub-blog', priority: 0.6 },
-    { path: 'dataanalysis', priority: 0.6 },
-  ]
+  console.log(`[Sitemap] Generated ${categoryRoutes.length} category routes`)
 
-  for (const page of otherPages) {
-    for (const locale of locales) {
-      sitemapEntries.push({
-        url: `${baseUrl}/${locale}/${page.path}`,
-        lastModified: new Date(),
-        changeFrequency: 'monthly',
-        priority: page.priority,
-        alternates: {
-          languages: Object.fromEntries(
-            locales.map(loc => [loc, `${baseUrl}/${loc}/${page.path}`])
-          ),
-        },
+  // 3. 添加 Dashboard 路径（四种语言）
+  const dashboardRoutes: MetadataRoute.Sitemap = []
+  for (const lang of languages) {
+    dashboardRoutes.push({
+      url: `${baseUrl}/${lang}/dashboard`,
+      lastModified: today,
+      changeFrequency: 'daily' as const,
+      priority: 0.8,
+    })
+  }
+  console.log(`[Sitemap] Generated ${dashboardRoutes.length} dashboard routes`)
+
+  // 4. 添加 Blog 路径（外部链接）
+  const blogRoute: MetadataRoute.Sitemap[0] = {
+    url: `${blogUrl}/`,
+    lastModified: today,
+    changeFrequency: 'daily' as const,
+    priority: 0.7,
+  }
+
+  // 5. 获取所有工具并生成工具详情页 URL
+  const toolRoutes: MetadataRoute.Sitemap = []
+  try {
+    // 获取所有工具（使用较大的 limit 值，如果工具数量很多可能需要分页）
+    for (const lang of languages) {
+      try {
+        let page = 1
+        const limit = 100 // 每页获取 100 个工具
+        let hasMore = true
+
+        while (hasMore) {
+          const response = await appsApi.list({ 
+            lang, 
+            page, 
+            limit 
+          })
+          
+          const tools = response.items || []
+          
+          for (const tool of tools) {
+            if (tool.id) {
+              toolRoutes.push({
+                url: `${baseUrl}/${lang}/tools/${tool.id}`,
+                lastModified: today,
+                changeFrequency: 'weekly' as const,
+                priority: 0.6,
+              })
+            }
+          }
+
+          // 检查是否还有更多页面
+          hasMore = page < response.pages
+          page++
+          
+          // 安全限制：最多获取 10 页（1000 个工具）
+          if (page > 10) {
+            console.warn(`[Sitemap] Reached page limit for tools in ${lang}`)
+            break
+          }
+        }
+        
+        console.log(`[Sitemap] Generated tool routes for ${lang}`)
+      } catch (error) {
+        console.error(`[Sitemap] Failed to fetch tools for ${lang}:`, error)
+      }
+    }
+  } catch (error) {
+    console.error('[Sitemap] Failed to fetch tools for sitemap:', error)
+  }
+  console.log(`[Sitemap] Generated ${toolRoutes.length} tool routes`)
+
+  // 6. 添加问题页路径（video 和 message，四种语言）
+  const questionRoutes: MetadataRoute.Sitemap = []
+  const questionSlugs = ['video', 'message']
+  for (const lang of languages) {
+    for (const slug of questionSlugs) {
+      questionRoutes.push({
+        url: `${baseUrl}/${lang}/question/${slug}`,
+        lastModified: today,
+        changeFrequency: 'weekly' as const,
+        priority: 0.5,
       })
     }
   }
+  console.log(`[Sitemap] Generated ${questionRoutes.length} question routes`)
 
-  return sitemapEntries
+  // 7. 合并所有路由并返回
+  const totalRoutes = 1 + categoryRoutes.length + dashboardRoutes.length + 1 + toolRoutes.length + questionRoutes.length
+  console.log(`[Sitemap] Total routes: ${totalRoutes}`)
+  
+  return [
+    homeRoute,
+    ...categoryRoutes,
+    ...dashboardRoutes,
+    blogRoute,
+    ...toolRoutes,
+    ...questionRoutes,
+  ]
 }
 
