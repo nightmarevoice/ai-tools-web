@@ -157,7 +157,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           page++
           
           // 安全限制：最多获取 10 页（1000 个工具）
-          if (page > 80) {
+          if (page > 90) {
             console.warn(`[Sitemap] Reached page limit for tools in ${lang}`)
             break
           }
