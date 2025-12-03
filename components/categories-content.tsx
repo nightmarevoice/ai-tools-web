@@ -83,6 +83,21 @@ function slugToKey(slug: string): string {
   return slug.toLowerCase().trim()
 }
 
+// 从 app.categories 构建分类 URL
+function getCategoryUrlFromApp(app: Application, locale: string): string | null {
+  if (!app.categories || app.categories.length === 0) {
+    return null
+  }
+  
+  // 使用第一个分类来构建 URL
+  const firstCategory = app.categories[0]
+  if (firstCategory.parent_category && firstCategory.category) {
+    return `/${locale}/categories/${firstCategory.parent_category}/${firstCategory.category}`
+  }
+  
+  return null
+}
+
 export function CategoriesContent() {
   const t = useTranslations("categories")
 
@@ -1216,26 +1231,31 @@ function CategoriesPageContent() {
                   {
                     searchType === "category" && apps.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-3">
-                       {apps.map((app: Application) => (
-                          <Link
-                            key={app.id}
-                            href={`/${locale}/tools/${app.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group rounded-lg border p-2 transition hover:border-primary cursor-pointer block"
-                          >
-                            {/* 缩略图 */}
-                            {app.screenshot_url && (
-                              <div className="mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
+                       {apps.map((app: Application) => {
+                          const toolUrl = `/${locale}/tools/${app.id}`
+                          
+                          return (
+                            <div
+                              key={app.id}
+                              className="group rounded-lg border p-2 transition hover:border-primary"
+                            >
+                              {/* 缩略图 - 链接到分类页面 */}
+                              {app.screenshot_url && (
+                                <Link
+                                  href={ toolUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60"
+                                >
                                   <img
-                                  src={app.screenshot_url.replace(/^http:\/\//, "https://")}
+                                    src={app.screenshot_url.replace(/^http:\/\//, "https://")}
                                     alt={app.app_name}
-                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                     loading="lazy"
-                                  referrerPolicy="no-referrer"
+                                    referrerPolicy="no-referrer"
                                   />
-                              </div>
-                            )}
+                                </Link>
+                              )}
                               <div className="space-y-2">
                               <div className="flex items-center gap-2">
                                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
@@ -1246,23 +1266,30 @@ function CategoriesPageContent() {
                                     loading="lazy"
                                   />
                                 </div>
-                                <div className="text-base hover:text-[#0057FF] font-semibold line-clamp-1 flex-1">
+                                {/* app_name - 链接到分类页面 */}
+                                <Link
+                                  href={toolUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-base hover:text-[#0057FF] font-semibold line-clamp-1 flex-1"
+                                >
                                   {app.app_name}
-                                </div>
+                                </Link>
                               </div>
                                 {app.product_description ? (
                                   <p className="text-sm text-muted-foreground line-clamp-2">
                                     {app.product_description}
                                   </p>
                                 ) : null}
-                              <div className="flex gap-2 text-xs text-muted-foreground">
+                              <div className="flex gap-1 text-xs text-muted-foreground">
                                 {app.categories?.slice(0, 2).map((cat, index) => (
-                                    <span
+                                    <Link
                                       key={`${cat.category}-${index}`}
-                                    className="rounded-full border px-2 py-0.5 whitespace-nowrap"
+                                      href={cat.parent_category && cat.category ? `/${locale}/categories/${cat.parent_category}/${cat.category}` : "#"}
+                                      className="px-1 py-0.5 text-xs font-medium bg-[#0057FF]/10 text-[#0057FF] rounded-lg border border-[#0057FF]/30 hover:bg-[#0057FF]/20 transition-colors"
                                     >
                                       {cat.name}
-                                    </span>
+                                    </Link>
                                   ))}
                                 {app.categories && app.categories.length > 2 && (
                                   <span className="rounded-full border px-2 py-0.5 whitespace-nowrap">
@@ -1271,8 +1298,9 @@ function CategoriesPageContent() {
                                 )}
                                 </div>
                               </div>
-                          </Link>
-                        ))}
+                            </div>
+                          )
+                        })}
                       </div>
                     )
                   }
@@ -1305,26 +1333,31 @@ function CategoriesPageContent() {
                   {
                     searchType === "search" && searchResults?.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-2">
-                       {searchResults?.map((app: Application) => (
-                          <Link
-                            key={app.id}
-                            href={`/${locale}/tools/${app.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group rounded-lg border p-2 transition hover:border-primary cursor-pointer block"
-                          >
-                            {/* 缩略图 */}
-                            {app.screenshot_url && (
-                              <div className="mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60">
+                       {searchResults?.map((app: Application) => {
+                          const categoryUrl = getCategoryUrlFromApp(app, locale)
+                          
+                          return (
+                            <div
+                              key={app.id}
+                              className="group rounded-lg border p-2 transition hover:border-primary"
+                            >
+                              {/* 缩略图 - 链接到分类页面 */}
+                              {app.screenshot_url && (
+                                <Link
+                                  href={ toolUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block mb-3 w-full aspect-video overflow-hidden rounded-lg border border-gray-200/60"
+                                >
                                   <img
-                                  src={app.screenshot_url.replace(/^http:\/\//, "https://")}
+                                    src={app.screenshot_url.replace(/^http:\/\//, "https://")}
                                     alt={app.app_name}
-                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                     loading="lazy"
-                                  referrerPolicy="no-referrer"
+                                    referrerPolicy="no-referrer"
                                   />
-                              </div>
-                            )}
+                                </Link>
+                              )}
                               <div className="space-y-2">
                               <div className="flex items-center gap-2">
                                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
@@ -1335,23 +1368,30 @@ function CategoriesPageContent() {
                                     loading="lazy"
                                   />
                                 </div>
-                                <div className="text-base font-semibold line-clamp-1 flex-1">
+                                {/* app_name - 链接到分类页面 */}
+                                <Link
+                                  href={toolUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-base hover:text-[#0057FF] font-semibold line-clamp-1 flex-1"
+                                >
                                   {app.app_name}
-                                </div>
+                                </Link>
                               </div>
                                 {app.product_description ? (
                                   <p className="text-sm text-muted-foreground line-clamp-2">
                                     {app.product_description}
                                   </p>
                                 ) : null}
-                              <div className="flex gap-2 text-xs text-muted-foreground">
-                                {app.categories?.slice(0, 2).map((cat, index) => (
-                                    <span
+                              <div className="flex gap-1 text-xs text-muted-foreground">
+                              {app.categories?.slice(0, 2).map((cat, index) => (
+                                    <Link
                                       key={`${cat.category}-${index}`}
-                                    className="rounded-full border px-2 py-0.5 whitespace-nowrap"
+                                      href={cat.parent_category && cat.category ? `/${locale}/categories/${cat.parent_category}/${cat.category}` : "#"}
+                                      className="rounded-full border px-1 py-0.5 whitespace-nowrap hover:bg-accent hover:text-accent-foreground transition-colors"
                                     >
                                       {cat.name}
-                                    </span>
+                                    </Link>
                                   ))}
                                 {app.categories && app.categories.length > 2 && (
                                   <span className="rounded-full border px-2 py-0.5 whitespace-nowrap">
@@ -1360,8 +1400,9 @@ function CategoriesPageContent() {
                                 )}
                                 </div>
                               </div>
-                          </Link>
-                        ))}
+                            </div>
+                          )
+                        })}
                       </div>
                     ) 
                   }
