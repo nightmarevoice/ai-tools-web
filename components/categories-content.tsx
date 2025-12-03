@@ -1207,11 +1207,12 @@ function CategoriesPageContent() {
                      </div>
                      
                    </div>
-                  {(appsLoading || searching || (searchType === "search" && searchLoadingMore && searchResults.length > 0)) && (
+                  {((appsLoading &&  searchType === "category") || (searching && searchResults.length === 0 && searchType === "search")) && (
                     <div className="grid gap-4 sm:grid-cols-3">
                      {Array.from({ length: 6 }).map((_, i) => (
                         <div key={i} className="rounded-lg border p-2">
                           {/* 缩略图占位符 */}
+                         
                           <div className="mb-3 w-full aspect-video rounded-lg bg-muted animate-pulse" />
                          <div className="flex items-start gap-3">
                             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted animate-pulse" />
@@ -1332,7 +1333,7 @@ function CategoriesPageContent() {
 
                   {
                     searchType === "search" && searchResults?.length > 0 && (
-                      <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="grid gap-4 sm:grid-cols-3">
                        {searchResults?.map((app: Application) => {
                           
                           const toolUrl = `/${locale}/tools/${app.id}`
@@ -1388,7 +1389,7 @@ function CategoriesPageContent() {
                                     <Link
                                       key={`${cat.category}-${index}`}
                                       href={cat.parent_category && cat.category ? `/${locale}/categories/${cat.parent_category}/${cat.category}` : "#"}
-                                      className="rounded-full border px-1 py-0.5 whitespace-nowrap hover:bg-accent hover:text-accent-foreground transition-colors"
+                                      className="px-1 py-0.5 text-xs font-medium bg-[#0057FF]/10 text-[#0057FF] rounded-lg border border-[#0057FF]/30 hover:bg-[#0057FF]/20 transition-colors"
                                     >
                                       {cat.name}
                                     </Link>
