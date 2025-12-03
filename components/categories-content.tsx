@@ -1334,8 +1334,8 @@ function CategoriesPageContent() {
                     searchType === "search" && searchResults?.length > 0 && (
                       <div className="grid gap-4 sm:grid-cols-2">
                        {searchResults?.map((app: Application) => {
-                          const categoryUrl = getCategoryUrlFromApp(app, locale)
                           
+                          const toolUrl = `/${locale}/tools/${app.id}`
                           return (
                             <div
                               key={app.id}
