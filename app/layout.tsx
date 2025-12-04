@@ -16,7 +16,7 @@ export const metadata = {
     template: "",
   },
   description:
-    "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps. Compare features, ratings, and find the perfect AI solution for your needs.",
+    "Discover the best AI tools and applications,Compare features, ratings, and find the perfect AI solution for your needs.",
   keywords: [
     "AI tools",
     "AI applications",

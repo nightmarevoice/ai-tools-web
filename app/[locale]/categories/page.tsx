@@ -50,7 +50,6 @@ export async function generateMetadata({
     keywords: [
       "AI categories",
       "AI tool categories",
-      "artificial intelligence tools",
       "AI software categories",
       "best AI tools by category",
     ],
