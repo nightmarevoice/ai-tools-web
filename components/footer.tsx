@@ -44,7 +44,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Logo />
-              <span className="font-bold">{t("brand")}</span>
+              <span className="font-bold">AI ToolsHub</span>
             </div>
             <p className="text-sm text-muted-foreground">{t("description")}</p>
           </div>
