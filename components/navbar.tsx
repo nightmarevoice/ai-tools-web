@@ -204,7 +204,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
       openInNewTab: false,
     },
     {
-      href: `https://blog.ai-apphub.com/`,
+      href: `https://blog.i-toolshub.com/`,
       label: tCommon("nav.blog"),
       icon: BookOpen,
       active: pathname.startsWith(`/${locale}/apphub-blog`) || pathname.startsWith("/apphub-blog"),
