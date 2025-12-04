@@ -67,12 +67,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
             // 2.4 为每个二级分类生成 URL：/{lang}/categories/{primaryCategory.key}/{secondaryCategory.key}
             for (const secondaryCategory of secondaryCategories) {
-              if (!secondaryCategory.key) {
+              if (!secondaryCategory.id) {
                 console.warn(`[Sitemap] Secondary category missing key:`, secondaryCategory)
                 continue
               }
 
-              const secondaryUrl = `${baseUrl}/${lang}/categories/${primaryCategory.key}/${secondaryCategory.key}`
+              const secondaryUrl = `${baseUrl}/${lang}/categories/${primaryCategory.key}/${secondaryCategory.id}`
               categoryRoutes.push({
                 url: secondaryUrl,
                 lastModified: today,

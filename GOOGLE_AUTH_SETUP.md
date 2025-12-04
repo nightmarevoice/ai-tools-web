@@ -134,7 +134,7 @@ https://your-domain.com/auth/callback (生产环境)
 2. 点击 **Create Credentials > OAuth client ID**
 3. 选择 **Application type**: Web application
 4. 配置:
-   - **Name**: AI AppHub (或自定义名称)
+   - **Name**: AI Tools (或自定义名称)
    - **Authorized JavaScript origins**:
      ```
      http://localhost:3000

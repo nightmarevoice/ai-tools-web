@@ -255,7 +255,7 @@ export function Navbar({ transparentAtTop = false }: { transparentAtTop?: boolea
               "bg-primary/20"
             }
           />
-          <span className="hidden font-bold sm:inline-block">AI AppHub</span>
+          <span className="hidden font-bold sm:inline-block">AI Tools</span>
         </Link>
         <nav className="hidden md:flex md:items-center md:justify-between">
           <div className="flex gap-6 justify-center">

@@ -77,7 +77,7 @@
 
 | 英文 | 中文 | 韩语 |
 |------|------|------|
-| AI AppHub | AI 工具导航 | AI 도구 내비게이션 |
+| AI Tools | AI 工具导航 | AI 도구 내비게이션 |
 | Navigation platform... | 发现、比较和组合... | AI 도구를 발견, 비교... |
 | Curated Products | 热门产品 | 인기 제품 |
 | Features | 功能特性 | 기능 특성 |

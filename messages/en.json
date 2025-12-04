@@ -21,7 +21,7 @@
       "home": "Home",
       "categories": "Categories",
       "intelligentTools": "Intelligent tools",
-      "blog": "AI AppHub Blog",
+      "blog": "AI Tools Blog",
       "dataanalysis": "Website Statistics",
       "profile": "Profile",
       "dashboard": "Dashboard",
@@ -115,7 +115,7 @@
     },
     "testimonials": {
       "title": "User Reviews",
-      "description": "Feedback on our AI AppHub—scenario-driven, tag-based exploration with clear alternatives and side-by-side comparison views to help you choose the right tool faster.",
+      "description": "Feedback on our AI Tools-driven, tag-based exploration with clear alternatives and side-by-side comparison views to help you choose the right tool faster.",
       "items": [
         {
           "quote": "Describe your needs in natural language, and the system intelligently matches the most suitable AI tools. No more blindly searching through countless tools.",
@@ -150,7 +150,7 @@
       ]
     },
     "cta": {
-      "title": "Feedback on our AI AppHub—scenario-driven,",
+      "title": "Feedback on our AI Tools-driven,",
       "description": "tag-based exploration with clear alternatives and side-by-side comparison views to help you choose the right tool faster."
     },
     "aiToolsTabs": {
@@ -328,7 +328,7 @@
   },
   "privacy": {
     "metadata": {
-      "title": "Privacy Policy | AI AppHub",
+      "title": "Privacy Policy | AI Tools",
       "description": "Learn how we collect, use, and protect your personal information"
     },
     "title": "Privacy Policy",
@@ -371,12 +371,12 @@
   },
   "service": {
     "metadata": {
-      "title": "Terms of Service | AI AppHub",
+      "title": "Terms of Service | AI Tools",
       "description": "Read our terms of service to understand the rules and conditions for using this platform"
     },
     "title": "Terms of Service",
     "lastUpdated": "Last Updated: {date}",
-    "intro": "Welcome to our AI AppHub platform. By using this website, you agree to comply with the following terms of service. Please read these terms carefully.",
+    "intro": "Welcome to our AI Tools platform. By using this website, you agree to comply with the following terms of service. Please read these terms carefully.",
     "section1": {
       "title": "1. Service Description",
       "content": "This platform provides discovery, comparison, and recommendation services for AI tools. We strive to provide users with accurate and timely AI tool information, but do not guarantee the completeness or accuracy of the information."
@@ -423,7 +423,7 @@
   },
   "login": {
     "title": "Log In",
-    "description": "Choose a login method to continue using AI AppHub",
+    "description": "Choose a login method to continue using AI Tools",
     "googleLogin": "Sign in with Google",
     "errors": {
       "signinFailed": "Sign in failed, please check your email and password",
@@ -440,7 +440,7 @@
     }
   },
   "footer": {
-    "brand": "AI AppHub",
+    "brand": "AI Tools",
     "description": "Navigation platform for discovering, comparing, and composing AI tools",
     "product": {
       "title": "Curated Products",
@@ -638,21 +638,21 @@
     "video": {
       "question": "What are some good AI video generation tools?",
       "metadata": {
-        "title": "AI Video Generation Tools Recommendations - AI AppHub",
+        "title": "AI Video Generation Tools Recommendations - AI Tools",
         "description": "Discover the best AI video generation tools for you, including video editing, special effects, automatic editing and more"
       }
     },
     "writing": {
       "question": "What are some good AI writing tools?",
       "metadata": {
-        "title": "AI Writing Tools Recommendations - AI AppHub",
+        "title": "AI Writing Tools Recommendations - AI Tools",
         "description": "Discover the best AI writing tools for you, including article generation, content creation, text editing and more"
       }
     },
     "message": {
       "question": "What are some good AI messaging/chat tools?",
       "metadata": {
-        "title": "AI Messaging Chat Tools Recommendations - AI AppHub",
+        "title": "AI Messaging Chat Tools Recommendations - AI Tools",
         "description": "Discover the best AI messaging and chat tools for you, including intelligent conversations, customer service assistants, chatbots and more"
       }
     }

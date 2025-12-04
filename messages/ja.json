@@ -21,7 +21,7 @@
       "home": "ホーム",
       "categories": "カテゴリー",
       "intelligentTools": "インテリジェントツール",
-      "blog": "AI AppHub Blog",
+      "blog": "AI Tools Blog",
       "dataanalysis": "ウェブサイト統計",
       "profile": "プロフィール",
       "dashboard": "ダッシュボード",
@@ -437,7 +437,7 @@
   
   "login": {
     "title": "ログイン",
-    "description": "ログイン方法を選択してAI AppHubを続けて使用する",
+    "description": "ログイン方法を選択してAI Tools",
     "googleLogin": "Googleアカウントでログイン",
     "errors": {
       "signinFailed": "ログインに失敗しました。メールアドレスとパスワードを確認してください",
@@ -651,21 +651,21 @@
     "video": {
       "question": "良いAI動画生成ツールはありますか？",
       "metadata": {
-        "title": "AI動画生成ツールおすすめ - AI AppHub",
+        "title": "AI動画生成ツールおすすめ - AI Tools",
         "description": "あなたに最適なAI動画生成ツールを発見しましょう。動画編集、特殊効果、自動編集などの機能が含まれます"
       }
     },
     "writing": {
       "question": "良いAIライティングツールはありますか？",
       "metadata": {
-        "title": "AIライティングツールおすすめ - AI AppHub",
+        "title": "AIライティングツールおすすめ - AI Tools",
         "description": "あなたに最適なAIライティングツールを発見しましょう。記事生成、コンテンツ作成、テキスト編集などの機能が含まれます"
       }
     },
     "message": {
       "question": "良いAIメッセージ/チャットツールはありますか？",
       "metadata": {
-        "title": "AIメッセージチャットツールおすすめ - AI AppHub",
+        "title": "AIメッセージチャットツールおすすめ - AI Tools",
         "description": "あなたに最適なAIメッセージとチャットツールを発見しましょう。インテリジェントな会話、カスタマーサービスアシスタント、チャットボットなどの機能が含まれます"
       }
     }

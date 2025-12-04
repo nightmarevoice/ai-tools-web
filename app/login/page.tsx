@@ -69,7 +69,7 @@ export default function LoginPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">登录</CardTitle>
           <CardDescription className="text-center">
-            选择登录方式继续使用 AI AppHub
+            选择登录方式继续使用 AI Tools
           </CardDescription>
         </CardHeader>
 

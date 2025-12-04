@@ -133,12 +133,13 @@ function CategoriesPageContent() {
   const [inputValue, setInputValue] = useState<string>("")
   const [loadingCategories, setLoadingCategories] = useState<boolean>(false)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
-  const [searchType, setSearchType] = useState<string>("category")
+ 
   const [hoveredPrimaryCategoryId, setHoveredPrimaryCategoryId] = useState<string | number | null>(null)
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
-  
+
+  const [searchType, setSearchType] = useState<string>(searchParams?.get("q") ? "search" :"category")
   // 从 Context 中获取 slug
   const parentCategorySlug = categoryContext?.parentCategorySlug
   const categorySlug = categoryContext?.categorySlug
@@ -1142,8 +1143,6 @@ function CategoriesPageContent() {
                           </button>
                         </div>
                       </form> 
-                      
-                      
                      </div>
                      
                    </div>
@@ -1207,6 +1206,7 @@ function CategoriesPageContent() {
                      </div>
                      
                    </div>
+                  
                   {((appsLoading &&  searchType === "category") || (searching && searchResults.length === 0 && searchType === "search")) && (
                     <div className="grid gap-4 sm:grid-cols-3">
                      {Array.from({ length: 6 }).map((_, i) => (
@@ -1316,7 +1316,7 @@ function CategoriesPageContent() {
                     </div>
                   ) : searchType === "search" && searchResults.length > 0 && searchResults.length >= searchTotal && searchTotal > 0 ? (
                     <div className="mt-6 flex items-center justify-center">
-                        <span className="text-xs text-muted-foreground">{tCommon("loadedAll")}</span>
+                        
                     </div>
                   ) : searchType !== "search" && appsLoadingMore ? (
                     <div className="mt-6 flex items-center justify-center">
