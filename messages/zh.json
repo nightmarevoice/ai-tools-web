@@ -21,7 +21,7 @@
       "home": "首页",
       "categories": "分类",
       "intelligentTools": "智能工具",
-      "blog": "AI AppHub Blog",
+      "blog": "AI Tools Blog",
       "dataanalysis": "网站统计",
       "profile": "个人资料",
       "dashboard": "仪表盘",
@@ -225,6 +225,11 @@
       "visits": "{count} 次访问",
       "tools": "个工具",
       "timesVisited": "次访问"
+    },
+    "blog": {
+      "title": "最新文章",
+      "description": "探索 AI 工具和技术的深度内容",
+      "empty": "暂无文章"
     }
   },
   "categories": {
@@ -423,7 +428,7 @@
   },
   "login": {
     "title": "登录",
-    "description": "选择登录方式继续使用 AI AppHub",
+    "description": "选择登录方式继续使用 AI Tools",
     "googleLogin": "使用 Google 账号登录",
     "errors": {
       "signinFailed": "登录失败,请检查邮箱和密码",
@@ -637,21 +642,21 @@
     "video": {
       "question": "有哪些好用的AI视频生成工具？",
       "metadata": {
-        "title": "AI视频生成工具推荐 - AI AppHub",
+        "title": "AI视频生成工具推荐 - AI Tools",
         "description": "发现最适合您的AI视频生成工具，包括视频编辑、特效制作、自动剪辑等功能"
       }
     },
     "writing": {
       "question": "有哪些好用的AI写作工具？",
       "metadata": {
-        "title": "AI写作工具推荐 - AI AppHub",
+        "title": "AI写作工具推荐 - AI Tools",
         "description": "发现最适合您的AI写作工具，包括文章生成、内容创作、文本编辑等功能"
       }
     },
     "message": {
       "question": "有哪些好用的AI消息/聊天工具？",
       "metadata": {
-        "title": "AI消息聊天工具推荐 - AI AppHub",
+        "title": "AI消息聊天工具推荐 - AI Tools",
         "description": "发现最适合您的AI消息和聊天工具，包括智能对话、客服助手、聊天机器人等功能"
       }
     }

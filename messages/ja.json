@@ -165,6 +165,11 @@
       "tools": "ツール",
       "timesVisited": "回訪問"
     },
+    "blog": {
+      "title": "最新記事",
+      "description": "AIツールとテクノロジーに関する深いコンテンツを探索",
+      "empty": "記事がありません"
+    },
     "aiToolsTabs": {
       "title": "注目のAIツール",
       "subtitle": "人気おすすめ、トレンドおすすめから高品質なAIツールをすばやく見つける",

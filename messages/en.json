@@ -225,6 +225,11 @@
       "visits": "{count} visits",
       "tools": "tools",
       "timesVisited": "visits"
+    },
+    "blog": {
+      "title": "Latest Articles",
+      "description": "Explore in-depth content about AI tools and technology",
+      "empty": "No articles available"
     }
   },
   "categories": {
@@ -509,7 +514,6 @@
     "categoryDetails": {
       "title": "Category Details",
       "productCount": "Product Count",
-      "avgGrowthRate": "Average Growth Rate",
       "avgDuration": "Average Duration",
       "goBack": "Go Back",
       "close": "Close",

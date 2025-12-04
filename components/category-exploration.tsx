@@ -94,10 +94,10 @@ export function CategoryExploration() {
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className="mb-6 flex items-baseline justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-2xl md:text-3xl">
               {t("title")}
             </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="text-muted-foreground md:text-lg mt-3">
               {t("subtitle", { count: totalCategories })}
             </p>
           </div>
