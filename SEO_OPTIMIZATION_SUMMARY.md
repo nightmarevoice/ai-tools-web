@@ -87,7 +87,7 @@
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 
-如果不设置，将使用默认值：`https://ai-apphub.com`
+如果不设置，将使用默认值：`https://i-toolshub.com`
 
 ### Sitemap 访问
 - 自动生成：`https://your-domain.com/sitemap.xml`

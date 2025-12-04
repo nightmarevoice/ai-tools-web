@@ -7,7 +7,7 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
 
 export const metadata = {
   metadataBase: new URL(baseUrl),

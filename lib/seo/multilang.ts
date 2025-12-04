@@ -1,6 +1,6 @@
 import { locales, defaultLocale } from '@/i18n'
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
 
 /**
  * 生成多语言 alternates 配置

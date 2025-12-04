@@ -4,8 +4,8 @@ import { appsApi } from '@/lib/api/apps'
 import type { Language } from '@/types/api'
 
 const languages: Language[] = ['zh', 'en', 'ja', 'ko']
-const baseUrl = 'https://ai-apphub.com'
-const blogUrl = 'https://blog.ai-apphub.com'
+const baseUrl = 'https://i-toolshub.com'
+const blogUrl = 'https://blog.i-toolshub.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const today = new Date()

@@ -9,7 +9,7 @@ export default async function Home({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   // 生成首页结构化数据
   const structuredData = {
@@ -47,7 +47,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "home.metadata" })
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
 
   const title = t("title")
   const description = t("description")

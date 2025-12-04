@@ -17,7 +17,7 @@ export default async function ParentCategoryPage({
   params: Promise<{ locale: string; parentCategory: string }>
 }) {
   const { locale, parentCategory } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   // 生成分类页结构化数据
   const structuredData = {
     "@context": "https://schema.org",
@@ -48,7 +48,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; parentCategory: string }>
 }): Promise<Metadata> {
   const { locale, parentCategory } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   const parentCategoryName = deslugify(parentCategory)
   const title = `AI Tools - ${parentCategoryName} | AI application search assistant`

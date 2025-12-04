@@ -11,7 +11,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "service.metadata" })
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
 
   return {
     title: t("title"),

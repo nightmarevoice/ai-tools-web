@@ -9,7 +9,7 @@ export default async function CategoriesPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   // 生成分类页结构化数据
   const structuredData = {
@@ -38,7 +38,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   // 使用默认值，因为翻译文件中可能没有 metadata
   const title = "AI Tool Categories | AI application search assistant"

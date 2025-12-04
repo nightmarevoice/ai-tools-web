@@ -17,7 +17,7 @@ export default async function CategoryDetailPage({
   params: Promise<{ locale: string; parentCategory: string; category: string }>
 }) {
   const { locale, parentCategory, category } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   // 生成分类页结构化数据
   const structuredData = {
@@ -50,7 +50,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; parentCategory: string; category: string }>
 }): Promise<Metadata> {
   const { locale, parentCategory, category } = await params
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ai-apphub.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   const parentCategoryName = deslugify(parentCategory)
   const categoryName = deslugify(category)
