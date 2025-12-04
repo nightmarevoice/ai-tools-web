@@ -12,7 +12,7 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
 export const metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "AI application search assistant - Discover & Analyze AI Tools",
+    default: "AI Tools search assistant - Discover & Analyze AI Tools",
     template: "",
   },
   description:
@@ -42,22 +42,22 @@ export const metadata = {
     type: "website",
     locale: "en_US",
     url: baseUrl,
-    title: "AI application search assistant - Discover & Analyze AI Tools",
+    title: "AI Tools search assistant - Discover & Analyze AI Tools",
     description:
       "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps.",
-    siteName: "AI application search assistant",
+    siteName: "AI Tools search assistant",
     images: [
       {
         url: `${baseUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "AI application search assistant",
+        alt: "AI Tools search assistant",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI application search assistant - Discover & Analyze AI Tools",
+    title: "AI Tools search assistant - Discover & Analyze AI Tools",
     description:
       "Discover the best AI tools and applications. Explore trending AI assistants, research tools, and productivity apps.",
     creator: "@researchai",

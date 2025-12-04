@@ -25,7 +25,7 @@ export function PaperChatInterface() {
       id: "welcome",
       role: "assistant",
       content:
-        "Hello! I'm your AI application search assistant. Ask me anything about this paper, and I'll provide insights based on its content.",
+        "Hello! I'm your AI Tools search assistant. Ask me anything about this paper, and I'll provide insights based on its content.",
     },
   ])
   const [input, setInput] = useState("")

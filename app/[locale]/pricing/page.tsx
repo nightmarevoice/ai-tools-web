@@ -11,10 +11,10 @@ import { PricingFaq } from "@/components/pricing-faq"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export const metadata: Metadata = {
-  title: "Pricing & Plans | AI application search assistant",
+  title: "Pricing & Plans | AI Tools search assistant",
   description: "Choose the perfect plan for your research needs with our flexible pricing options",
   openGraph: {
-    title: "Pricing & Plans | AI application search assistant",
+    title: "Pricing & Plans | AI Tools search assistant",
     description: "Choose the perfect plan for your research needs with our flexible pricing options",
     type: "website",
     images: [
@@ -22,13 +22,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AI application search assistant - Pricing & Plans",
+        alt: "AI Tools search assistant - Pricing & Plans",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pricing & Plans | AI application search assistant",
+    title: "Pricing & Plans | AI Tools search assistant",
     description: "Choose the perfect plan for your research needs with our flexible pricing options",
     images: ["/og-image.png"],
   },

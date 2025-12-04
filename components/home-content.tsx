@@ -25,6 +25,7 @@ interface BlogPost {
   }
   date: string
   featured_media: number
+  author: number
   _embedded?: {
     "wp:featuredmedia"?: Array<{
       source_url: string
@@ -36,6 +37,11 @@ interface BlogPost {
           full?: { source_url: string }
         }
       }
+    }>
+    author?: Array<{
+      id: number
+      name: string
+      slug: string
     }>
   }
 }
@@ -53,7 +59,45 @@ export function HomeContent() {
         )
         if (response.ok) {
           const data = await response.json()
-          setBlogPosts(data)
+          
+          // 如果 _embed 没有包含作者信息，单独请求作者信息
+          const postsWithAuthors = await Promise.all(
+            data.map(async (post: BlogPost) => {
+              // 如果已经有嵌入的作者信息，直接返回
+              if (post._embedded?.author?.[0]) {
+                return post
+              }
+              
+              // 否则单独请求作者信息
+              try {
+                const authorResponse = await fetch(
+                  `https://blog.i-toolshub.com/wp-json/wp/v2/users/${post.author}`
+                )
+                if (authorResponse.ok) {
+                  const author = await authorResponse.json()
+                  return {
+                    ...post,
+                    _embedded: {
+                      ...post._embedded,
+                      author: [
+                        {
+                          id: author.id,
+                          name: author.name,
+                          slug: author.slug,
+                        },
+                      ],
+                    },
+                  }
+                }
+              } catch (error) {
+                console.error(`Failed to fetch author for post ${post.id}:`, error)
+              }
+              
+              return post
+            })
+          )
+          
+          setBlogPosts(postsWithAuthors)
         }
       } catch (error) {
         console.error("Failed to fetch blog posts:", error)
@@ -92,6 +136,12 @@ export function HomeContent() {
       featuredMedia.media_details?.sizes?.large?.source_url ||
       featuredMedia.source_url
     )
+  }
+
+  // 获取作者名字
+  const getAuthorName = (post: BlogPost): string | null => {
+    const author = post._embedded?.author?.[0]
+    return author?.name || null
   }
 
   return (
@@ -173,7 +223,7 @@ export function HomeContent() {
           </div>
 
           {loading ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-2">
               {[...Array(4)].map((_, i) => (
                 <div
                   key={i}
@@ -220,14 +270,23 @@ export function HomeContent() {
                       <h3 className="text-base font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                         {stripHtml(post.title.rendered)}
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2 flex-grow">
-                        {stripHtml(post.excerpt.rendered)}
+                      <p className="text-sm text-muted-foreground mt-5 ">
+                      {getAuthorName(post) && (
+                            <>
+                              <span className="text-xs text-muted-foreground">Auth · </span>
+                              <span className="text-xs text-muted-foreground">
+                                {getAuthorName(post)}
+                              </span>
+                            </>
+                          )}
                       </p>
-                      <div className="flex items-center justify-between mt-auto">
-                        <span className="text-xs text-muted-foreground">
-                          {formatDate(post.date)}
-                        </span>
-                       
+                      <div className="flex items-center justify-between mt-1">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-muted-foreground">
+                            {formatDate(post.date)}
+                          </span>
+                        
+                        </div>
                       </div>
                     </div>
                   </a>

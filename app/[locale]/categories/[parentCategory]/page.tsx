@@ -51,7 +51,7 @@ export async function generateMetadata({
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   const parentCategoryName = deslugify(parentCategory)
-  const title = `AI Tools - ${parentCategoryName} | AI application search assistant`
+  const title = `AI Tools - ${parentCategoryName} | AI Tools search assistant`
   const description = `Browse AI tools in ${parentCategoryName} category. Discover the best AI applications for your needs.`
 
   return {
@@ -68,7 +68,7 @@ export async function generateMetadata({
       description,
       type: "website",
       url: `${baseUrl}/${locale}/categories/${parentCategory}`,
-      siteName: "AI application search assistant",
+      siteName: "AI Tools search assistant",
       images: [
         {
           url: `${baseUrl}/og-image.png`,

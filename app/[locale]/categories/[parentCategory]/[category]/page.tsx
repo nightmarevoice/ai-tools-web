@@ -72,7 +72,7 @@ export async function generateMetadata({
       description,
       type: "website",
       url: `${baseUrl}/${locale}/categories/${parentCategory}/${category}`,
-      siteName: "AI application search assistant",
+      siteName: "AI Tools search assistant",
       images: [
         {
           url: `${baseUrl}/og-image.png`,

@@ -21,7 +21,7 @@ interface UploadedDocumentPageProps {
 export async function generateMetadata({ params }: UploadedDocumentPageProps): Promise<Metadata> {
   const { locale } = await params
   return {
-    title: "Chat with Uploaded Document | AI application search assistant",
+    title: "Chat with Uploaded Document | AI Tools search assistant",
     description: "Ask questions and get AI-powered insights about your uploaded document",
   }
 }

@@ -6,7 +6,7 @@ export default function BlogPage() {
 }
 
 export const metadata: Metadata = {
-  title: "AI Hub Blog - AI application search assistant",
+  title: "AI Hub Blog - AI Tools search assistant",
   description: "AI Hub Blog - Latest news and updates about AI tools",
 }
 

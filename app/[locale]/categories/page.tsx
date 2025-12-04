@@ -41,9 +41,9 @@ export async function generateMetadata({
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://i-toolshub.com"
   
   // 使用默认值，因为翻译文件中可能没有 metadata
-  const title = "AI Tool Categories | AI application search assistant"
+  const title = "AI Tool Categories | AI Tools search assistant"
   const description = "Browse AI tools by category. Discover the best AI applications organized by category including AI assistants, productivity tools, research tools, and more."
-
+  document.getElementsByClassName('html')[0].innerHTML
   return {
     title,
     description,
@@ -58,7 +58,7 @@ export async function generateMetadata({
       description,
       type: "website",
       url: `${baseUrl}/${locale}/categories`,
-      siteName: "AI application search assistant",
+      siteName: "AI Tools search assistant",
       images: [
         {
           url: `${baseUrl}/og-image.png`,

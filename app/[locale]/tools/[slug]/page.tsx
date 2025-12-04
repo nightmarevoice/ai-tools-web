@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     const imageUrl = app.screenshot_url || app.icon_url || `${baseUrl}/og-image.png`
 
     return {
-      title: `${app.app_name} | AI application search assistant`,
+      title: `${app.app_name} | AI Tools search assistant`,
       description: description.length > 160 ? description.substring(0, 157) + '...' : description,
       keywords: keywords,
       authors: app.developer_name ? [{ name: app.developer_name }] : undefined,
@@ -81,7 +81,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
         description: description.length > 200 ? description.substring(0, 197) + '...' : description,
         type: "website",
         url: canonicalUrl,
-        siteName: "AI application search assistant",
+        siteName: "AI Tools search assistant",
         images: [
           {
             url: imageUrl,

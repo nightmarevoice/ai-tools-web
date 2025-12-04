@@ -34,10 +34,10 @@ export const dynamicParams = false
 export async function generateMetadata({ params }: PaperPageProps): Promise<Metadata> {
   const { locale } = await params
   return {
-    title: "Paper Details | AI application search assistant",
+    title: "Paper Details | AI Tools search assistant",
     description: "View detailed information and AI-generated summary of research paper",
     openGraph: {
-      title: "Research Paper Details | AI application search assistant",
+      title: "Research Paper Details | AI Tools search assistant",
       description: "View detailed information and AI-generated summary of this research paper",
       type: "article",
       images: [
@@ -45,13 +45,13 @@ export async function generateMetadata({ params }: PaperPageProps): Promise<Meta
           url: "/og-image.png",
           width: 1200,
           height: 630,
-          alt: "AI application search assistant - Paper Details",
+          alt: "AI Tools search assistant - Paper Details",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Research Paper Details | AI application search assistant",
+      title: "Research Paper Details | AI Tools search assistant",
       description: "View detailed information and AI-generated summary of this research paper",
       images: ["/og-image.png"],
     },

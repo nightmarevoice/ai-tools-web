@@ -51,9 +51,9 @@
   },
   "home": {
     "metadata": {
-      "title": "AI Application Search Assistant",
-      "description": "AI Application Search Assistant, quickly discover and match the most suitable AI tools, help you quickly create AI tool usage plans based on scenarios",
-      "ogAlt": "AI Application Search Assistant"
+      "title": "AI Tools search assistant",
+      "description": "AI Tools search assistant, quickly discover and match the most suitable AI tools, help you quickly create AI tool usage plans based on scenarios",
+      "ogAlt": "AI Tools search assistant"
     },
     "hero": {
       "title": "All scenarios you need can find corresponding AI tools here",
