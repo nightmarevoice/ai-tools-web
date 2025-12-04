@@ -43,7 +43,6 @@ export async function generateMetadata({
   // 使用默认值，因为翻译文件中可能没有 metadata
   const title = "AI Tool Categories | AI Tools search assistant"
   const description = "Browse AI tools by category. Discover the best AI applications organized by category including AI assistants, productivity tools, research tools, and more."
-  document.getElementsByClassName('html')[0].innerHTML
   return {
     title,
     description,

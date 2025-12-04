@@ -548,20 +548,6 @@ export default async function ToolPage({ params }: ToolPageProps) {
                          
 
                           <div className="flex flex-col gap-2">
-                            {similar.categories && similar.categories.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {similar.categories.slice(0, 2).map((category, index) => (
-                                  <Link
-                                    key={`${category.category}-${index}`}
-                                    href={`/${locale}/categories/${category.category}`}
-                                    className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full border border-blue-200 hover:bg-blue-100 transition-colors"
-                                  >
-                                    {category.name}
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                            
                             <div className="flex items-center gap-3 text-xs text-gray-500">
                               {similar.monthly_visits && (
                                 <div className="flex items-center gap-1">
