@@ -76,7 +76,45 @@ const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
 }
 
 
+
 const DEFAULT_APP_LIMIT = 20
+
+const CACHE_PREFIX = "ai-tools-cache:"
+const CACHE_EXPIRATION = 60 * 60 * 1000 // 1 hour
+
+interface CacheItem<T> {
+  data: T
+  timestamp: number
+}
+
+function getCache<T>(key: string): T | null {
+  if (typeof window === "undefined") return null
+  try {
+    const item = window.localStorage.getItem(CACHE_PREFIX + key)
+    if (!item) return null
+    const parsed: CacheItem<T> = JSON.parse(item)
+    if (Date.now() - parsed.timestamp > CACHE_EXPIRATION) {
+      window.localStorage.removeItem(CACHE_PREFIX + key)
+      return null
+    }
+    return parsed.data
+  } catch (e) {
+    return null
+  }
+}
+
+function setCache<T>(key: string, data: T) {
+  if (typeof window === "undefined") return
+  try {
+    const item: CacheItem<T> = {
+      data,
+      timestamp: Date.now(),
+    }
+    window.localStorage.setItem(CACHE_PREFIX + key, JSON.stringify(item))
+  } catch (e) {
+    console.warn("Failed to set cache", e)
+  }
+}
 
 // 将 slug 转换为分类 key（slug 和 key 格式相同，都是 kebab-case）
 function slugToKey(slug: string): string {
@@ -329,12 +367,21 @@ function CategoriesPageContent() {
 
         // 只加载一级分类列表，不加载应用列表
         // 应用列表将在二级分类选中后由另一个 useEffect 加载
-        const categoriesResponse = await categoriesApi.listPrimary(resolvedLang)
+        let cats: Category[] = []
+        const cacheKey = `primary-categories-${resolvedLang || 'default'}`
+        const cachedData = getCache<Category[]>(cacheKey)
 
-        if (aborted) return
-
-        const cats = categoriesResponse.primary_categories ?? []
-        setPrimaryCategories(cats)
+        if (cachedData) {
+          cats = cachedData
+          setPrimaryCategories(cats)
+          setLoadingCategories(false)
+        } else {
+          const categoriesResponse = await categoriesApi.listPrimary(resolvedLang)
+          if (aborted) return
+          cats = categoriesResponse.primary_categories ?? []
+          setPrimaryCategories(cats)
+          setCache(cacheKey, cats)
+        }
 
         // 检查是否有搜索参数 q，如果有则不设置默认分类
         const qParam = searchParams?.get("q") ?? ""
@@ -400,7 +447,18 @@ function CategoriesPageContent() {
     setLoadingSecondaryCategories(prev => ({ ...prev, [categoryKey]: true }))
 
     try {
-      const response = await categoriesApi.listSecondary(primaryCategory.key!, resolvedLang)
+      const cacheKey = `secondary-categories-${categoryKey}-${resolvedLang || 'default'}`
+      const cachedData = getCache<Category[]>(cacheKey)
+
+      let categories: Category[] = []
+
+      if (cachedData) {
+        categories = cachedData
+      } else {
+        const response = await categoriesApi.listSecondary(primaryCategory.key!, resolvedLang)
+        categories = response.categories ?? []
+        setCache(cacheKey, categories)
+      }
 
       // 标记为已加载
       loadedCategoriesRef.current.add(categoryKey)
@@ -408,7 +466,7 @@ function CategoriesPageContent() {
 
       setSecondaryCategories(prev => ({
         ...prev,
-        [categoryKey]: response.categories ?? []
+        [categoryKey]: categories
       }))
     } catch (e: any) {
       console.error(`Failed to load secondary categories for ${categoryKey}:`, e)
